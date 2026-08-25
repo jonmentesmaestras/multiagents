@@ -63,6 +63,63 @@ example output:
 }
 """
 
+YOUTUBE_COMMENTS_ANALYZER_INSTRUCTION = """
+You are the YouTube Comments / Video Analyzer Agent.
+Your task is to:
+1. Take the output from the previous agent (from session state key "landing_page_research") which contains the "youtube_keywords" array, for example:
+   "youtube_keywords": [
+     "cómo conseguir clientes high ticket",
+     "escalar agencia de marketing",
+     "embudo de ventas automático",
+     "oferta irresistible ejemplos",
+     "vender servicios por internet"
+   ]
+
+2. Call the tool `search_youtube_videos` passing the list of `youtube_keywords`.
+   The tool will:
+   - Search YouTube for each keyword.
+   - Apply popularity sort.
+   - Filter videos with >= 100,000 views (100K views).
+   - Extract the video title, full video URL (`video_href`), and total views (`video_views`).
+   - Pick the top 10 videos for each key search phrase.
+   - Discard any video that is not in Spanish.
+
+3. Verify the collected videos are relevant to the niche and keywords.
+3.1. Verify you collect 10 videos for each keywords set (phrase)  
+
+4. Output ONLY a valid JSON array of objects with the following schema:
+[
+  {
+    "video_keywords": "Example keywords 1",
+    "video_title": "Example Title 1",
+    "video_href": "https://www.youtube.com/watch?v=...",
+    "video_views": "599K views"
+  },
+  {
+    "video_keywords": "Example keywords 1",
+    "video_title": "Example Title 2",
+    "video_href": "https://www.youtube.com/watch?v=...",
+    "video_views": "599K views"
+  },
+    {
+    "video_keywords": "Example keywords 1",
+    "video_title": "Example Title 3",
+    "video_href": "https://www.youtube.com/watch?v=...",
+    "video_views": "599K views"
+  },
+  {
+    "video_keywords": "Example keywords 2",
+    "video_title": "Example Title 1",
+    "video_href": "https://www.youtube.com/watch?v=...",
+    "video_views": "599K views"
+  }
+
+]
+"""
+
+# Alias for backward compatibility
+YOTUBE_COMMENTS_ANALYZER = YOUTUBE_COMMENTS_ANALYZER_INSTRUCTION
+
 
 CAMPAIGN_ORCHESTRATOR_INSTRUCTION = """
 You are the Youtube comments research Assistant. 

@@ -9,6 +9,7 @@ from marketing_campaign_agent.agent import (
     campaign_orchestrator,
     landing_page_research_agent,
     root_agent,
+    youtube_comments_analyzer_agent,
 )
 from marketing_campaign_agent.tools import scrape_landing_page
 
@@ -21,9 +22,11 @@ class TestAgentConfiguration:
         assert root_agent is campaign_orchestrator
 
     def test_orchestrator_sub_agents(self):
-        """Verify orchestrator contains the landing_page_research_agent."""
-        assert len(campaign_orchestrator.sub_agents) >= 1
-        assert landing_page_research_agent in campaign_orchestrator.sub_agents
+        """Verify orchestrator contains both sub-agents in order."""
+        assert len(campaign_orchestrator.sub_agents) == 2
+        assert campaign_orchestrator.sub_agents[0] is landing_page_research_agent
+        assert campaign_orchestrator.sub_agents[1] is youtube_comments_analyzer_agent
+
 
     def test_landing_page_research_agent_config(self):
         """Verify landing page research agent settings, tools, and output key."""

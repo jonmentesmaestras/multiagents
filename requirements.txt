@@ -2,3 +2,5 @@ google-adk>=2.7.1
 google-generativeai>=0.8.6
 google-genai>=2.19.0
 python-dotenv>=1.2.3
+playwright>=1.40.0
+beautifulsoup4>=4.12.0

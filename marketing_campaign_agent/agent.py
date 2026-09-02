@@ -7,9 +7,12 @@ from marketing_campaign_agent.instructions import (
     CAMPAIGN_ORCHESTRATOR_INSTRUCTION,
     LANDING_PAGE_COPYWRITER_INSTRUCTION,
     YOUTUBE_COMMENTS_ANALYZER_INSTRUCTION,
+    YOUTUBE_COMMENT_EXTRACTOR_INSTRUCTION,
 )
 from marketing_campaign_agent.tools import (
+    extract_comments_from_videos,
     scrape_landing_page,
+    search_and_collect_youtube_data,
     search_youtube_videos,
 )
 
@@ -32,8 +35,18 @@ youtube_comments_analyzer_agent = LlmAgent(
     model=MODEL_NAME,
     instruction=YOUTUBE_COMMENTS_ANALYZER_INSTRUCTION,
     output_key="youtube_videos_research",
-    tools=[search_youtube_videos],
+    tools=[search_and_collect_youtube_data],
 )
+
+# -- Sub agent 3: Youtube Comments Extractor Agent ---
+youtube_comment_extractor_agent = LlmAgent(
+    name="YoutubeCommentExtractor",
+    model=MODEL_NAME,
+    instruction=YOUTUBE_COMMENT_EXTRACTOR_INSTRUCTION,
+    output_key="youtube_comments_extracted",
+    tools=[extract_comments_from_videos],
+)
+
 
 campaign_orchestrator = SequentialAgent(
     name="marketing_campaign_orchestrator",
@@ -41,7 +54,9 @@ campaign_orchestrator = SequentialAgent(
     sub_agents=[
         landing_page_research_agent,
         youtube_comments_analyzer_agent,
+        youtube_comment_extractor_agent,
     ],
 )
 
-root_agent = campaign_orchestrator
+root_agent = campaign_orchestrator
+

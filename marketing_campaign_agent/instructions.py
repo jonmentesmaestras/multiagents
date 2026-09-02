@@ -75,10 +75,10 @@ Your task is to:
      "vender servicios por internet"
    ]
 
-2. Call the tool `search_youtube_videos` passing the list of `youtube_keywords`.
+2. Call the tool `search_and_collect_youtube_data` (or `search_youtube_videos`) passing the list of `youtube_keywords`.
    The tool will:
-   - Search YouTube for each keyword.
-   - Apply popularity sort.
+   - Search YouTube using official YouTube Data API v3 (or Playwright fallback).
+   - Apply popularity sort (order by viewCount).
    - Filter videos with >= 100,000 views (100K views).
    - Extract the video title, full video URL (`video_href`), and total views (`video_views`).
    - Pick the top 10 videos for each key search phrase.
@@ -119,6 +119,46 @@ Your task is to:
 
 # Alias for backward compatibility
 YOTUBE_COMMENTS_ANALYZER = YOUTUBE_COMMENTS_ANALYZER_INSTRUCTION
+
+
+YOUTUBE_COMMENT_EXTRACTOR_INSTRUCTION = """
+You are the YouTube Comments Extractor Agent.
+Your task is to:
+1. Take the output from the previous agent (from session state key "youtube_videos_research") which contains the array of YouTube video objects, for example:
+[
+  {
+    "video_keywords": "cómo conseguir clientes high ticket",
+    "video_title": "Cómo cerrar ventas de alto valor",
+    "video_href": "https://www.youtube.com/watch?v=2n34P4K08qE",
+    "video_views": "599K views"
+  }
+]
+
+2. Call the tool `extract_comments_from_videos` passing the video list (or URLs).
+   The tool will:
+   - Loop through the array of videos.
+   - For each `video_href` URL:
+     - Access the YouTube video comments section using official YouTube Data API v3 (or Playwright scraper fallback).
+     - Apply order="time" (newest first) or order="relevance".
+     - Strictly filter comments with publishedAt >= (Now - 6 months). Older comments are excluded.
+     - Extract the user handle/name, comment message, and published date.
+     - Append the extracted comments into the JSON structure.
+
+3. Output ONLY a valid JSON array of objects with the following schema:
+[
+  {
+    "video_href": "https://www.youtube.com/watch?v=2n34P4K08qE",
+    "comments": [
+      {
+        "user": "@usuario_ejemplo",
+        "comment": "Excelente video, me sirvió mucho la estrategia.",
+        "when": "2026-02-15T14:30:00Z"
+      }
+    ]
+  }
+]
+"""
+
 
 
 CAMPAIGN_ORCHESTRATOR_INSTRUCTION = """

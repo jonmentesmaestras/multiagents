@@ -7,9 +7,12 @@ from marketing_campaign_agent.instructions import (
     CAMPAIGN_ORCHESTRATOR_INSTRUCTION,
     LANDING_PAGE_COPYWRITER_INSTRUCTION,
     YOUTUBE_COMMENTS_ANALYZER_INSTRUCTION,
+    YOUTUBE_COMMENTS_CLASSIFIER_INSTRUCTION,
+    YOUTUBE_COMMENTS_COLLECTOR_INSTRUCTION,
     YOUTUBE_COMMENT_EXTRACTOR_INSTRUCTION,
 )
 from marketing_campaign_agent.tools import (
+    collect_youtube_comments,
     extract_comments_from_videos,
     scrape_landing_page,
     search_and_collect_youtube_data,
@@ -38,14 +41,28 @@ youtube_comments_analyzer_agent = LlmAgent(
     tools=[search_and_collect_youtube_data],
 )
 
-# -- Sub agent 3: Youtube Comments Extractor Agent ---
-youtube_comment_extractor_agent = LlmAgent(
-    name="YoutubeCommentExtractor",
+# -- Sub agent 3: Youtube Comments Collector Agent ---
+youtube_comments_collector_agent = LlmAgent(
+    name="YoutubeCommentsCollector",
     model=MODEL_NAME,
-    instruction=YOUTUBE_COMMENT_EXTRACTOR_INSTRUCTION,
-    output_key="youtube_comments_extracted",
+    instruction=YOUTUBE_COMMENTS_COLLECTOR_INSTRUCTION,
+    output_key="youtube_comments_collected",
     tools=[extract_comments_from_videos],
 )
+
+# Alias for backward compatibility
+youtube_comment_extractor_agent = youtube_comments_collector_agent
+
+# -- Sub agent 4: Youtube Comments Classifier Agent ---
+youtube_comments_classifier_agent = LlmAgent(
+    name="YoutubeCommentsClassifier",
+    model=MODEL_NAME,
+    instruction=YOUTUBE_COMMENTS_CLASSIFIER_INSTRUCTION,
+    output_key="youtube_comments_classified",
+)
+
+# Alias for backward compatibility
+youtube_comment_classifier_agent = youtube_comments_classifier_agent
 
 
 campaign_orchestrator = SequentialAgent(
@@ -54,9 +71,11 @@ campaign_orchestrator = SequentialAgent(
     sub_agents=[
         landing_page_research_agent,
         youtube_comments_analyzer_agent,
-        youtube_comment_extractor_agent,
+        youtube_comments_collector_agent,
+        youtube_comments_classifier_agent,
     ],
 )
 
 root_agent = campaign_orchestrator
+
 

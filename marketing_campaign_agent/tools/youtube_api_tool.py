@@ -41,14 +41,18 @@ def format_view_count(views: int) -> str:
 
 
 def extract_video_id(video_id_or_url: str) -> str:
-    """Extracts 11-character YouTube video ID from a URL or returns the ID directly."""
+    """Extracts YouTube video ID from a URL or returns the ID directly."""
     if not video_id_or_url:
         return ""
     clean = video_id_or_url.strip()
-    if len(clean) == 11 and not ("/" in clean or "?" in clean):
+    if len(clean) == 11 and not ("/" in clean or "?" in clean or "=" in clean):
         return clean
-    match = re.search(r"(?:v=|\/embed\/|youtu\.be\/|\/v\/|\/watch\?v=|\&v=)([\w-]{11})", clean)
-    return match.group(1) if match else clean
+    match = re.search(r"(?:v=|\/embed\/|youtu\.be\/|\/v\/|\/watch\?v=|\&v=)([\w-]+)", clean)
+    if match:
+        return match.group(1)
+    if not clean.startswith("http://") and not clean.startswith("https://"):
+        return clean
+    return ""
 
 
 def search_youtube_videos_api(

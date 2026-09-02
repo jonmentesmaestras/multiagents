@@ -11,6 +11,7 @@ from marketing_campaign_agent.agent import (
     root_agent,
     youtube_comment_extractor_agent,
     youtube_comments_analyzer_agent,
+    youtube_comments_collector_agent,
 )
 from marketing_campaign_agent.tools import scrape_landing_page
 
@@ -27,7 +28,9 @@ class TestAgentConfiguration:
         assert len(campaign_orchestrator.sub_agents) == 3
         assert campaign_orchestrator.sub_agents[0] is landing_page_research_agent
         assert campaign_orchestrator.sub_agents[1] is youtube_comments_analyzer_agent
-        assert campaign_orchestrator.sub_agents[2] is youtube_comment_extractor_agent
+        assert campaign_orchestrator.sub_agents[2] is youtube_comments_collector_agent
+        assert youtube_comments_collector_agent.name == "YoutubeCommentsCollector"
+        assert youtube_comment_extractor_agent is youtube_comments_collector_agent
 
 
 

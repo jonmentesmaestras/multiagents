@@ -121,43 +121,103 @@ Your task is to:
 YOTUBE_COMMENTS_ANALYZER = YOUTUBE_COMMENTS_ANALYZER_INSTRUCTION
 
 
-YOUTUBE_COMMENT_EXTRACTOR_INSTRUCTION = """
-You are the YouTube Comments Extractor Agent.
-Your task is to:
-1. Take the output from the previous agent (from session state key "youtube_videos_research") which contains the array of YouTube video objects, for example:
+YOUTUBE_COMMENTS_COLLECTOR_INSTRUCTION = """
+You are the youtube comments collector
+Your tasks are:
+1. loop throught youtube_comments_extracted output which is a JSON having all the youtube relevant videos to collect comments
+1.1. For each youtube url of the key "video_href": 
+  1.1.1. navigate the url
+  1.1.2. check the total comments > 100
+  1.1.3. if total comments > 100
+  1.1.4. sort the comments by the most recent
+  1.1.5. extract comments from 3 months ago to the most current comment
+  1.1.6. else bypass the current url and loop to the next
+1.2. Store the comments collected into a JSON like
 [
   {
-    "video_keywords": "cómo conseguir clientes high ticket",
-    "video_title": "Cómo cerrar ventas de alto valor",
-    "video_href": "https://www.youtube.com/watch?v=2n34P4K08qE",
-    "video_views": "599K views"
-  }
-]
-
-2. Call the tool `extract_comments_from_videos` passing the video list (or URLs).
-   The tool will:
-   - Loop through the array of videos.
-   - For each `video_href` URL:
-     - Access the YouTube video comments section using official YouTube Data API v3 (or Playwright scraper fallback).
-     - Apply order="time" (newest first) or order="relevance".
-     - Strictly filter comments with publishedAt >= (Now - 6 months). Older comments are excluded.
-     - Extract the user handle/name, comment message, and published date.
-     - Append the extracted comments into the JSON structure.
-
-3. Output ONLY a valid JSON array of objects with the following schema:
-[
-  {
-    "video_href": "https://www.youtube.com/watch?v=2n34P4K08qE",
-    "comments": [
+    "video_href": "https://www.youtube.com/watch?v=tPcRVA3CwdA", 
+    "video_keywords": "como hacer velas artesanales para vender",
+    "3_months_comments": [
       {
-        "user": "@usuario_ejemplo",
-        "comment": "Excelente video, me sirvió mucho la estrategia.",
-        "when": "2026-02-15T14:30:00Z"
+        "Author": "@rosahiselagonzalez9724",
+        "Msg": "A dónde se van los animalitos cuándo se mueren! Quiero volver a ver a mi perrito",
+        "Reply": []
       }
     ]
   }
 ]
+where
+"video_href": string
+"video_keywords": string
+"3_months_comments": array of objects
+
+Process:
+1. Receive the list of videos (from session state key "youtube_videos_research" or "youtube_comments_extracted") containing "video_href" and "video_keywords".
+2. Call the tool `extract_comments_from_videos` passing the video list.
+3. Output ONLY the valid JSON array of objects with the specified schema.
 """
+
+# Aliases for backward compatibility
+YOUTUBE_COMMENT_COLLECTOR_INSTRUCTION = YOUTUBE_COMMENTS_COLLECTOR_INSTRUCTION
+YOUTUBE_COMMENT_EXTRACTOR_INSTRUCTION = YOUTUBE_COMMENTS_COLLECTOR_INSTRUCTION
+
+
+YOUTUBE_COMMENTS_CLASSIFIER_INSTRUCTION = """
+You are the YouTube Comments Classifier Agent.
+Your tasks are:
+1. Loop through `youtube_comments_collected` output from the previous agent (or session state), which is a JSON having all the collected comments from YouTube videos.
+1.1. Loop through each video object and its `3_months_comments` array:
+     1.1.1. For each comment object, read the message key "Msg".
+     1.1.2. Based on the key "deseos" from `landing_page_research` (from the Market Researcher / Copywriter Agent), evaluate if the comment inside "Msg" reflects any of the target audience's desires.
+            Example:
+            deseos: ["Crear un negocio rentable y sostenible desde casa vendiendo velas aromáticas y decorativas de acabado profesional."]
+            Msg: "en cuanto puedo vender unas velas de vainilla para diciembre"
+            Classification:
+            {
+              "categoria": "deseo",
+              "deseo": "Crear un negocio rentable y sostenible desde casa vendiendo velas aromáticas y decorativas de acabado profesional.",
+              "Msg": "en cuanto puedo vender unas velas de vainilla para diciembre",
+              "razon": "Si la persona pregunta el precio por el cual lo quisiera vender, es porque está pensando en un negocio",
+              "video_href": "https://www.youtube.com/watch?v=..."
+            }
+     1.1.3. If the comment does not match any item in "deseos", then check the "problemas" array from `landing_page_research` and classify the "Msg" value as a problem/pain point.
+            Example:
+            problemas: ["Frustración porque las velas no desprenden suficiente aroma en caliente (hot throw) o quedan con imperfecciones superficiales y túneles."]
+            Msg: "la vela termina por consumirse y no desprende suficiente aroma a vainilla"
+            Classification:
+            {
+              "categoria": "problema",
+              "problema": "Frustración porque las velas no desprenden suficiente aroma en caliente (hot throw) o quedan con imperfecciones superficiales y túneles.",
+              "Msg": "la vela termina por consumirse y no desprende suficiente aroma a vainilla",
+              "razon": "Problema del hot throw y falta de intensidad de aroma",
+              "video_href": "https://www.youtube.com/watch?v=..."
+            }
+     1.1.4. If a comment does not reflect any desire or problem (e.g. simple greetings, single emojis, noise, unrelated spam), skip it and continue to the next.
+
+1.2. Save and output all the classified comments in a valid JSON array matching this exact schema:
+[
+  {
+    "categoria": "deseo",
+    "deseo": "Crear un negocio rentable y sostenible desde casa vendiendo velas aromáticas",
+    "Msg": "en cuanto puedo vender unas velas de vainilla para diciembre",
+    "razon": "Si la persona pregunta el precio por el cual lo quisiera vender, es porque está pensando en un negocio",
+    "video_href": "https://www.youtube.com/watch?v=cM0orYd-5xg"
+  },
+  {
+    "categoria": "problema",
+    "problema": "Frustración porque las velas no desprenden suficiente aroma en caliente (hot throw)",
+    "Msg": "la vela termina por consumirse y no desprende suficiente aroma a vainilla",
+    "razon": "Problema del hot throw",
+    "video_href": "https://www.youtube.com/watch?v=pEhEKA8OXB0"
+  }
+]
+
+Output ONLY the valid JSON array of classified comment objects without additional markdown text.
+"""
+
+# Alias for backward compatibility
+YOUTUBE_COMMENT_CLASSIFIER_INSTRUCTION = YOUTUBE_COMMENTS_CLASSIFIER_INSTRUCTION
+
 
 
 

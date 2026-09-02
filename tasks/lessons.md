@@ -7,3 +7,7 @@
 ## 2. Precedencia de variables de autenticación en Google GenAI SDK
 - **Patrón:** `google-genai` detecta tanto `GOOGLE_API_KEY` como `GEMINI_API_KEY`.
 - **Regla:** Mantener ambas variables sincronizadas con el valor activo en el `.env` raíz para evitar discrepancias cuando diferentes librerías o submódulos soliciten una u otra variable.
+
+## 3. Normalización idempotente de URLs canónicas de YouTube
+- **Patrón:** Cuando se reciben URLs en múltiples formatos (links completos, enlaces cortos `youtu.be`, IDs individuales o embebidos), extraer el ID y reconstruir la URL sin verificar si ya es canónica puede provocar prefijos duplicados (ej: `https://www.youtube.com/watch?v=https://...`).
+- **Solución Elegante:** Implementar una función helper centralizada (`_normalize_youtube_url`) que extraiga el ID limpio y genere la URL canónica `https://www.youtube.com/watch?v={id}` de forma idempotente.

@@ -40,6 +40,7 @@ class YouTubeCommentScraper:
         expand_replies: bool = False,
         sort_threshold: int = 500,
         max_months: Optional[int] = 6,
+        min_comments_threshold: Optional[int] = None,
         browser_type: str = "chromium",
     ):
         self.headless = headless
@@ -49,6 +50,7 @@ class YouTubeCommentScraper:
         self.expand_replies = expand_replies
         self.sort_threshold = sort_threshold
         self.max_months = max_months
+        self.min_comments_threshold = min_comments_threshold
         self.browser_type = browser_type
 
     async def _handle_consent(self, page: Page) -> None:
@@ -411,6 +413,11 @@ class YouTubeCommentScraper:
                 # 3. Extract Comment Count from <h2 id="count"...>
                 comment_count = await self._extract_comment_count(page)
                 logger.info(f"Extracted Total Comments Count: {comment_count}")
+
+                # Check min comments threshold (e.g. > 100)
+                if self.min_comments_threshold is not None and comment_count > 0 and comment_count <= self.min_comments_threshold:
+                    logger.info(f"Comment count ({comment_count}) <= threshold ({self.min_comments_threshold}). Bypassing video.")
+                    return []
 
                 # 4. Check if comments count > 500 or sort_override requested
                 should_sort_newest = False

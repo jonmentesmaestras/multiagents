@@ -1,0 +1,97 @@
+{
+  "session_id": "f0f2641e-39df-43ec-8564-b911bdb2484a",
+  "session_updated_at_utc": "2026-09-04T14:56:27.628131+00:00",
+  "exported_at_utc": "2026-09-04T14:56:27.631059+00:00",
+  "total_decisiones": 107,
+  "total_para_revision": 4,
+  "conteos": {
+    "problema": 3,
+    "deseo": 1
+  },
+  "estado_revision_humana": "pendiente",
+  "comentarios": [
+    {
+      "comment_id": "Ugz8UXiedUyDtv3E_XZ4AaABAg",
+      "decision": "problema",
+      "category_id": "P2",
+      "failure_kind": null,
+      "attempts": 1,
+      "categoria": "problema",
+      "deseo": null,
+      "problema": "Sentir frustración cuando los alargamientos se descascaran o agrietan a los pocos días y tener que rehacerlos gratis.",
+      "Msg": "Buenas tardes pq seme caen rapido",
+      "Author": "@erikaperez7012",
+      "video_href": "https://www.youtube.com/watch?v=zZWMCsJJNwU",
+      "published_at": "2026-06-08T01:40:23Z",
+      "comment_url": "https://www.youtube.com/watch?v=zZWMCsJJNwU&lc=Ugz8UXiedUyDtv3E_XZ4AaABAg",
+      "revision_humana": "pendiente",
+      "observacion_humana": ""
+    },
+    {
+      "comment_id": "UgwR_Pyiax-1tMznAOZ4AaABAg",
+      "decision": "problema",
+      "category_id": "P2",
+      "failure_kind": null,
+      "attempts": 1,
+      "categoria": "problema",
+      "deseo": null,
+      "problema": "Sentir frustración cuando los alargamientos se descascaran o agrietan a los pocos días y tener que rehacerlos gratis.",
+      "Msg": "Se me despegan en la punta que estoy haciendo mal",
+      "Author": "@waterlingdedeluciac5073",
+      "video_href": "https://www.youtube.com/watch?v=VKMjIgoSvSo",
+      "published_at": "2026-07-08T18:49:58Z",
+      "comment_url": "https://www.youtube.com/watch?v=VKMjIgoSvSo&lc=UgwR_Pyiax-1tMznAOZ4AaABAg",
+      "revision_humana": "pendiente",
+      "observacion_humana": ""
+    },
+    {
+      "comment_id": "UgzBf8Bfs6x1wzsS6794AaABAg",
+      "decision": "deseo",
+      "category_id": "D2",
+      "failure_kind": null,
+      "attempts": 2,
+      "categoria": "deseo",
+      "deseo": "Garantizar la durabilidad de los alargamientos de uñas por más de 6 semanas sin retrabajo, quiebras o desprendimientos.",
+      "problema": null,
+      "Msg": "Cómo preparar la uña de la clienta para pegar la uña de acrílico sin que se desprenda",
+      "Author": "@MonzyGGtierrez",
+      "video_href": "https://www.youtube.com/watch?v=_YIS83gHPtk",
+      "published_at": "2026-07-10T02:41:38Z",
+      "comment_url": "https://www.youtube.com/watch?v=_YIS83gHPtk&lc=UgzBf8Bfs6x1wzsS6794AaABAg",
+      "revision_humana": "pendiente",
+      "observacion_humana": ""
+    },
+    {
+      "comment_id": "Ugz9c0g2f3C81vmWdmJ4AaABAg",
+      "decision": "problema",
+      "category_id": "P2",
+      "failure_kind": null,
+      "attempts": 2,
+      "categoria": "problema",
+      "deseo": null,
+      "problema": "Sentir frustración cuando los alargamientos se descascaran o agrietan a los pocos días y tener que rehacerlos gratis.",
+      "Msg": "Soy aprendiz y el poligel no me dura mucho tiempo en las uñas",
+      "Author": "@ceci5670",
+      "video_href": "https://www.youtube.com/watch?v=kIm3Eg6sOkw",
+      "published_at": "2026-08-16T02:21:23Z",
+      "comment_url": "https://www.youtube.com/watch?v=kIm3Eg6sOkw&lc=Ugz9c0g2f3C81vmWdmJ4AaABAg",
+      "revision_humana": "pendiente",
+      "observacion_humana": ""
+    }
+  ],
+  "pendientes_revision": [
+    {
+      "comment_id": "UgxRPZQn0lRy35QzVg14AaABAg",
+      "decision": "requiere_revision",
+      "category_id": null,
+      "failure_kind": "semantic_ambiguity",
+      "attempts": 2,
+      "categoria": "requiere_revision",
+      "deseo": null,
+      "problema": null,
+      "Msg": "Y si en la parte de adentro por dónde la uña crece me queda grueso ? Que debería hacer para que no me quede cada vez que presionó y limpio queda.... Es frustrante",
+      "Author": "@kimcielomar7965",
+      "video_href": "https://www.youtube.com/watch?v=Ht4aKK1YUVk"
+    }
+  ]
+}

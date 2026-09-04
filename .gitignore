@@ -28,8 +28,8 @@ env/
 
 # Environment Variables
 .env
-.env.local
-.env.*.local
+.env*
+!.env.example
 
 # IDE & Editor files
 .vscode/

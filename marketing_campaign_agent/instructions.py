@@ -249,7 +249,7 @@ Your task is to evaluate the final JSON of classified comments (`youtube_comment
 
 Process:
 1. Access the classified comments dataset (`youtube_comments_classified`) and the source comments dataset (`youtube_comments_collected`). Call `validate_comments_integrity` first, then call `evaluate_classified_comments_metrics` with both datasets.
-   If `youtube_comments_classification_status.target_reached` is true and the combined valid count is at least 100, accept the offer even when the source is larger: the pipeline intentionally stops at that market-signal threshold. Otherwise, if integrity is `incomplete`, report `INCOMPLETE_ANALYSIS` and do not make an offer acceptance/rejection decision from partial counts.
+   If `youtube_comments_classification_status.target_reached` is true and the combined valid count is at least 100, accept the offer even when the source is larger: the pipeline intentionally stops at that market-signal threshold. Treat `requiere_revision` caused by semantic ambiguity as processed but unconfirmed; it does not make integrity incomplete. If the confirmed total is below 100 but the confirmed total plus semantic-review count could reach 100, use `HUMAN_REVIEW_REQUIRED`. Otherwise, if integrity is `incomplete` or technical errors remain, report `INCOMPLETE_ANALYSIS` and do not make an offer acceptance/rejection decision from partial counts.
 2. Evaluate the decision tree:
    - Question 1: Are there more than 50 comments in "deseos"? (`deseos_count > 50`)
    - Question 2: If not, are there more than 50 comments in "problemas"? (`problemas_count > 50`)

@@ -118,7 +118,8 @@ def test_extraction_failure_stops_model_and_all_downstream_and_clears_stale_stat
     assert all(a.calls == 0 for a in downstream)
     assert all(session.state.get(key) is None for key in STATE_KEYS)
     assert session.state[STATUS_KEY]["status"] == "error"
-    assert "Investigación detenida" in events[-1].content.parts[0].text
+    messages = [p.text for event in events if event.content for p in event.content.parts or [] if p.text]
+    assert "Investigación detenida" in messages[-1]
 
 
 def test_success_publishes_validated_current_source_and_runs_downstream():

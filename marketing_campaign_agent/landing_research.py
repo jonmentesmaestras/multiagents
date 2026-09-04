@@ -1,6 +1,8 @@
 """Mandatory extraction and evidence validation around the ADK research agent."""
 
 from contextlib import aclosing
+import asyncio
+import time
 import json
 import re
 from typing import Annotated, Literal
@@ -11,6 +13,7 @@ from google.genai import types
 from pydantic import BaseModel, Field, StringConstraints, ValidationError
 
 from .comments_pipeline import _decode
+from . import recovery_runtime
 from .tools.landing_page_scraper import content_error, scrape_landing_page
 
 
@@ -57,6 +60,7 @@ STATE_KEYS = (
     "youtube_comments_extracted", "campaign_report",
     "youtube_comments_collection_status", "youtube_comments_classification_status",
     "youtube_comments_checkpoint", "youtube_comments_classification_cache",
+    "youtube_comments_recovery", "youtube_collection_recovery", "human_review_files",
     "market_research_metrics", "comments_resume",
 )
 STATUS_KEY = "landing_page_research_status"
@@ -188,6 +192,86 @@ class GroundedCampaignOrchestrator(SequentialAgent):
     """Stop the sequence on extraction/validation failure, including stale state."""
 
     async def _run_async_impl(self, ctx):
+        identity = f'{ctx.session.app_name}:{ctx.session.user_id}:{ctx.session.id}'
+        lease = recovery_runtime.SessionLease(identity)
+        def lifecycle(status, **values):
+            prior = ctx.session.state.get('pipeline_run') or {}
+            data = {**prior, **values, 'status': status, 'updated_at': time.time(),
+                    'invocation_id': ctx.invocation_id}
+            ctx.session.state['pipeline_run'] = data
+            return Event(author=self.name, invocation_id=ctx.invocation_id, branch=ctx.branch,
+                         actions=EventActions(state_delta={'pipeline_run': data}))
+        if not lease.acquire():
+            yield Event(author=self.name, invocation_id=ctx.invocation_id,
+                        content=types.Content(role='model', parts=[types.Part.from_text(
+                            text='Esta sesión ya tiene una ejecución activa. Se conserva su avance.')]))
+            return
+        try:
+            message = ' '.join(p.text or '' for p in (ctx.user_content.parts or [])) if ctx.user_content else ''
+            automatic = message.strip() == recovery_runtime.AUTO_RESUME
+            prior = ctx.session.state.get('pipeline_run') or {}
+            if automatic and prior.get('status') != 'active':
+                return
+            if automatic and prior.get('restart_attempts', 0) >= 3:
+                yield lifecycle('failed', error='restart_limit')
+                yield Event(author=self.name, invocation_id=ctx.invocation_id,
+                            content=types.Content(role='model', parts=[types.Part.from_text(
+                                text='Recuperación agotada tras tres reinicios. Los avances se conservan; revisa el error del servidor.')]))
+                return
+            yield lifecycle('active', restart_attempts=prior.get('restart_attempts', 0) + 1 if automatic else 0)
+            async with aclosing(self._run_pipeline(ctx)) as stream:
+                async for event in stream:
+                    yield event
+            metrics = ctx.session.state.get('market_research_metrics') or {}
+            decision_status = metrics.get('processing_status')
+            if decision_status:
+                labels = {'THRESHOLD_REACHED': 'ACCEPT OFFER (OFERTA ACEPTADA)',
+                          'THRESHOLD_NOT_REACHED': 'UMBRAL NO ALCANZADO',
+                          'HUMAN_REVIEW_REQUIRED': 'REVISIÓN HUMANA NECESARIA',
+                          'INCOMPLETE_ANALYSIS': 'INCOMPLETE_ANALYSIS'}
+                marker = labels.get(decision_status, decision_status)
+                current_report = ctx.session.state.get('market_research_report') or ''
+                if marker not in current_report:
+                    current_report = current_report.rstrip() + f'\n\nDecisión del sistema: {marker}.'
+                    ctx.session.state['market_research_report'] = current_report
+                    yield Event(author=self.name, invocation_id=ctx.invocation_id,
+                                actions=EventActions(state_delta={'market_research_report': current_report}),
+                                content=types.Content(role='model', parts=[types.Part.from_text(
+                                    text=f'Decisión verificada: {marker}.')]))
+            if (ctx.session.state.get('youtube_comments_collected')
+                    and not ctx.session.state.get('market_research_report')):
+                report = 'INCOMPLETE_ANALYSIS: la secuencia no produjo un dictamen. Consulta los errores registrados; los avances guardados se conservan.'
+                ctx.session.state['market_research_report'] = report
+                yield Event(author=self.name, invocation_id=ctx.invocation_id,
+                            actions=EventActions(state_delta={'market_research_report': report}),
+                            content=types.Content(role='model', parts=[types.Part.from_text(text=report)]))
+            if ctx.session.state.get('youtube_comments_classified'):
+                from .diagnostics.export_human_review import export
+                try:
+                    files = await asyncio.to_thread(export, ctx.session.id, dict(ctx.session.state), time.time())
+                    ctx.session.state['human_review_files'] = files
+                    yield Event(author=self.name, invocation_id=ctx.invocation_id,
+                                actions=EventActions(state_delta={'human_review_files': files}),
+                                content=types.Content(role='model', parts=[types.Part.from_text(
+                                    text='Archivo de revisión humana generado: ' + files['html'] + '\nJSON: ' + files['json'])]))
+                except Exception as exc:
+                    yield Event(author=self.name, invocation_id=ctx.invocation_id,
+                                content=types.Content(role='model', parts=[types.Part.from_text(
+                                    text=f'No se pudo exportar el archivo de revisión ({type(exc).__name__}). Las decisiones permanecen guardadas.')]))
+            yield lifecycle('finished')
+        except (asyncio.CancelledError, GeneratorExit):
+            event = lifecycle('active' if recovery_runtime.SHUTTING_DOWN else 'cancelled')
+            await asyncio.shield(ctx.session_service.append_event(session=ctx.session, event=event))
+            raise
+        except Exception as exc:
+            yield lifecycle('failed', error=type(exc).__name__)
+            yield Event(author=self.name, invocation_id=ctx.invocation_id,
+                        content=types.Content(role='model', parts=[types.Part.from_text(
+                            text=f'La ejecución terminó con un error ({type(exc).__name__}). Los avances guardados se conservan.')]))
+        finally:
+            lease.release()
+
+    async def _run_pipeline(self, ctx):
         def emit(text, delta=None):
             delta = delta or {}
             ctx.session.state.update(delta)
@@ -196,7 +280,7 @@ class GroundedCampaignOrchestrator(SequentialAgent):
                          content=types.Content(role="model", parts=[types.Part.from_text(text=text)]))
 
         message = " ".join(p.text or "" for p in (ctx.user_content.parts or [])) if ctx.user_content else ""
-        resume = bool(re.fullmatch(r"\s*(reanuda|contin[uú]a)(?: la secuencia)?[.!]?\s*", message, re.I))
+        resume = message.strip() == recovery_runtime.AUTO_RESUME or bool(re.fullmatch(r"\s*(reanuda|contin[uú]a)(?: la secuencia)?[.!]?\s*", message, re.I))
         start_index = 0
         if resume:
             state = ctx.session.state
@@ -279,7 +363,7 @@ class GroundedCampaignOrchestrator(SequentialAgent):
                         return
                     incomplete = (collection.get("status") != "complete"
                                   or classification.get("status") != "complete"
-                                  or classification.get("review_count", 0) > 0
+                                  or metrics.get("technical_error_count", 0) > 0
                                   or classification.get("invalid_source_count", 0) > 0
                                   or metrics["coverage"]["status"] != "verified")
                     if incomplete:
@@ -293,11 +377,15 @@ class GroundedCampaignOrchestrator(SequentialAgent):
                             f"Comentarios para revisión: {classification.get('review_count', 0)}. "
                             f"Comentarios sin identificador: {classification.get('invalid_source_count', 0)}.\n\n"
                             "Estas cifras son provisionales. No se emite una decisión definitiva de mercado. "
-                            "Envía «reanuda» para recuperar lo pendiente manteniendo los resultados guardados."
+                            f"Errores técnicos pendientes: {classification.get('technical_error_count', 0)}. "
+                            f"Comentarios ambiguos: {classification.get('semantic_review_count', 0)}. "
+                            "La recuperación automática finalizó. Los pendientes se conservan para inspección humana."
                         )
                         yield emit(report, {"market_research_report": report, "market_research_metrics": metrics})
                         return
                     yield emit("Cobertura verificada. Generando el informe final.", {"market_research_metrics": metrics})
+            run = ctx.session.state.get('pipeline_run') or {}
+            yield emit(f'Etapa {index + 1}: {agent.name}.', {'pipeline_run': {**run, 'stage': index}})
             async with aclosing(agent.run_async(ctx)) as stream:
                 async for event in stream:
                     yield event
@@ -308,11 +396,11 @@ class GroundedCampaignOrchestrator(SequentialAgent):
                                "los comentarios disponibles; el informe final mostrará las limitaciones.")
                 elif status and status.get("status") != "complete":
                     yield emit("No se pudo completar la recolección. Revisa el estado de extracción "
-                               "y envía «reanuda» si hay comentarios guardados.")
+                               "Los datos guardados se conservan para inspección.")
                     return
             if index == 3:
                 status = ctx.session.state.get("youtube_comments_classification_status") or {}
                 if status and status.get("status") != "complete":
                     yield emit("La clasificación no terminó. Los avances guardados se mantienen. "
-                               "Envía «reanuda» para continuar.")
+                               "El estado contiene el motivo que requiere intervención.")
                     return

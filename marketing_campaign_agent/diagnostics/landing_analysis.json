@@ -1,0 +1,125 @@
+{
+  "avatar": {
+    "name": "Personas interesadas en la curación por sonido y el bienestar holístico",
+    "demographics": {
+      "age_range": null,
+      "gender": null,
+      "language": null
+    },
+    "description": "Individuos que buscan aprender a aplicar frecuencias sonoras en su vida cotidiana para equilibrar su mente, cuerpo y espíritu, así como mejorar su sueño, concentración y energía."
+  },
+  "offer": {
+    "description": "Una descarga gratuita que incluye la guía en PDF '100 Frequencies for Healing' junto con una serie de tutoriales de 8 días por correo electrónico y música de frecuencias de regalo.",
+    "deliverables": [
+      "Guía de referencia en PDF '100 Frequencies for Healing' con el listado y beneficios de 100 frecuencias.",
+      "Serie de 8 días con tutoriales por correo electrónico, instrucciones claras, prácticas sencillas y pistas de música de frecuencias gratuitas."
+    ]
+  },
+  "main_promise": "Aprender a usar 100 frecuencias de sanación a través de 8 sistemas para equilibrar y transformar mente, cuerpo y espíritu.",
+  "deseos": [
+    "Mejorar la concentración, la creatividad, la relajación y lograr un sueño profundo.",
+    "Liberar el miedo, promover la transformación personal y restaurar la armonía.",
+    "Activar el flujo de energía y el poder de manifestación."
+  ],
+  "problemas": [
+    "Falta de conocimiento sobre qué frecuencias específicas utilizar para metas personales de bienestar e identificación de tonos adecuados.",
+    "Presencia de miedo, desequilibrio o falta de armonía en la mente, el cuerpo y el espíritu.",
+    "Dificultades para alcanzar estados profundos de relajación, enfoque mental o descanso adecuado."
+  ],
+  "youtube_keywords": [
+    "frecuencias para sanar mente y cuerpo",
+    "frecuencias solfeggio 528 hz para liberar miedo",
+    "ondas cerebrales alfa beta theta para dormir y concentrarse",
+    "resonancia schumann 7.83 hz para conexion con la tierra",
+    "guia de sanacion por sonido y frecuencias sonoras"
+  ],
+  "evidence": [
+    {
+      "field": "offer.description",
+      "quote": "You will receive the “100 Frequencies for Healing” PDF guide along with an 8-day series of email tutorials and free frequency music.",
+      "kind": "explicit"
+    },
+    {
+      "field": "offer.deliverables.0",
+      "quote": "Part 1 – “100 Frequencies for Healing” PDF Guide",
+      "kind": "explicit"
+    },
+    {
+      "field": "offer.deliverables.1",
+      "quote": "Part 2 – 8-Day Email Tutorials and Frequency Music",
+      "kind": "explicit"
+    },
+    {
+      "field": "main_promise",
+      "quote": "to help you use healing frequencies to balance and transform your mind, body, and spirit.",
+      "kind": "explicit"
+    },
+    {
+      "field": "avatar",
+      "quote": "helping you identify the tones that align with your personal goals for balance and transformation.",
+      "kind": "inference"
+    },
+    {
+      "field": "deseos.0",
+      "quote": "enhance focus, creativity, relaxation, and deep sleep.",
+      "kind": "explicit"
+    },
+    {
+      "field": "deseos.1",
+      "quote": "releasing fear, promoting transformation, and restoring harmony.",
+      "kind": "explicit"
+    },
+    {
+      "field": "deseos.2",
+      "quote": "activate energy flow and manifestation power.",
+      "kind": "explicit"
+    },
+    {
+      "field": "problemas.0",
+      "quote": "helping you identify the tones that align with your personal goals for balance and transformation.",
+      "kind": "inference"
+    },
+    {
+      "field": "problemas.1",
+      "quote": "releasing fear, promoting transformation, and restoring harmony.",
+      "kind": "inference"
+    },
+    {
+      "field": "problemas.2",
+      "quote": "enhance focus, creativity, relaxation, and deep sleep.",
+      "kind": "inference"
+    },
+    {
+      "field": "youtube_keywords.0",
+      "quote": "Each day focuses on a different frequency system and includes clear guidance, a free music track, and simple practices to help you apply the frequencies in daily life.",
+      "kind": "inference"
+    },
+    {
+      "field": "youtube_keywords.1",
+      "quote": "We will explore tones like 396 Hz, 528 Hz, and 639 Hz, known for releasing fear, promoting transformation, and restoring harmony.",
+      "kind": "inference"
+    },
+    {
+      "field": "youtube_keywords.2",
+      "quote": "We will experience Alpha, Beta, Theta, and Delta waves to enhance focus, creativity, relaxation, and deep sleep.",
+      "kind": "inference"
+    },
+    {
+      "field": "youtube_keywords.3",
+      "quote": "we will experience unique vibrations such as 110 Hz for grounding and 7.83 Hz Schumann Resonance for deep Earth connection.",
+      "kind": "inference"
+    },
+    {
+      "field": "youtube_keywords.4",
+      "quote": "This guide brings together 100 of the most widely used healing frequencies across modern and traditional sound healing systems",
+      "kind": "inference"
+    }
+  ],
+  "source_info": {
+    "url": "https://www.musicofwisdom.com/100frequencies",
+    "requested_url": "https://www.musicofwisdom.com/100frequencies",
+    "page_type": "TSL",
+    "page_language": "en",
+    "youtube_language": "es"
+  }
+}

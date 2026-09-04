@@ -1,0 +1,125 @@
+{
+    "avatar": {
+        "name": "Personas interesadas en el bienestar holístico y la sanación con sonido",
+        "demographics": {
+            "age_range": null,
+            "gender": null,
+            "language": null
+        },
+        "description": "Personas que buscan transformar y equilibrar su mente, cuerpo y espíritu utilizando frecuencias sonoras y música terapéutica en su vida diaria."
+    },
+    "offer": {
+        "description": "Recopilación gratuita en PDF de las 100 frecuencias más utilizadas en la sanación por sonido, acompañada de un programa de 8 días con tutoriales por correo electrónico y música gratuita.",
+        "deliverables": [
+            "Guía en PDF '100 Frequencies for Healing' que incluye la lista de las 100 frecuencias y sus respectivos beneficios.",
+            "Serie de tutoriales por correo electrónico durante 8 días con orientación diaria, pistas de música gratuitas y prácticas sencillas para aplicar las frecuencias."
+        ]
+    },
+    "main_promise": "Aprender los beneficios de las 100 frecuencias de sanación a través de 8 sistemas para equilibrar y transformar mente, cuerpo y espíritu en 8 días.",
+    "deseos": [
+        "Utilizar frecuencias de sonido para equilibrar y transformar mente, cuerpo y espíritu.",
+        "Aprender los beneficios específicos de las 100 frecuencias de sanación sonora más utilizadas.",
+        "Experimentar mejoras en concentración, creatividad, relajación y sueño profundo mediante ondas cerebrales y tonos armónicos."
+    ],
+    "problemas": [
+        "Falta de orientación clara sobre cómo aplicar frecuencias de sonido en la vida cotidiana.",
+        "Desequilibrio emocional o físico y falta de herramientas de armonización energética.",
+        "Desconocimiento de los diferentes sistemas de frecuencias (Solfeggio, ondas cerebrales, Tesla, etc.) y sus usos específicos."
+    ],
+    "youtube_keywords": [
+        "frecuencias de sanación por sonido",
+        "frecuencias solfeggio 528 hz para sanar",
+        "ondas cerebrales alfa y theta relajacion",
+        "musica de frecuencias para transformar mente cuerpo espiritu",
+        "guia de sistemas de frecuencias de sonido"
+    ],
+    "evidence": [
+        {
+            "field": "offer.description",
+            "quote": "Download My Compilation of the\n100 Most Commonly Used\nFrequencies in Sound Healing\nPlus,\nGet 8 FREE\nTutorials\n📚 &\nMusic\n🎧\nto Help You Heal with Frequencies",
+            "kind": "explicit"
+        },
+        {
+            "field": "offer.deliverables.0",
+            "quote": "Part 1 – “100 Frequencies for Healing” PDF Guide\nA beautifully organized reference that lists\nall 100 frequencies and their benefits",
+            "kind": "explicit"
+        },
+        {
+            "field": "offer.deliverables.1",
+            "quote": "Part 2 – 8-Day Email Tutorials and Frequency Music\nAfter downloading the guide, you will receive one email per day for 8 days.",
+            "kind": "explicit"
+        },
+        {
+            "field": "main_promise",
+            "quote": "Learn the\nBenefits of All 100 Healing Frequencies\nAcross\n8 Systems",
+            "kind": "explicit"
+        },
+        {
+            "field": "avatar",
+            "quote": "Each day, we will focus on a specific frequency system. Over 8 days, you will receive\nemail guidance\nand\nfree music\nto help you use healing frequencies to balance and transform your mind, body, and spirit.",
+            "kind": "inference"
+        },
+        {
+            "field": "deseos.0",
+            "quote": "to help you use healing frequencies to balance and transform your mind, body, and spirit.",
+            "kind": "inference"
+        },
+        {
+            "field": "deseos.1",
+            "quote": "Learn the\nBenefits of All 100 Healing Frequencies\nAcross\n8 Systems",
+            "kind": "inference"
+        },
+        {
+            "field": "deseos.2",
+            "quote": "We will experience Alpha, Beta, Theta, and Delta waves to enhance focus, creativity, relaxation, and deep sleep.",
+            "kind": "inference"
+        },
+        {
+            "field": "problemas.0",
+            "quote": "Each day focuses on a different frequency system and includes clear guidance, a free music track, and simple practices to help you apply the frequencies in daily life.",
+            "kind": "inference"
+        },
+        {
+            "field": "problemas.1",
+            "quote": "Each frequency resonates with specific aspects of the body, mind, and spirit, supporting grounding, emotional release, energetic balance, and spiritual awakening.​",
+            "kind": "inference"
+        },
+        {
+            "field": "problemas.2",
+            "quote": "This guide brings together 100 of the most widely used healing frequencies across modern and traditional sound healing systems, including Solfeggio, Brainwave, Tesla, Angelic, Planetary, Meridian, Rife, and Special Frequencies.",
+            "kind": "inference"
+        },
+        {
+            "field": "youtube_keywords.0",
+            "quote": "100 Most Commonly Used\nFrequencies in Sound Healing",
+            "kind": "inference"
+        },
+        {
+            "field": "youtube_keywords.1",
+            "quote": "We will explore tones like 396 Hz, 528 Hz, and 639 Hz, known for releasing fear, promoting transformation, and restoring harmony.",
+            "kind": "inference"
+        },
+        {
+            "field": "youtube_keywords.2",
+            "quote": "We will experience Alpha, Beta, Theta, and Delta waves to enhance focus, creativity, relaxation, and deep sleep.",
+            "kind": "inference"
+        },
+        {
+            "field": "youtube_keywords.3",
+            "quote": "to help you use healing frequencies to balance and transform your mind, body, and spirit.",
+            "kind": "inference"
+        },
+        {
+            "field": "youtube_keywords.4",
+            "quote": "This guide brings together 100 of the most widely used healing frequencies across modern and traditional sound healing systems, including Solfeggio, Brainwave, Tesla, Angelic, Planetary, Meridian, Rife, and Special Frequencies.",
+            "kind": "inference"
+        }
+    ],
+    "source_info": {
+        "url": "https://www.musicofwisdom.com/100frequencies",
+        "requested_url": "https://www.musicofwisdom.com/100frequencies",
+        "page_type": "TSL",
+        "page_language": "en",
+        "youtube_language": "es"
+    }
+}

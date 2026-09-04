@@ -6,6 +6,12 @@ import urllib.parse
 import urllib.request
 from dotenv import find_dotenv, load_dotenv
 
+# Ensure UTF-8 output on Windows terminals
+if hasattr(sys.stdout, "reconfigure"):
+    sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+if hasattr(sys.stderr, "reconfigure"):
+    sys.stderr.reconfigure(encoding="utf-8", errors="replace")
+
 
 def test_gemini_api_key():
     # Load environment variables from the root .env

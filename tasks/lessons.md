@@ -11,3 +11,15 @@
 ## 3. Normalización idempotente de URLs canónicas de YouTube
 - **Patrón:** Cuando se reciben URLs en múltiples formatos (links completos, enlaces cortos `youtu.be`, IDs individuales o embebidos), extraer el ID y reconstruir la URL sin verificar si ya es canónica puede provocar prefijos duplicados (ej: `https://www.youtube.com/watch?v=https://...`).
 - **Solución Elegante:** Implementar una función helper centralizada (`_normalize_youtube_url`) que extraiga el ID limpio y genere la URL canónica `https://www.youtube.com/watch?v={id}` de forma idempotente.
+
+## 4. Deserialización resiliente de texto raspado de la web (User-Generated Content)
+- **Patrón:** Los comentarios extraídos de plataformas web pueden contener caracteres de control sin escapar, saltos de línea crudos o comillas HTML sin procesar, provocando errores en `json.loads`.
+- **Solución Elegante:** Utilizar `strict=False` en las funciones de deserialización (`json.loads(..., strict=False)`) y construir helpers flexibles que procesen tanto listas de diccionarios, strings JSON, o estructuras intermedias anidadas sin interrumpir el pipeline multi-agente.
+
+## 5. Anclaje Estricto (*Strict Grounding*) y Prevención de Alucinaciones por Dominio
+- **Patrón:** Cuando un LLM analiza una URL o dominio conocido, la memoria paramétrica pre-entrenada puede sobreescribir el contenido real de la página. Por ejemplo, al raspar `musicofwisdom.com/100frequencies` (un lead magnet de bienestar holístico personal), el modelo alucinó licencias de música comercial porque la empresa matriz vende pistas libres de regalías en su catálogo general.
+- **Solución Elegante:** Integrar directivas explícitas de *Strict Grounding* en las instrucciones del agente (`LANDING_PAGE_COPYWRITER_INSTRUCTION`):
+  1. Forzar al modelo a basar su análisis **únicamente** en el texto extraído por la herramienta.
+  2. Prohibir expresamente la extrapolación basada en el nombre del dominio o la empresa.
+  3. Diferenciar claramente la **oferta principal de la página** (lead magnet, producto) frente a la biografía del instructor o enlaces secundarios del footer.
+  4. Definir el avatar del cliente como el **consumidor final de esa oferta concreta**, no el perfil profesional del autor.

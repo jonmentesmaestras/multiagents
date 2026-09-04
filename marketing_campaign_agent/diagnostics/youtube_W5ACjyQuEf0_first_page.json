@@ -1,0 +1,2143 @@
+{
+  "fetched_at": "2026-09-03T13:13:01.355350+00:00",
+  "stats": {
+    "kind": "youtube#videoListResponse",
+    "etag": "BNJJcCslfPlpQZZmFPeDpUmhNe8",
+    "items": [
+      {
+        "kind": "youtube#video",
+        "etag": "cu_ZxBo6bSN1czRSU5WjSXUp_W4",
+        "id": "W5ACjyQuEf0",
+        "statistics": {
+          "viewCount": "30416752",
+          "likeCount": "318319",
+          "favoriteCount": "0",
+          "commentCount": "23292"
+        }
+      }
+    ],
+    "pageInfo": {
+      "totalResults": 1,
+      "resultsPerPage": 1
+    }
+  },
+  "comments": {
+    "kind": "youtube#commentThreadListResponse",
+    "etag": "ACuNZsqpX-pyMLapuRNBuuXL8gg",
+    "nextPageToken": "Z2V0X25ld2VzdF9maXJzdC0tQ2dnSWdBUVZGN2ZST0JJRkNJZ2dHQUFTQlFpSElCZ0FFZ1VJaVNBWUFCSUZDSjBnR0FFU0JRaW9JQmdBRWdVSW5pQVlBQklGQ01nZ0dBQWlEUW9MQ0ltVGo5UUdFT2pZbGtOUUFGZ0I=",
+    "pageInfo": {
+      "totalResults": 50,
+      "resultsPerPage": 50
+    },
+    "items": [
+      {
+        "kind": "youtube#commentThread",
+        "etag": "7Obisg2xv-1f_7S_JYxCt0X3kN0",
+        "id": "Ugxefuay_BBPDRRakUx4AaABAg",
+        "snippet": {
+          "channelId": "UCS4kVH1srJ9h9nqJPG2iDLg",
+          "videoId": "W5ACjyQuEf0",
+          "topLevelComment": {
+            "kind": "youtube#comment",
+            "etag": "Y831wI8HzvQ4MX2M4yRv8JvsNdk",
+            "id": "Ugxefuay_BBPDRRakUx4AaABAg",
+            "snippet": {
+              "channelId": "UCS4kVH1srJ9h9nqJPG2iDLg",
+              "videoId": "W5ACjyQuEf0",
+              "textDisplay": "Hermosos seres!!!✨ Gracias infinitas por estar ahí, por sus hermosos mensajes, por compartir y por expresar lo que sienten. Nos hace bien, nos da ganas de seguir haciendo lo que más nos gusta  hacer, que es música.  Música que sale del corazón hacia otros corazones 💞<br>Nada de esto tendría sentido si no estuvieran ahí, recibiendo nuestros pequeños regalos!.\r<br>¡Se los abraza con el ALMA y estamos realmente agradecidos! \r<br>Aquí dejo un link con frecuencias Sagradas:   <a href=\"http://satchit.es/solfeggio\">http://satchit.es/solfeggio\r</a><br>¡Revisen las listas hay mucha música variada!\r<br>BENDICIONES!!!!\r🙏",
+              "textOriginal": "Hermosos seres!!!✨ Gracias infinitas por estar ahí, por sus hermosos mensajes, por compartir y por expresar lo que sienten. Nos hace bien, nos da ganas de seguir haciendo lo que más nos gusta  hacer, que es música.  Música que sale del corazón hacia otros corazones 💞\nNada de esto tendría sentido si no estuvieran ahí, recibiendo nuestros pequeños regalos!.\r\n¡Se los abraza con el ALMA y estamos realmente agradecidos! \r\nAquí dejo un link con frecuencias Sagradas:   http://satchit.es/solfeggio\r\n¡Revisen las listas hay mucha música variada!\r\nBENDICIONES!!!!\r🙏",
+              "authorDisplayName": "@SatChit",
+              "authorProfileImageUrl": "https://yt3.ggpht.com/FnohK9fdiiY-qyeOE6oiklkyWtRDC1WOCq6V_aG3EfAM2TO1JfjwMRTrPqv8i9xNouT5W1HnsA=s48-c-k-c0x00ffffff-no-rj",
+              "authorChannelUrl": "http://www.youtube.com/@SatChit",
+              "authorChannelId": {
+                "value": "UCS4kVH1srJ9h9nqJPG2iDLg"
+              },
+              "canRate": true,
+              "viewerRating": "none",
+              "likeCount": 10918,
+              "publishedAt": "2020-05-05T21:10:25Z",
+              "updatedAt": "2022-12-09T06:03:57Z"
+            }
+          },
+          "canReply": true,
+          "totalReplyCount": 768,
+          "isPublic": true
+        },
+        "replies": {
+          "comments": [
+            {
+              "kind": "youtube#comment",
+              "etag": "aF4M7x80OXF8E7t5r0tOgdV0b0c",
+              "id": "Ugxefuay_BBPDRRakUx4AaABAg.98I1ihMUP4l98IJ3u864J2",
+              "snippet": {
+                "channelId": "UCS4kVH1srJ9h9nqJPG2iDLg",
+                "videoId": "W5ACjyQuEf0",
+                "textDisplay": "GRACIAS ❤️ GRACIAS ❤️ GRACIAS ❤️",
+                "textOriginal": "GRACIAS ❤️ GRACIAS ❤️ GRACIAS ❤️",
+                "parentId": "Ugxefuay_BBPDRRakUx4AaABAg",
+                "authorDisplayName": "@ovidiuradu9355",
+                "authorProfileImageUrl": "https://yt3.ggpht.com/ytc/AIdro_kAlheSkHFifnLCJWMwgq_xSd6pPrejcFe8OnXuskQZ_SA=s48-c-k-c0x00ffffff-no-rj",
+                "authorChannelUrl": "http://www.youtube.com/@ovidiuradu9355",
+                "authorChannelId": {
+                  "value": "UC0NEaiA0cuThdhYUNEFxFGA"
+                },
+                "canRate": true,
+                "viewerRating": "none",
+                "likeCount": 186,
+                "publishedAt": "2020-05-05T23:41:59Z",
+                "updatedAt": "2020-05-05T23:41:59Z"
+              }
+            },
+            {
+              "kind": "youtube#comment",
+              "etag": "xvlB9Hj12l14LcrGZnwvr7pTbB4",
+              "id": "Ugxefuay_BBPDRRakUx4AaABAg.98I1ihMUP4l98L5_SxDiep",
+              "snippet": {
+                "channelId": "UCS4kVH1srJ9h9nqJPG2iDLg",
+                "videoId": "W5ACjyQuEf0",
+                "textDisplay": "Gracias al credor que es Dios que on dé quira está es in finito y soyeparte del credor gracias amor y paz alá humanida",
+                "textOriginal": "Gracias al credor que es Dios que on dé quira está es in finito y soyeparte del credor gracias amor y paz alá humanida",
+                "parentId": "Ugxefuay_BBPDRRakUx4AaABAg",
+                "authorDisplayName": "@salvadorflores6894",
+                "authorProfileImageUrl": "https://yt3.ggpht.com/ytc/AIdro_mxFSwDQhnRcraG0kgwDVnRCBGCJHWY0oV8cHt-dUE=s48-c-k-c0x00ffffff-no-rj",
+                "authorChannelUrl": "http://www.youtube.com/@salvadorflores6894",
+                "authorChannelId": {
+                  "value": "UCcAPYtRKkiwxsAMxv7xpc9A"
+                },
+                "canRate": true,
+                "viewerRating": "none",
+                "likeCount": 146,
+                "publishedAt": "2020-05-07T01:41:49Z",
+                "updatedAt": "2020-05-07T01:41:49Z"
+              }
+            },
+            {
+              "kind": "youtube#comment",
+              "etag": "LO81_98h3F70C656MBx09Eos5ng",
+              "id": "Ugxefuay_BBPDRRakUx4AaABAg.98I1ihMUP4l98Lpz6TFB3P",
+              "snippet": {
+                "channelId": "UCS4kVH1srJ9h9nqJPG2iDLg",
+                "videoId": "W5ACjyQuEf0",
+                "textDisplay": "Diós 🙏 🌹 Gracias por darme la oportunidad de estar en el camino de estos hermosos seres de Luz q me dan la oportunidad de acercarme a, ti q eres un amor 😍 incondicio al y por eso mismo los sigas llenando de bendiciones e iluminando sus seres en tu amor 😍.<br>        Gracias seres de luz por existir en esta dimensión y compartir lo conmigo. 🌹 🙏 🙏",
+                "textOriginal": "Diós 🙏 🌹 Gracias por darme la oportunidad de estar en el camino de estos hermosos seres de Luz q me dan la oportunidad de acercarme a, ti q eres un amor 😍 incondicio al y por eso mismo los sigas llenando de bendiciones e iluminando sus seres en tu amor 😍.\n        Gracias seres de luz por existir en esta dimensión y compartir lo conmigo. 🌹 🙏 🙏",
+                "parentId": "Ugxefuay_BBPDRRakUx4AaABAg",
+                "authorDisplayName": "@elenlujano7354",
+                "authorProfileImageUrl": "https://yt3.ggpht.com/ytc/AIdro_klwkJuTL1iKzUTpyx-os1Rx6IUyOeHkbgssKvE6HtwPQ=s48-c-k-c0x00ffffff-no-rj",
+                "authorChannelUrl": "http://www.youtube.com/@elenlujano7354",
+                "authorChannelId": {
+                  "value": "UCWP57UL7fxoS8N03ZPe3f5g"
+                },
+                "canRate": true,
+                "viewerRating": "none",
+                "likeCount": 169,
+                "publishedAt": "2020-05-07T08:36:01Z",
+                "updatedAt": "2020-05-07T08:36:01Z"
+              }
+            },
+            {
+              "kind": "youtube#comment",
+              "etag": "D_ebZygasAjr8e3kpBExMQ4jZLQ",
+              "id": "Ugxefuay_BBPDRRakUx4AaABAg.98I1ihMUP4l98NyHO6z-qN",
+              "snippet": {
+                "channelId": "UCS4kVH1srJ9h9nqJPG2iDLg",
+                "videoId": "W5ACjyQuEf0",
+                "textDisplay": "Hoy abri tu canal por la curiosidad de saber a que te referías con  la frecuencia de Dios,  y quede asombrada de lo bien que se escucha,  gracias",
+                "textOriginal": "Hoy abri tu canal por la curiosidad de saber a que te referías con  la frecuencia de Dios,  y quede asombrada de lo bien que se escucha,  gracias",
+                "parentId": "Ugxefuay_BBPDRRakUx4AaABAg",
+                "authorDisplayName": "@alejandrasilva8074",
+                "authorProfileImageUrl": "https://yt3.ggpht.com/ytc/AIdro_k5iQS8_4-WKfjRSKdCiaqzU9U4EABhggMJLwco46l0uCE=s48-c-k-c0x00ffffff-no-rj",
+                "authorChannelUrl": "http://www.youtube.com/@alejandrasilva8074",
+                "authorChannelId": {
+                  "value": "UC114uYp6g56TyGoDUxzZ_nA"
+                },
+                "canRate": true,
+                "viewerRating": "none",
+                "likeCount": 127,
+                "publishedAt": "2020-05-08T04:27:02Z",
+                "updatedAt": "2020-05-08T04:27:02Z"
+              }
+            },
+            {
+              "kind": "youtube#comment",
+              "etag": "ysdFH9MLRsrqnXbde2HtQ4PgcY0",
+              "id": "Ugxefuay_BBPDRRakUx4AaABAg.98I1ihMUP4l98RDFuZczl2",
+              "snippet": {
+                "channelId": "UCS4kVH1srJ9h9nqJPG2iDLg",
+                "videoId": "W5ACjyQuEf0",
+                "textDisplay": "Sat-Chit Música &amp; Mantras<br>Namasté. 🙏. <br>¡Qué música tan Hermosa y Armoniosa!<br>La Tierra necesita Amor, Luz y Paz para SANAR.<br>Gracias.<br>In Lakes&#39;h.<br>Somos UNO.<br>🙏",
+                "textOriginal": "Sat-Chit Música & Mantras\nNamasté. 🙏. \n¡Qué música tan Hermosa y Armoniosa!\nLa Tierra necesita Amor, Luz y Paz para SANAR.\nGracias.\nIn Lakes'h.\nSomos UNO.\n🙏",
+                "parentId": "Ugxefuay_BBPDRRakUx4AaABAg",
+                "authorDisplayName": "@juanchong3633",
+                "authorProfileImageUrl": "https://yt3.ggpht.com/ytc/AIdro_lyUDaWENoQmZlwqD99VLGZD8N9ZdQn8zetZ3Tjf_J91A=s48-c-k-c0x00ffffff-no-rj",
+                "authorChannelUrl": "http://www.youtube.com/@juanchong3633",
+                "authorChannelId": {
+                  "value": "UCnkC9932de4pk8Rs6zftXMw"
+                },
+                "canRate": true,
+                "viewerRating": "none",
+                "likeCount": 165,
+                "publishedAt": "2020-05-09T10:44:22Z",
+                "updatedAt": "2020-05-09T11:06:51Z"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "kind": "youtube#commentThread",
+        "etag": "7l6V8v3WmHcODIrb5ZOD0fuvcEE",
+        "id": "UgxzdBC9DC9Jy8je_eV4AaABAg",
+        "snippet": {
+          "channelId": "UCS4kVH1srJ9h9nqJPG2iDLg",
+          "videoId": "W5ACjyQuEf0",
+          "topLevelComment": {
+            "kind": "youtube#comment",
+            "etag": "3Ta6KWsm0LGzz-VJyMKwJKOjHq8",
+            "id": "UgxzdBC9DC9Jy8je_eV4AaABAg",
+            "snippet": {
+              "channelId": "UCS4kVH1srJ9h9nqJPG2iDLg",
+              "videoId": "W5ACjyQuEf0",
+              "textDisplay": "Te amo Dios",
+              "textOriginal": "Te amo Dios",
+              "authorDisplayName": "@magdalenacruzatarodriguez5834",
+              "authorProfileImageUrl": "https://yt3.ggpht.com/ytc/AIdro_lXOSSaNJqPM8w9KMSokLkaNoZhZEMtQ3HJSKOCpja9Mp4=s48-c-k-c0x00ffffff-no-rj",
+              "authorChannelUrl": "http://www.youtube.com/@magdalenacruzatarodriguez5834",
+              "authorChannelId": {
+                "value": "UCGd1zNQNkMYitL417_dC0Ew"
+              },
+              "canRate": true,
+              "viewerRating": "none",
+              "likeCount": 0,
+              "publishedAt": "2026-09-03T09:30:36Z",
+              "updatedAt": "2026-09-03T09:30:36Z"
+            }
+          },
+          "canReply": true,
+          "totalReplyCount": 0,
+          "isPublic": true
+        }
+      },
+      {
+        "kind": "youtube#commentThread",
+        "etag": "urrjIuWQA_UrEpJNi5hxUHB8jwA",
+        "id": "UgweNohiVhurt3VireF4AaABAg",
+        "snippet": {
+          "channelId": "UCS4kVH1srJ9h9nqJPG2iDLg",
+          "videoId": "W5ACjyQuEf0",
+          "topLevelComment": {
+            "kind": "youtube#comment",
+            "etag": "KBQmLa6mroq23SpPaJlzmwAT1pk",
+            "id": "UgweNohiVhurt3VireF4AaABAg",
+            "snippet": {
+              "channelId": "UCS4kVH1srJ9h9nqJPG2iDLg",
+              "videoId": "W5ACjyQuEf0",
+              "textDisplay": "Gracias por tan hermosa frecuencia . Genera mucha paz, tranquilidad y sentimientos dulces y especiales. Bendiciones 😊❤",
+              "textOriginal": "Gracias por tan hermosa frecuencia . Genera mucha paz, tranquilidad y sentimientos dulces y especiales. Bendiciones 😊❤",
+              "authorDisplayName": "@ariana-p11ln",
+              "authorProfileImageUrl": "https://yt3.ggpht.com/ytc/AIdro_nB9Tm9qpNPeUVqazDqRe4FZV6uFd0W3Uq2mMGoCDO5-URC1guRJ6X6izUpduu-J5L48g=s48-c-k-c0x00ffffff-no-rj",
+              "authorChannelUrl": "http://www.youtube.com/@ariana-p11ln",
+              "authorChannelId": {
+                "value": "UCCz-bQC9VZDkpAJKvaGzdMQ"
+              },
+              "canRate": true,
+              "viewerRating": "none",
+              "likeCount": 0,
+              "publishedAt": "2026-09-03T06:57:31Z",
+              "updatedAt": "2026-09-03T06:57:31Z"
+            }
+          },
+          "canReply": true,
+          "totalReplyCount": 0,
+          "isPublic": true
+        }
+      },
+      {
+        "kind": "youtube#commentThread",
+        "etag": "pIdJXpsaUbQdHfs4IvmeZ20Gw8M",
+        "id": "UgxUAhISXUvgmY9QjKx4AaABAg",
+        "snippet": {
+          "channelId": "UCS4kVH1srJ9h9nqJPG2iDLg",
+          "videoId": "W5ACjyQuEf0",
+          "topLevelComment": {
+            "kind": "youtube#comment",
+            "etag": "arIbQA5xZEPC6p_JFdaUjNXNmas",
+            "id": "UgxUAhISXUvgmY9QjKx4AaABAg",
+            "snippet": {
+              "channelId": "UCS4kVH1srJ9h9nqJPG2iDLg",
+              "videoId": "W5ACjyQuEf0",
+              "textDisplay": "Gracias ❤ y que Todos lleguemos a conocer al creador ❤😢",
+              "textOriginal": "Gracias ❤ y que Todos lleguemos a conocer al creador ❤😢",
+              "authorDisplayName": "@KingLeniel",
+              "authorProfileImageUrl": "https://yt3.ggpht.com/Z2qBw7AelfE0RGFHN3ImgY9ZrKFHGGY1q7SpIPAMpvQdGtWQKtvZ05IAhEJSai_6uhp7y-B2gg=s48-c-k-c0x00ffffff-no-rj",
+              "authorChannelUrl": "http://www.youtube.com/@KingLeniel",
+              "authorChannelId": {
+                "value": "UCQ527fPnZAPbNDqlhLb1GNQ"
+              },
+              "canRate": true,
+              "viewerRating": "none",
+              "likeCount": 0,
+              "publishedAt": "2026-09-02T19:36:55Z",
+              "updatedAt": "2026-09-02T19:36:55Z"
+            }
+          },
+          "canReply": true,
+          "totalReplyCount": 0,
+          "isPublic": true
+        }
+      },
+      {
+        "kind": "youtube#commentThread",
+        "etag": "I671CZs0LLqALook_83fFl8tMWk",
+        "id": "Ugx9fUgB5jMxo9esjRZ4AaABAg",
+        "snippet": {
+          "channelId": "UCS4kVH1srJ9h9nqJPG2iDLg",
+          "videoId": "W5ACjyQuEf0",
+          "topLevelComment": {
+            "kind": "youtube#comment",
+            "etag": "xkhQR_AbXlAdB0Vra0h7xgjSbIE",
+            "id": "Ugx9fUgB5jMxo9esjRZ4AaABAg",
+            "snippet": {
+              "channelId": "UCS4kVH1srJ9h9nqJPG2iDLg",
+              "videoId": "W5ACjyQuEf0",
+              "textDisplay": "SIGO DISFRUTANDO ESTAS HERMOSAS FRECUENCIAS DÉ AMOR DIVINO 💟 PARA MÍ DESPERTAR 🫂 DÍA A DÍA 🪷💕🕊️💙🫂🙏 GRACIAS 💙🫂🙏 GRACIAS 💙🫂🙏 GRACIAS 💙🫂🙏 BENDICIONES PARA TODOS 🥰💙🫂",
+              "textOriginal": "SIGO DISFRUTANDO ESTAS HERMOSAS FRECUENCIAS DÉ AMOR DIVINO 💟 PARA MÍ DESPERTAR 🫂 DÍA A DÍA 🪷💕🕊️💙🫂🙏 GRACIAS 💙🫂🙏 GRACIAS 💙🫂🙏 GRACIAS 💙🫂🙏 BENDICIONES PARA TODOS 🥰💙🫂",
+              "authorDisplayName": "@MaríaAliciaNieva",
+              "authorProfileImageUrl": "https://yt3.ggpht.com/ytc/AIdro_mzwk73fmnfDwFs4aca8l6kkQx6GyTAVAtENSyHlH_Zex_oOyaCVbcQl_w7mzDMX7MLRg=s48-c-k-c0x00ffffff-no-rj",
+              "authorChannelUrl": "http://www.youtube.com/@Mar%C3%ADaAliciaNieva",
+              "authorChannelId": {
+                "value": "UCcGkI-7txK6Bzm53wAOWW3w"
+              },
+              "canRate": true,
+              "viewerRating": "none",
+              "likeCount": 0,
+              "publishedAt": "2026-09-02T10:51:50Z",
+              "updatedAt": "2026-09-02T10:51:50Z"
+            }
+          },
+          "canReply": true,
+          "totalReplyCount": 0,
+          "isPublic": true
+        }
+      },
+      {
+        "kind": "youtube#commentThread",
+        "etag": "bHXcFbKieyNbOskpgI1zaU0_r5c",
+        "id": "UgwdStFG9pPS4P7ji6R4AaABAg",
+        "snippet": {
+          "channelId": "UCS4kVH1srJ9h9nqJPG2iDLg",
+          "videoId": "W5ACjyQuEf0",
+          "topLevelComment": {
+            "kind": "youtube#comment",
+            "etag": "eWqpB8IIb2alnTbqhTcCXRLGc4Q",
+            "id": "UgwdStFG9pPS4P7ji6R4AaABAg",
+            "snippet": {
+              "channelId": "UCS4kVH1srJ9h9nqJPG2iDLg",
+              "videoId": "W5ACjyQuEf0",
+              "textDisplay": "Gratitud infinita",
+              "textOriginal": "Gratitud infinita",
+              "authorDisplayName": "@sandrarivera-u5d",
+              "authorProfileImageUrl": "https://yt3.ggpht.com/B9pPqXZunBogWW_PVKgJCQ5ijgacArVglZZwba82r43dHFJwGZHHqS7rAIufjL5efdH_mP1RIA=s48-c-k-c0x00ffffff-no-rj",
+              "authorChannelUrl": "http://www.youtube.com/@sandrarivera-u5d",
+              "authorChannelId": {
+                "value": "UCzjSacBZnmypGnVXllgaeqA"
+              },
+              "canRate": true,
+              "viewerRating": "none",
+              "likeCount": 1,
+              "publishedAt": "2026-09-01T05:04:21Z",
+              "updatedAt": "2026-09-01T05:04:21Z"
+            }
+          },
+          "canReply": true,
+          "totalReplyCount": 0,
+          "isPublic": true
+        }
+      },
+      {
+        "kind": "youtube#commentThread",
+        "etag": "eT-i9lIVjerCsMJEVlH9trS94_U",
+        "id": "UgxFcGJ5jDGTDskxT1R4AaABAg",
+        "snippet": {
+          "channelId": "UCS4kVH1srJ9h9nqJPG2iDLg",
+          "videoId": "W5ACjyQuEf0",
+          "topLevelComment": {
+            "kind": "youtube#comment",
+            "etag": "cXQjPrjfMqGlqRE5zp3Fyx_TlGA",
+            "id": "UgxFcGJ5jDGTDskxT1R4AaABAg",
+            "snippet": {
+              "channelId": "UCS4kVH1srJ9h9nqJPG2iDLg",
+              "videoId": "W5ACjyQuEf0",
+              "textDisplay": "Gratidão❤",
+              "textOriginal": "Gratidão❤",
+              "authorDisplayName": "@wolmergs",
+              "authorProfileImageUrl": "https://yt3.ggpht.com/7oHHBhwFcq3p78pBS2q_NyHmWy4_FZSD_9EVcjbh16oXGk1vmcO0RrCeM_13gA9kcYIfzgR6AZo=s48-c-k-c0x00ffffff-no-rj",
+              "authorChannelUrl": "http://www.youtube.com/@wolmergs",
+              "authorChannelId": {
+                "value": "UCCsgPs83sxlwocLYzA-iD7Q"
+              },
+              "canRate": true,
+              "viewerRating": "none",
+              "likeCount": 0,
+              "publishedAt": "2026-08-31T19:50:53Z",
+              "updatedAt": "2026-08-31T19:50:53Z"
+            }
+          },
+          "canReply": true,
+          "totalReplyCount": 0,
+          "isPublic": true
+        }
+      },
+      {
+        "kind": "youtube#commentThread",
+        "etag": "1k2Ndj9R4WjnSSvlNnQ649JEeyw",
+        "id": "UgyTH3rWcaUOT_b0sLZ4AaABAg",
+        "snippet": {
+          "channelId": "UCS4kVH1srJ9h9nqJPG2iDLg",
+          "videoId": "W5ACjyQuEf0",
+          "topLevelComment": {
+            "kind": "youtube#comment",
+            "etag": "9Lf0st9iGQGjsNMZtC5KKTFr060",
+            "id": "UgyTH3rWcaUOT_b0sLZ4AaABAg",
+            "snippet": {
+              "channelId": "UCS4kVH1srJ9h9nqJPG2iDLg",
+              "videoId": "W5ACjyQuEf0",
+              "textDisplay": "Hecho está",
+              "textOriginal": "Hecho está",
+              "authorDisplayName": "@elizabethleivadematos7212",
+              "authorProfileImageUrl": "https://yt3.ggpht.com/ytc/AIdro_mOUkwtkEfCCJ-TVib5CB8DcXtBH8SNC7dNfGfQRCEl1_0=s48-c-k-c0x00ffffff-no-rj",
+              "authorChannelUrl": "http://www.youtube.com/@elizabethleivadematos7212",
+              "authorChannelId": {
+                "value": "UC_eqag29sC4XmTh8_uiLmag"
+              },
+              "canRate": true,
+              "viewerRating": "none",
+              "likeCount": 0,
+              "publishedAt": "2026-08-31T03:21:26Z",
+              "updatedAt": "2026-08-31T03:21:26Z"
+            }
+          },
+          "canReply": true,
+          "totalReplyCount": 0,
+          "isPublic": true
+        }
+      },
+      {
+        "kind": "youtube#commentThread",
+        "etag": "C7RnJp8kDsZDkNZPOT5kq562tZU",
+        "id": "Ugw__MjQ_T-bMbGznBp4AaABAg",
+        "snippet": {
+          "channelId": "UCS4kVH1srJ9h9nqJPG2iDLg",
+          "videoId": "W5ACjyQuEf0",
+          "topLevelComment": {
+            "kind": "youtube#comment",
+            "etag": "xToD26gfffaVCNZQJYJW-FiES-g",
+            "id": "Ugw__MjQ_T-bMbGznBp4AaABAg",
+            "snippet": {
+              "channelId": "UCS4kVH1srJ9h9nqJPG2iDLg",
+              "videoId": "W5ACjyQuEf0",
+              "textDisplay": "YO SOY MI CRISTO MI ENERGIA MI PRESENCIA MI UNIVERSO MI PRESENCIA MI ESPIRITU  MI CONSENCIA MI INCERCION",
+              "textOriginal": "YO SOY MI CRISTO MI ENERGIA MI PRESENCIA MI UNIVERSO MI PRESENCIA MI ESPIRITU  MI CONSENCIA MI INCERCION",
+              "authorDisplayName": "@MargaritoantonioRiveraponce",
+              "authorProfileImageUrl": "https://yt3.ggpht.com/ytc/AIdro_mNkj4pW6jUvChG4gBzsrYlBtzdpsU-SuNMu6MPKVmDoCxY2_D05vAOfPJE2IATJUm0Sw=s48-c-k-c0x00ffffff-no-rj",
+              "authorChannelUrl": "http://www.youtube.com/@MargaritoantonioRiveraponce",
+              "authorChannelId": {
+                "value": "UCv_FmlFF3o6yfPrQEgcin4A"
+              },
+              "canRate": true,
+              "viewerRating": "none",
+              "likeCount": 0,
+              "publishedAt": "2026-08-31T02:35:31Z",
+              "updatedAt": "2026-08-31T02:35:31Z"
+            }
+          },
+          "canReply": true,
+          "totalReplyCount": 0,
+          "isPublic": true
+        }
+      },
+      {
+        "kind": "youtube#commentThread",
+        "etag": "sX1Xm4GyNJyaA104McC8BfcmYLQ",
+        "id": "UgxuSGLe52GAHrUWDwh4AaABAg",
+        "snippet": {
+          "channelId": "UCS4kVH1srJ9h9nqJPG2iDLg",
+          "videoId": "W5ACjyQuEf0",
+          "topLevelComment": {
+            "kind": "youtube#comment",
+            "etag": "2CFRbRP75uojm3UTYuoRuIRxuFo",
+            "id": "UgxuSGLe52GAHrUWDwh4AaABAg",
+            "snippet": {
+              "channelId": "UCS4kVH1srJ9h9nqJPG2iDLg",
+              "videoId": "W5ACjyQuEf0",
+              "textDisplay": "Gracias al amor que respiran todos los comentarios. Dios os bendiga a todos y os provea de toda la paz y serenidad para siempre.❤❤",
+              "textOriginal": "Gracias al amor que respiran todos los comentarios. Dios os bendiga a todos y os provea de toda la paz y serenidad para siempre.❤❤",
+              "authorDisplayName": "@inesceberio9664",
+              "authorProfileImageUrl": "https://yt3.ggpht.com/ytc/AIdro_nH-uU1AZX6JuI7hy8EEMt8BLyrim5kT9kV7a5c_ArDwIs=s48-c-k-c0x00ffffff-no-rj",
+              "authorChannelUrl": "http://www.youtube.com/@inesceberio9664",
+              "authorChannelId": {
+                "value": "UCK6FPEenGNUa1PW-q5Z_6nQ"
+              },
+              "canRate": true,
+              "viewerRating": "none",
+              "likeCount": 0,
+              "publishedAt": "2026-08-30T21:39:54Z",
+              "updatedAt": "2026-08-30T21:39:54Z"
+            }
+          },
+          "canReply": true,
+          "totalReplyCount": 0,
+          "isPublic": true
+        }
+      },
+      {
+        "kind": "youtube#commentThread",
+        "etag": "aEg0jhw-z-54hjUlgXLIpFJo_dc",
+        "id": "Ugw26Tf2HN_LQq8a_X54AaABAg",
+        "snippet": {
+          "channelId": "UCS4kVH1srJ9h9nqJPG2iDLg",
+          "videoId": "W5ACjyQuEf0",
+          "topLevelComment": {
+            "kind": "youtube#comment",
+            "etag": "2-AWPr_CT_wGmLkewyS39OURP3k",
+            "id": "Ugw26Tf2HN_LQq8a_X54AaABAg",
+            "snippet": {
+              "channelId": "UCS4kVH1srJ9h9nqJPG2iDLg",
+              "videoId": "W5ACjyQuEf0",
+              "textDisplay": "Te pido padre salir adelante con mi vida",
+              "textOriginal": "Te pido padre salir adelante con mi vida",
+              "authorDisplayName": "@FranciscojavierVillegasg-l2t3z",
+              "authorProfileImageUrl": "https://yt3.ggpht.com/ytc/AIdro_mMRF-rcRa9b_yXNV-hvxnhOm6TnYsgR_H4o8INMq8xI4X1RzG0FqBQ7ldbX62yXqGQeA=s48-c-k-c0x00ffffff-no-rj",
+              "authorChannelUrl": "http://www.youtube.com/@FranciscojavierVillegasg-l2t3z",
+              "authorChannelId": {
+                "value": "UCoIYbCpqpFY3XHfWSeq6C_Q"
+              },
+              "canRate": true,
+              "viewerRating": "none",
+              "likeCount": 0,
+              "publishedAt": "2026-08-30T09:00:02Z",
+              "updatedAt": "2026-08-30T09:00:02Z"
+            }
+          },
+          "canReply": true,
+          "totalReplyCount": 1,
+          "isPublic": true
+        },
+        "replies": {
+          "comments": [
+            {
+              "kind": "youtube#comment",
+              "etag": "hA_XyOma_KSAnQHztlZ6uyJF9po",
+              "id": "Ugw26Tf2HN_LQq8a_X54AaABAg.Aa7dojS3p7aAa8Mnm5WV7m",
+              "snippet": {
+                "channelId": "UCS4kVH1srJ9h9nqJPG2iDLg",
+                "videoId": "W5ACjyQuEf0",
+                "textDisplay": "Un abrazo de luz, hay días que se siente muy intenso. ❤ Te acompaño, todo está bien",
+                "textOriginal": "Un abrazo de luz, hay días que se siente muy intenso. ❤ Te acompaño, todo está bien",
+                "parentId": "Ugw26Tf2HN_LQq8a_X54AaABAg",
+                "authorDisplayName": "@EstherMontagutvanOoijen",
+                "authorProfileImageUrl": "https://yt3.ggpht.com/Jnw-VUig3DbKHk4y6BLSgDMBWIuTerFsU1_I21z7zlfPh-UEF_EZOG2Fq_h41HZ8Hiistc6l4w=s48-c-k-c0x00ffffff-no-rj",
+                "authorChannelUrl": "http://www.youtube.com/@EstherMontagutvanOoijen",
+                "authorChannelId": {
+                  "value": "UCMMquBRyNSxlUNb7fvze1dg"
+                },
+                "canRate": true,
+                "viewerRating": "none",
+                "likeCount": 0,
+                "publishedAt": "2026-08-30T15:41:52Z",
+                "updatedAt": "2026-08-30T15:41:52Z"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "kind": "youtube#commentThread",
+        "etag": "hIvKGpeCBfzIQa-wcjVIV4QpFRQ",
+        "id": "UgychPRJaCczkAF__xJ4AaABAg",
+        "snippet": {
+          "channelId": "UCS4kVH1srJ9h9nqJPG2iDLg",
+          "videoId": "W5ACjyQuEf0",
+          "topLevelComment": {
+            "kind": "youtube#comment",
+            "etag": "aeiNJldTrXDo9n4YVWQmte5GUT0",
+            "id": "UgychPRJaCczkAF__xJ4AaABAg",
+            "snippet": {
+              "channelId": "UCS4kVH1srJ9h9nqJPG2iDLg",
+              "videoId": "W5ACjyQuEf0",
+              "textDisplay": "Mis hijos la oyen cada noche para poder consiliar el sueño, duermen profundamente en pocos minutos",
+              "textOriginal": "Mis hijos la oyen cada noche para poder consiliar el sueño, duermen profundamente en pocos minutos",
+              "authorDisplayName": "@Yami-w2n",
+              "authorProfileImageUrl": "https://yt3.ggpht.com/ytc/AIdro_mS_CCK-QXw5Ab053XYwPFS2OCJIhM__ZIyQCZzNXZysj7xsL0hhcV-s6JSg44FmwyM0A=s48-c-k-c0x00ffffff-no-rj",
+              "authorChannelUrl": "http://www.youtube.com/@Yami-w2n",
+              "authorChannelId": {
+                "value": "UCEQBEvtXjRiU52z-K6cbZhA"
+              },
+              "canRate": true,
+              "viewerRating": "none",
+              "likeCount": 0,
+              "publishedAt": "2026-08-29T05:29:07Z",
+              "updatedAt": "2026-08-29T05:29:07Z"
+            }
+          },
+          "canReply": true,
+          "totalReplyCount": 0,
+          "isPublic": true
+        }
+      },
+      {
+        "kind": "youtube#commentThread",
+        "etag": "kdREFNRpteIS3RnxkW09p4CYTzY",
+        "id": "UgyelgddoUr0GPmDLUR4AaABAg",
+        "snippet": {
+          "channelId": "UCS4kVH1srJ9h9nqJPG2iDLg",
+          "videoId": "W5ACjyQuEf0",
+          "topLevelComment": {
+            "kind": "youtube#comment",
+            "etag": "PFDRPEZ_zVgulquSf2f7g_4dMrU",
+            "id": "UgyelgddoUr0GPmDLUR4AaABAg",
+            "snippet": {
+              "channelId": "UCS4kVH1srJ9h9nqJPG2iDLg",
+              "videoId": "W5ACjyQuEf0",
+              "textDisplay": "Maravillosa frecuencia relajante, DIOS no se equivoca en su creacion, que la paz cubra a este mundo que estan bello y que nosotros sepamos cuidarlo, quererlo y respetarlo, que la lluvia de bendiciones  sea continua y que el corazon de cada ser humano se abra para las cosas hermosas que DIOS Nos ofrece en cada momento..seamos agradecidos y respetuosos con nuestros dones y regalos divinos...desde el corazon bendigo mi vida y la de quien lea este mensaje en el tiempo que sea y pais que sea...hecho esta hecho esta hecho esta AMEN🙏",
+              "textOriginal": "Maravillosa frecuencia relajante, DIOS no se equivoca en su creacion, que la paz cubra a este mundo que estan bello y que nosotros sepamos cuidarlo, quererlo y respetarlo, que la lluvia de bendiciones  sea continua y que el corazon de cada ser humano se abra para las cosas hermosas que DIOS Nos ofrece en cada momento..seamos agradecidos y respetuosos con nuestros dones y regalos divinos...desde el corazon bendigo mi vida y la de quien lea este mensaje en el tiempo que sea y pais que sea...hecho esta hecho esta hecho esta AMEN🙏",
+              "authorDisplayName": "@rolandovazquez4907",
+              "authorProfileImageUrl": "https://yt3.ggpht.com/II1NbmH6asQCmyt1TCqrKfTOqiKsTZWctb3k3-zSkyPh0PjfSAn-fGAo41DC3otRqW0DmFrG_Ek=s48-c-k-c0x00ffffff-no-rj",
+              "authorChannelUrl": "http://www.youtube.com/@rolandovazquez4907",
+              "authorChannelId": {
+                "value": "UC8RiqVnJHyB0f6ch-9Ymy7w"
+              },
+              "canRate": true,
+              "viewerRating": "none",
+              "likeCount": 0,
+              "publishedAt": "2026-08-29T00:16:51Z",
+              "updatedAt": "2026-08-29T00:16:51Z"
+            }
+          },
+          "canReply": true,
+          "totalReplyCount": 0,
+          "isPublic": true
+        }
+      },
+      {
+        "kind": "youtube#commentThread",
+        "etag": "TAbeB--0el15GRqtutsKI10qfLM",
+        "id": "Ugx7d4My6m16vtGOoHF4AaABAg",
+        "snippet": {
+          "channelId": "UCS4kVH1srJ9h9nqJPG2iDLg",
+          "videoId": "W5ACjyQuEf0",
+          "topLevelComment": {
+            "kind": "youtube#comment",
+            "etag": "GdUvOk13YiQpyuPRp3CDSh2rHVU",
+            "id": "Ugx7d4My6m16vtGOoHF4AaABAg",
+            "snippet": {
+              "channelId": "UCS4kVH1srJ9h9nqJPG2iDLg",
+              "videoId": "W5ACjyQuEf0",
+              "textDisplay": "Inmensamente gratitud 🙏",
+              "textOriginal": "Inmensamente gratitud 🙏",
+              "authorDisplayName": "@LolimarParra-o6t",
+              "authorProfileImageUrl": "https://yt3.ggpht.com/ytc/AIdro_k9XrKEjeqnVQ_ExBSkLiNtUAbq9qlCdjlKe0ywClY98iY03q7dSB_WmMajNAsA2n6ytg=s48-c-k-c0x00ffffff-no-rj",
+              "authorChannelUrl": "http://www.youtube.com/@LolimarParra-o6t",
+              "authorChannelId": {
+                "value": "UC4hu0VKkKqWECNljCSrhisQ"
+              },
+              "canRate": true,
+              "viewerRating": "none",
+              "likeCount": 0,
+              "publishedAt": "2026-08-28T12:48:27Z",
+              "updatedAt": "2026-08-28T12:48:27Z"
+            }
+          },
+          "canReply": true,
+          "totalReplyCount": 0,
+          "isPublic": true
+        }
+      },
+      {
+        "kind": "youtube#commentThread",
+        "etag": "3fARGaC8bAH1AvGSRMgf_gg6gHQ",
+        "id": "UgzpBAdjmEownC-PpDd4AaABAg",
+        "snippet": {
+          "channelId": "UCS4kVH1srJ9h9nqJPG2iDLg",
+          "videoId": "W5ACjyQuEf0",
+          "topLevelComment": {
+            "kind": "youtube#comment",
+            "etag": "yC2TI20JVZ37nnmv20K2q_c554E",
+            "id": "UgzpBAdjmEownC-PpDd4AaABAg",
+            "snippet": {
+              "channelId": "UCS4kVH1srJ9h9nqJPG2iDLg",
+              "videoId": "W5ACjyQuEf0",
+              "textDisplay": "Gracias Dios Universo vivo Vibración Divina 🙏 en tu Presencia Celestial nos conectamos Padre 🙏 🙌 ✨ libera todo.",
+              "textOriginal": "Gracias Dios Universo vivo Vibración Divina 🙏 en tu Presencia Celestial nos conectamos Padre 🙏 🙌 ✨ libera todo.",
+              "authorDisplayName": "@LolimarParra-o6t",
+              "authorProfileImageUrl": "https://yt3.ggpht.com/ytc/AIdro_k9XrKEjeqnVQ_ExBSkLiNtUAbq9qlCdjlKe0ywClY98iY03q7dSB_WmMajNAsA2n6ytg=s48-c-k-c0x00ffffff-no-rj",
+              "authorChannelUrl": "http://www.youtube.com/@LolimarParra-o6t",
+              "authorChannelId": {
+                "value": "UC4hu0VKkKqWECNljCSrhisQ"
+              },
+              "canRate": true,
+              "viewerRating": "none",
+              "likeCount": 0,
+              "publishedAt": "2026-08-28T12:48:04Z",
+              "updatedAt": "2026-08-28T12:48:04Z"
+            }
+          },
+          "canReply": true,
+          "totalReplyCount": 0,
+          "isPublic": true
+        }
+      },
+      {
+        "kind": "youtube#commentThread",
+        "etag": "S7DjeAKBFbyhaF5m8hHHM3m0FGE",
+        "id": "UgzUGk5enIXhjUu0tk94AaABAg",
+        "snippet": {
+          "channelId": "UCS4kVH1srJ9h9nqJPG2iDLg",
+          "videoId": "W5ACjyQuEf0",
+          "topLevelComment": {
+            "kind": "youtube#comment",
+            "etag": "2fvC84TNXGLrdpS19vq6GfJqzJg",
+            "id": "UgzUGk5enIXhjUu0tk94AaABAg",
+            "snippet": {
+              "channelId": "UCS4kVH1srJ9h9nqJPG2iDLg",
+              "videoId": "W5ACjyQuEf0",
+              "textDisplay": "Gracias divino creador.. universo ..gracias amada divinidad..TODO PODEROSO..A LA VIDA por todas Y CADA UNA DE SUS BENDICIONES QUE ME HAN DADO Y QUE LE HAN  DADO A MIS HIJOS., GRACIAS GRACIAS GRACIAS AMEN EFFATA SHALOM YESEREYE 🙏🙏🙏",
+              "textOriginal": "Gracias divino creador.. universo ..gracias amada divinidad..TODO PODEROSO..A LA VIDA por todas Y CADA UNA DE SUS BENDICIONES QUE ME HAN DADO Y QUE LE HAN  DADO A MIS HIJOS., GRACIAS GRACIAS GRACIAS AMEN EFFATA SHALOM YESEREYE 🙏🙏🙏",
+              "authorDisplayName": "@aritidescifuentes1500",
+              "authorProfileImageUrl": "https://yt3.ggpht.com/ytc/AIdro_njMp9P5pDrqRaj4oHRodXslSma01EB2tIA4mBbGR7rDJoi92M1smujcI3N84wSKYdkGA=s48-c-k-c0x00ffffff-no-rj",
+              "authorChannelUrl": "http://www.youtube.com/@aritidescifuentes1500",
+              "authorChannelId": {
+                "value": "UCx2e8d4bafYv7kYUtDH3BBw"
+              },
+              "canRate": true,
+              "viewerRating": "none",
+              "likeCount": 0,
+              "publishedAt": "2026-08-28T06:04:17Z",
+              "updatedAt": "2026-08-28T06:04:17Z"
+            }
+          },
+          "canReply": true,
+          "totalReplyCount": 0,
+          "isPublic": true
+        }
+      },
+      {
+        "kind": "youtube#commentThread",
+        "etag": "6bA6ooInR3hLEE4F42_n-C4KC6k",
+        "id": "UgwQ0lsEI7tBqawOauJ4AaABAg",
+        "snippet": {
+          "channelId": "UCS4kVH1srJ9h9nqJPG2iDLg",
+          "videoId": "W5ACjyQuEf0",
+          "topLevelComment": {
+            "kind": "youtube#comment",
+            "etag": "94RmwmTgkx1g1P0tzGN2lW8G8BU",
+            "id": "UgwQ0lsEI7tBqawOauJ4AaABAg",
+            "snippet": {
+              "channelId": "UCS4kVH1srJ9h9nqJPG2iDLg",
+              "videoId": "W5ACjyQuEf0",
+              "textDisplay": "Mi hermano esta muy grave, veo su deterioro y sufrimiento. Estamos solos en casa, el en su cama, yéndose.<br>Dios liberalo de sufrimiento, recibelo en tus brazos, unelo a mis padres, abuelos y seres queridos que estan a tu lado.<br>Amen",
+              "textOriginal": "Mi hermano esta muy grave, veo su deterioro y sufrimiento. Estamos solos en casa, el en su cama, yéndose.\nDios liberalo de sufrimiento, recibelo en tus brazos, unelo a mis padres, abuelos y seres queridos que estan a tu lado.\nAmen",
+              "authorDisplayName": "@NataliaBruzzone-w2e",
+              "authorProfileImageUrl": "https://yt3.ggpht.com/ytc/AIdro_nfaS9vjq2Wu5GonnDUIOhRL2y6pnzLaoMqhU-6dfu7LLR1aLU8I2-k3XCvlqvcw0YKRQ=s48-c-k-c0x00ffffff-no-rj",
+              "authorChannelUrl": "http://www.youtube.com/@NataliaBruzzone-w2e",
+              "authorChannelId": {
+                "value": "UCESJHmEt0QS_D2vkEYKLiLQ"
+              },
+              "canRate": true,
+              "viewerRating": "none",
+              "likeCount": 0,
+              "publishedAt": "2026-08-28T00:25:37Z",
+              "updatedAt": "2026-08-28T00:25:37Z"
+            }
+          },
+          "canReply": true,
+          "totalReplyCount": 1,
+          "isPublic": true
+        },
+        "replies": {
+          "comments": [
+            {
+              "kind": "youtube#comment",
+              "etag": "VusWeNcjJQPZJ2NxZbTY6eZXAl4",
+              "id": "UgwQ0lsEI7tBqawOauJ4AaABAg.Aa1_MI3fPO1Aa8NRO5LTen",
+              "snippet": {
+                "channelId": "UCS4kVH1srJ9h9nqJPG2iDLg",
+                "videoId": "W5ACjyQuEf0",
+                "textDisplay": "Un abrazo de luz y descansa, que tengamos siempre una bonita despedida y una bonita imagen del ser. Aunque la parte física sea impactante, recuerda siempre las buenas experiencias que habéis compartido hasta ahora ❤",
+                "textOriginal": "Un abrazo de luz y descansa, que tengamos siempre una bonita despedida y una bonita imagen del ser. Aunque la parte física sea impactante, recuerda siempre las buenas experiencias que habéis compartido hasta ahora ❤",
+                "parentId": "UgwQ0lsEI7tBqawOauJ4AaABAg",
+                "authorDisplayName": "@EstherMontagutvanOoijen",
+                "authorProfileImageUrl": "https://yt3.ggpht.com/Jnw-VUig3DbKHk4y6BLSgDMBWIuTerFsU1_I21z7zlfPh-UEF_EZOG2Fq_h41HZ8Hiistc6l4w=s48-c-k-c0x00ffffff-no-rj",
+                "authorChannelUrl": "http://www.youtube.com/@EstherMontagutvanOoijen",
+                "authorChannelId": {
+                  "value": "UCMMquBRyNSxlUNb7fvze1dg"
+                },
+                "canRate": true,
+                "viewerRating": "none",
+                "likeCount": 0,
+                "publishedAt": "2026-08-30T15:47:24Z",
+                "updatedAt": "2026-08-30T15:47:24Z"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "kind": "youtube#commentThread",
+        "etag": "9onjfsfTC1uhmeAC_-pGejxOw1Y",
+        "id": "Ugzgx_j-XOTWD2weXPZ4AaABAg",
+        "snippet": {
+          "channelId": "UCS4kVH1srJ9h9nqJPG2iDLg",
+          "videoId": "W5ACjyQuEf0",
+          "topLevelComment": {
+            "kind": "youtube#comment",
+            "etag": "vcPVKIvdyDZqAypnTwy2Beyf0nU",
+            "id": "Ugzgx_j-XOTWD2weXPZ4AaABAg",
+            "snippet": {
+              "channelId": "UCS4kVH1srJ9h9nqJPG2iDLg",
+              "videoId": "W5ACjyQuEf0",
+              "textDisplay": "Buen y bendecido día, amada energía radiante y vibrante de Amor Infinito, en todas y todos. Gracias, por este nuevo y bendecido día.<br>Presencia Divina del Amor Universal, que amorosamente nos cobijas en Tu Sagrado Corazón, Divina Corte Celestial, guíen nuestros pensamientos, sentimientos, actos y actitudes. Ayúdenos a ser mejores instrumentos de Su Amor, sacando provecho de las crisis que nos han tocado vivir, como parte de la misión que cada quien hemos venido a cumplir y para compartir las enseñanzas que hemos adquirido con quienes las necesiten, pero sobre todo con quienes las quieran.<br>En armonía con el Universo. Gracias, gracias, gracias. Amén.",
+              "textOriginal": "Buen y bendecido día, amada energía radiante y vibrante de Amor Infinito, en todas y todos. Gracias, por este nuevo y bendecido día.\nPresencia Divina del Amor Universal, que amorosamente nos cobijas en Tu Sagrado Corazón, Divina Corte Celestial, guíen nuestros pensamientos, sentimientos, actos y actitudes. Ayúdenos a ser mejores instrumentos de Su Amor, sacando provecho de las crisis que nos han tocado vivir, como parte de la misión que cada quien hemos venido a cumplir y para compartir las enseñanzas que hemos adquirido con quienes las necesiten, pero sobre todo con quienes las quieran.\nEn armonía con el Universo. Gracias, gracias, gracias. Amén.",
+              "authorDisplayName": "@Betzybrave",
+              "authorProfileImageUrl": "https://yt3.ggpht.com/ytc/AIdro_kZmx79k230Nubp-1U82aBHyARRQYEqqc8e879qBiMM0OE=s48-c-k-c0x00ffffff-no-rj",
+              "authorChannelUrl": "http://www.youtube.com/@Betzybrave",
+              "authorChannelId": {
+                "value": "UCWM8xDY-u4cYDR7cIKvlICQ"
+              },
+              "canRate": true,
+              "viewerRating": "none",
+              "likeCount": 0,
+              "publishedAt": "2026-08-27T12:27:14Z",
+              "updatedAt": "2026-08-27T12:27:14Z"
+            }
+          },
+          "canReply": true,
+          "totalReplyCount": 0,
+          "isPublic": true
+        }
+      },
+      {
+        "kind": "youtube#commentThread",
+        "etag": "GSSKBrk54xsP43Spi-TwRxJEccM",
+        "id": "UgyPbwsXMZioZEu4a_d4AaABAg",
+        "snippet": {
+          "channelId": "UCS4kVH1srJ9h9nqJPG2iDLg",
+          "videoId": "W5ACjyQuEf0",
+          "topLevelComment": {
+            "kind": "youtube#comment",
+            "etag": "wxe8DVCmsL97XdITZ2wF9L8Z0W0",
+            "id": "UgyPbwsXMZioZEu4a_d4AaABAg",
+            "snippet": {
+              "channelId": "UCS4kVH1srJ9h9nqJPG2iDLg",
+              "videoId": "W5ACjyQuEf0",
+              "textDisplay": "Me encanta esta música para trabajar y estar conectadita 🥰",
+              "textOriginal": "Me encanta esta música para trabajar y estar conectadita 🥰",
+              "authorDisplayName": "@rocioc.alvarez813",
+              "authorProfileImageUrl": "https://yt3.ggpht.com/ytc/AIdro_maKuqMT_S36BwmiaSTtLHRIi-xGrPKKoMe0sZm-yN1DQ=s48-c-k-c0x00ffffff-no-rj",
+              "authorChannelUrl": "http://www.youtube.com/@rocioc.alvarez813",
+              "authorChannelId": {
+                "value": "UCYTpdQkcSarlGBzVzIGnPJw"
+              },
+              "canRate": true,
+              "viewerRating": "none",
+              "likeCount": 0,
+              "publishedAt": "2026-08-27T09:45:30Z",
+              "updatedAt": "2026-08-27T09:45:30Z"
+            }
+          },
+          "canReply": true,
+          "totalReplyCount": 0,
+          "isPublic": true
+        }
+      },
+      {
+        "kind": "youtube#commentThread",
+        "etag": "Py-WFHl_-Rkj6SwhsYyymwMcF54",
+        "id": "Ugx8rmPghPJ6CO-gdLZ4AaABAg",
+        "snippet": {
+          "channelId": "UCS4kVH1srJ9h9nqJPG2iDLg",
+          "videoId": "W5ACjyQuEf0",
+          "topLevelComment": {
+            "kind": "youtube#comment",
+            "etag": "sOdNdbVsnYgEPlcvIkVFfGvj4Mw",
+            "id": "Ugx8rmPghPJ6CO-gdLZ4AaABAg",
+            "snippet": {
+              "channelId": "UCS4kVH1srJ9h9nqJPG2iDLg",
+              "videoId": "W5ACjyQuEf0",
+              "textDisplay": "🙏🙏🙏🙏",
+              "textOriginal": "🙏🙏🙏🙏",
+              "authorDisplayName": "@carlossodi5188",
+              "authorProfileImageUrl": "https://yt3.ggpht.com/ytc/AIdro_nyLgFnVkBveaIsk6PSSdUmmeyRNrqtzMv7M-xDrFqF1U4=s48-c-k-c0x00ffffff-no-rj",
+              "authorChannelUrl": "http://www.youtube.com/@carlossodi5188",
+              "authorChannelId": {
+                "value": "UCNOQTuntB_dxGyoNG5WcTtQ"
+              },
+              "canRate": true,
+              "viewerRating": "none",
+              "likeCount": 0,
+              "publishedAt": "2026-08-27T08:59:44Z",
+              "updatedAt": "2026-08-27T08:59:44Z"
+            }
+          },
+          "canReply": true,
+          "totalReplyCount": 0,
+          "isPublic": true
+        }
+      },
+      {
+        "kind": "youtube#commentThread",
+        "etag": "71zghV_fpDKu0UMRS479x_tpMwI",
+        "id": "Ugw1Eufs2T-4TuHMAip4AaABAg",
+        "snippet": {
+          "channelId": "UCS4kVH1srJ9h9nqJPG2iDLg",
+          "videoId": "W5ACjyQuEf0",
+          "topLevelComment": {
+            "kind": "youtube#comment",
+            "etag": "GMTRgQHZju4jTeRP8mrNChFOZE4",
+            "id": "Ugw1Eufs2T-4TuHMAip4AaABAg",
+            "snippet": {
+              "channelId": "UCS4kVH1srJ9h9nqJPG2iDLg",
+              "videoId": "W5ACjyQuEf0",
+              "textDisplay": "AMÉN",
+              "textOriginal": "AMÉN",
+              "authorDisplayName": "@BeatrizOrtiz-zj1bo",
+              "authorProfileImageUrl": "https://yt3.ggpht.com/ytc/AIdro_ncWjF6ELdgcuIjcujQyuEZTAeeGPZ80mMWsDh6pOqDtSqYtvfyOWPvp61gMoyzrzthrw=s48-c-k-c0x00ffffff-no-rj",
+              "authorChannelUrl": "http://www.youtube.com/@BeatrizOrtiz-zj1bo",
+              "authorChannelId": {
+                "value": "UC6SyDEuq22yKVRs42lqHu2Q"
+              },
+              "canRate": true,
+              "viewerRating": "none",
+              "likeCount": 0,
+              "publishedAt": "2026-08-26T22:18:02Z",
+              "updatedAt": "2026-08-26T22:18:02Z"
+            }
+          },
+          "canReply": true,
+          "totalReplyCount": 0,
+          "isPublic": true
+        }
+      },
+      {
+        "kind": "youtube#commentThread",
+        "etag": "nDDHikwXks_9nVvEXsMIjfHHVuQ",
+        "id": "UgzyX7BQ4z-X3MRiIe54AaABAg",
+        "snippet": {
+          "channelId": "UCS4kVH1srJ9h9nqJPG2iDLg",
+          "videoId": "W5ACjyQuEf0",
+          "topLevelComment": {
+            "kind": "youtube#comment",
+            "etag": "h26R6A5xxRoeL4W9PYkeudLwt2s",
+            "id": "UgzyX7BQ4z-X3MRiIe54AaABAg",
+            "snippet": {
+              "channelId": "UCS4kVH1srJ9h9nqJPG2iDLg",
+              "videoId": "W5ACjyQuEf0",
+              "textDisplay": "Té escucho y recibo tus palabras para corregir lo qué está mal, para sanar mí cuerpo y mi alma, y tener fuerzas para ayudar a mí hijo a sanar su cuerpo.Gracias!!!",
+              "textOriginal": "Té escucho y recibo tus palabras para corregir lo qué está mal, para sanar mí cuerpo y mi alma, y tener fuerzas para ayudar a mí hijo a sanar su cuerpo.Gracias!!!",
+              "authorDisplayName": "@lilianmuldon9901",
+              "authorProfileImageUrl": "https://yt3.ggpht.com/ytc/AIdro_nb6dcza0TnZ4dXIGtB_JKUUTqg2iNabkLhcam0-3Q=s48-c-k-c0x00ffffff-no-rj",
+              "authorChannelUrl": "http://www.youtube.com/@lilianmuldon9901",
+              "authorChannelId": {
+                "value": "UC9gfQLaZXBXfeMLZjCoawqA"
+              },
+              "canRate": true,
+              "viewerRating": "none",
+              "likeCount": 0,
+              "publishedAt": "2026-08-26T07:39:42Z",
+              "updatedAt": "2026-08-26T07:39:42Z"
+            }
+          },
+          "canReply": true,
+          "totalReplyCount": 0,
+          "isPublic": true
+        }
+      },
+      {
+        "kind": "youtube#commentThread",
+        "etag": "OX-uG2ODIZ5jX41lwhkDuRM4ABM",
+        "id": "UgxXOzMGgJXNQRnzkn14AaABAg",
+        "snippet": {
+          "channelId": "UCS4kVH1srJ9h9nqJPG2iDLg",
+          "videoId": "W5ACjyQuEf0",
+          "topLevelComment": {
+            "kind": "youtube#comment",
+            "etag": "7gD1dmGZlDMkftwXVl-_UxB41Nw",
+            "id": "UgxXOzMGgJXNQRnzkn14AaABAg",
+            "snippet": {
+              "channelId": "UCS4kVH1srJ9h9nqJPG2iDLg",
+              "videoId": "W5ACjyQuEf0",
+              "textDisplay": "Necesito que me pasen cosas buenas y terminar con esta fea racha",
+              "textOriginal": "Necesito que me pasen cosas buenas y terminar con esta fea racha",
+              "authorDisplayName": "@julietagomezcardinali3687",
+              "authorProfileImageUrl": "https://yt3.ggpht.com/ytc/AIdro_nLaPUY58UB_weAvTBCyrbklOksy-5vBlXG6c9wus0cZQ=s48-c-k-c0x00ffffff-no-rj",
+              "authorChannelUrl": "http://www.youtube.com/@julietagomezcardinali3687",
+              "authorChannelId": {
+                "value": "UCrRYzg7LLSVLmwNA3ZlBctw"
+              },
+              "canRate": true,
+              "viewerRating": "none",
+              "likeCount": 0,
+              "publishedAt": "2026-08-25T19:37:33Z",
+              "updatedAt": "2026-08-25T19:37:33Z"
+            }
+          },
+          "canReply": true,
+          "totalReplyCount": 1,
+          "isPublic": true
+        },
+        "replies": {
+          "comments": [
+            {
+              "kind": "youtube#comment",
+              "etag": "BinX-_9HDzdDEVR8n-wdVmaOJEk",
+              "id": "UgxXOzMGgJXNQRnzkn14AaABAg.A_wunaVtUoIAa8NkOTs3r3",
+              "snippet": {
+                "channelId": "UCS4kVH1srJ9h9nqJPG2iDLg",
+                "videoId": "W5ACjyQuEf0",
+                "textDisplay": "Un mensaje lleno de amor, me uno a tí en esta época y la bautizo como la época del cambio, abre tu mente y corazón a esos planes y así vienen a nosotras ❤",
+                "textOriginal": "Un mensaje lleno de amor, me uno a tí en esta época y la bautizo como la época del cambio, abre tu mente y corazón a esos planes y así vienen a nosotras ❤",
+                "parentId": "UgxXOzMGgJXNQRnzkn14AaABAg",
+                "authorDisplayName": "@EstherMontagutvanOoijen",
+                "authorProfileImageUrl": "https://yt3.ggpht.com/Jnw-VUig3DbKHk4y6BLSgDMBWIuTerFsU1_I21z7zlfPh-UEF_EZOG2Fq_h41HZ8Hiistc6l4w=s48-c-k-c0x00ffffff-no-rj",
+                "authorChannelUrl": "http://www.youtube.com/@EstherMontagutvanOoijen",
+                "authorChannelId": {
+                  "value": "UCMMquBRyNSxlUNb7fvze1dg"
+                },
+                "canRate": true,
+                "viewerRating": "none",
+                "likeCount": 0,
+                "publishedAt": "2026-08-30T15:50:08Z",
+                "updatedAt": "2026-08-30T15:50:08Z"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "kind": "youtube#commentThread",
+        "etag": "5vdNjA6_ArrPym10odHdQOYETJs",
+        "id": "Ugw5AudcuIllWiktta14AaABAg",
+        "snippet": {
+          "channelId": "UCS4kVH1srJ9h9nqJPG2iDLg",
+          "videoId": "W5ACjyQuEf0",
+          "topLevelComment": {
+            "kind": "youtube#comment",
+            "etag": "PJYdjayG8DvcR1Tm2Vf_fZ1PCUc",
+            "id": "Ugw5AudcuIllWiktta14AaABAg",
+            "snippet": {
+              "channelId": "UCS4kVH1srJ9h9nqJPG2iDLg",
+              "videoId": "W5ACjyQuEf0",
+              "textDisplay": "Decreto con el nombre poderoso de Jesucristo,Paz y amor para toda la humanidad ❤❤❤",
+              "textOriginal": "Decreto con el nombre poderoso de Jesucristo,Paz y amor para toda la humanidad ❤❤❤",
+              "authorDisplayName": "@soniaduarte8852",
+              "authorProfileImageUrl": "https://yt3.ggpht.com/eKlXr6A2R_nSPpdLBitKWBkqVH4403ug3fctyQ1W5V-LNkYAkZzRoV03eaKtaHuuJ9jSbGWkyF0=s48-c-k-c0x00ffffff-no-rj",
+              "authorChannelUrl": "http://www.youtube.com/@soniaduarte8852",
+              "authorChannelId": {
+                "value": "UCP6tKpRN0zVk7KuyJY3fEzA"
+              },
+              "canRate": true,
+              "viewerRating": "none",
+              "likeCount": 0,
+              "publishedAt": "2026-08-25T12:46:06Z",
+              "updatedAt": "2026-08-25T12:46:06Z"
+            }
+          },
+          "canReply": true,
+          "totalReplyCount": 0,
+          "isPublic": true
+        }
+      },
+      {
+        "kind": "youtube#commentThread",
+        "etag": "UZWoXxXoycgFwOLCCTT6czoPYzY",
+        "id": "Ugw4gOLeyCsWxEpGEP94AaABAg",
+        "snippet": {
+          "channelId": "UCS4kVH1srJ9h9nqJPG2iDLg",
+          "videoId": "W5ACjyQuEf0",
+          "topLevelComment": {
+            "kind": "youtube#comment",
+            "etag": "MaVSPwymdxzBpfTY7QfaC6AcyEA",
+            "id": "Ugw4gOLeyCsWxEpGEP94AaABAg",
+            "snippet": {
+              "channelId": "UCS4kVH1srJ9h9nqJPG2iDLg",
+              "videoId": "W5ACjyQuEf0",
+              "textDisplay": "AMÉN",
+              "textOriginal": "AMÉN",
+              "authorDisplayName": "@zetatamarit",
+              "authorProfileImageUrl": "https://yt3.ggpht.com/-QpRPQ0ypexubxkXlcyBq2Xevyc0eE3WGGEjKgM750AdCha2JFga4jYL_VPmStyhS8lCnDSn=s48-c-k-c0x00ffffff-no-rj",
+              "authorChannelUrl": "http://www.youtube.com/@zetatamarit",
+              "authorChannelId": {
+                "value": "UCFZ6Ro2wKLdehVaHIe3ZNpQ"
+              },
+              "canRate": true,
+              "viewerRating": "none",
+              "likeCount": 0,
+              "publishedAt": "2026-08-25T01:40:30Z",
+              "updatedAt": "2026-08-25T01:40:30Z"
+            }
+          },
+          "canReply": true,
+          "totalReplyCount": 0,
+          "isPublic": true
+        }
+      },
+      {
+        "kind": "youtube#commentThread",
+        "etag": "gySebLu6gmI2Ep7UTiK9r9rxJ5g",
+        "id": "UgxXJOQ6yUhsrhuzb3N4AaABAg",
+        "snippet": {
+          "channelId": "UCS4kVH1srJ9h9nqJPG2iDLg",
+          "videoId": "W5ACjyQuEf0",
+          "topLevelComment": {
+            "kind": "youtube#comment",
+            "etag": "vrTuEgYfEzhM5MCjwenEvnyb3E8",
+            "id": "UgxXJOQ6yUhsrhuzb3N4AaABAg",
+            "snippet": {
+              "channelId": "UCS4kVH1srJ9h9nqJPG2iDLg",
+              "videoId": "W5ACjyQuEf0",
+              "textDisplay": "/Z/",
+              "textOriginal": "/Z/",
+              "authorDisplayName": "@zetatamarit",
+              "authorProfileImageUrl": "https://yt3.ggpht.com/-QpRPQ0ypexubxkXlcyBq2Xevyc0eE3WGGEjKgM750AdCha2JFga4jYL_VPmStyhS8lCnDSn=s48-c-k-c0x00ffffff-no-rj",
+              "authorChannelUrl": "http://www.youtube.com/@zetatamarit",
+              "authorChannelId": {
+                "value": "UCFZ6Ro2wKLdehVaHIe3ZNpQ"
+              },
+              "canRate": true,
+              "viewerRating": "none",
+              "likeCount": 1,
+              "publishedAt": "2026-08-25T01:40:25Z",
+              "updatedAt": "2026-08-25T01:40:25Z"
+            }
+          },
+          "canReply": true,
+          "totalReplyCount": 0,
+          "isPublic": true
+        }
+      },
+      {
+        "kind": "youtube#commentThread",
+        "etag": "qjaXnKndUGOz-aLJZ5cxCSAIw3I",
+        "id": "UgwYNRDjX4XHQOYnXZN4AaABAg",
+        "snippet": {
+          "channelId": "UCS4kVH1srJ9h9nqJPG2iDLg",
+          "videoId": "W5ACjyQuEf0",
+          "topLevelComment": {
+            "kind": "youtube#comment",
+            "etag": "_6F5r98llwoa_LGinQ8lhz0xuQo",
+            "id": "UgwYNRDjX4XHQOYnXZN4AaABAg",
+            "snippet": {
+              "channelId": "UCS4kVH1srJ9h9nqJPG2iDLg",
+              "videoId": "W5ACjyQuEf0",
+              "textDisplay": "777",
+              "textOriginal": "777",
+              "authorDisplayName": "@zetatamarit",
+              "authorProfileImageUrl": "https://yt3.ggpht.com/-QpRPQ0ypexubxkXlcyBq2Xevyc0eE3WGGEjKgM750AdCha2JFga4jYL_VPmStyhS8lCnDSn=s48-c-k-c0x00ffffff-no-rj",
+              "authorChannelUrl": "http://www.youtube.com/@zetatamarit",
+              "authorChannelId": {
+                "value": "UCFZ6Ro2wKLdehVaHIe3ZNpQ"
+              },
+              "canRate": true,
+              "viewerRating": "none",
+              "likeCount": 1,
+              "publishedAt": "2026-08-25T01:40:15Z",
+              "updatedAt": "2026-08-25T01:40:15Z"
+            }
+          },
+          "canReply": true,
+          "totalReplyCount": 0,
+          "isPublic": true
+        }
+      },
+      {
+        "kind": "youtube#commentThread",
+        "etag": "5v-uwzR-F8ZQU2KCrvkDFsrpLNc",
+        "id": "UgziqZ_Wtt2xKaY0hBF4AaABAg",
+        "snippet": {
+          "channelId": "UCS4kVH1srJ9h9nqJPG2iDLg",
+          "videoId": "W5ACjyQuEf0",
+          "topLevelComment": {
+            "kind": "youtube#comment",
+            "etag": "dQCJt7zG_5q7A9G6RgZknpVBsAs",
+            "id": "UgziqZ_Wtt2xKaY0hBF4AaABAg",
+            "snippet": {
+              "channelId": "UCS4kVH1srJ9h9nqJPG2iDLg",
+              "videoId": "W5ACjyQuEf0",
+              "textDisplay": "AMÉN",
+              "textOriginal": "AMÉN",
+              "authorDisplayName": "@zetatamarit",
+              "authorProfileImageUrl": "https://yt3.ggpht.com/-QpRPQ0ypexubxkXlcyBq2Xevyc0eE3WGGEjKgM750AdCha2JFga4jYL_VPmStyhS8lCnDSn=s48-c-k-c0x00ffffff-no-rj",
+              "authorChannelUrl": "http://www.youtube.com/@zetatamarit",
+              "authorChannelId": {
+                "value": "UCFZ6Ro2wKLdehVaHIe3ZNpQ"
+              },
+              "canRate": true,
+              "viewerRating": "none",
+              "likeCount": 1,
+              "publishedAt": "2026-08-25T01:40:09Z",
+              "updatedAt": "2026-08-25T01:40:09Z"
+            }
+          },
+          "canReply": true,
+          "totalReplyCount": 0,
+          "isPublic": true
+        }
+      },
+      {
+        "kind": "youtube#commentThread",
+        "etag": "gnh7OvNwcE7uTLyDyDa_4zS9FJU",
+        "id": "UgxwW7hKOLJLpLY3_QB4AaABAg",
+        "snippet": {
+          "channelId": "UCS4kVH1srJ9h9nqJPG2iDLg",
+          "videoId": "W5ACjyQuEf0",
+          "topLevelComment": {
+            "kind": "youtube#comment",
+            "etag": "izHfVE3uI8TZVi8orKCCIA-dEOE",
+            "id": "UgxwW7hKOLJLpLY3_QB4AaABAg",
+            "snippet": {
+              "channelId": "UCS4kVH1srJ9h9nqJPG2iDLg",
+              "videoId": "W5ACjyQuEf0",
+              "textDisplay": "estoy esperando el milagro de dios!",
+              "textOriginal": "estoy esperando el milagro de dios!",
+              "authorDisplayName": "@micaelaaleman8089",
+              "authorProfileImageUrl": "https://yt3.ggpht.com/ytc/AIdro_mU7CWsTSrex9EXpAobnUpFBPgbEFzCYCN3GYkL8s8=s48-c-k-c0x00ffffff-no-rj",
+              "authorChannelUrl": "http://www.youtube.com/@micaelaaleman8089",
+              "authorChannelId": {
+                "value": "UCB4ppYQRV3XGrkZ5uUAbY3A"
+              },
+              "canRate": true,
+              "viewerRating": "none",
+              "likeCount": 0,
+              "publishedAt": "2026-08-24T20:32:36Z",
+              "updatedAt": "2026-08-24T20:32:36Z"
+            }
+          },
+          "canReply": true,
+          "totalReplyCount": 1,
+          "isPublic": true
+        },
+        "replies": {
+          "comments": [
+            {
+              "kind": "youtube#comment",
+              "etag": "VNCUHrh59WhEahUTZ8vFaTI4ILY",
+              "id": "UgxwW7hKOLJLpLY3_QB4AaABAg.A_uRIxgNvv1Aa8NqOrUiwe",
+              "snippet": {
+                "channelId": "UCS4kVH1srJ9h9nqJPG2iDLg",
+                "videoId": "W5ACjyQuEf0",
+                "textDisplay": "El milagro de Dios que veo aquí eres tú ❤",
+                "textOriginal": "El milagro de Dios que veo aquí eres tú ❤",
+                "parentId": "UgxwW7hKOLJLpLY3_QB4AaABAg",
+                "authorDisplayName": "@EstherMontagutvanOoijen",
+                "authorProfileImageUrl": "https://yt3.ggpht.com/Jnw-VUig3DbKHk4y6BLSgDMBWIuTerFsU1_I21z7zlfPh-UEF_EZOG2Fq_h41HZ8Hiistc6l4w=s48-c-k-c0x00ffffff-no-rj",
+                "authorChannelUrl": "http://www.youtube.com/@EstherMontagutvanOoijen",
+                "authorChannelId": {
+                  "value": "UCMMquBRyNSxlUNb7fvze1dg"
+                },
+                "canRate": true,
+                "viewerRating": "none",
+                "likeCount": 0,
+                "publishedAt": "2026-08-30T15:50:57Z",
+                "updatedAt": "2026-08-30T15:50:57Z"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "kind": "youtube#commentThread",
+        "etag": "enwxFdtQucgN8eYZYoRtryUtjyc",
+        "id": "UgwoMT7DJoC6HvrTvHh4AaABAg",
+        "snippet": {
+          "channelId": "UCS4kVH1srJ9h9nqJPG2iDLg",
+          "videoId": "W5ACjyQuEf0",
+          "topLevelComment": {
+            "kind": "youtube#comment",
+            "etag": "epfTQ5kwv_iv0bcSAViGhk6DTyk",
+            "id": "UgwoMT7DJoC6HvrTvHh4AaABAg",
+            "snippet": {
+              "channelId": "UCS4kVH1srJ9h9nqJPG2iDLg",
+              "videoId": "W5ACjyQuEf0",
+              "textDisplay": "Gracias muchas gracias bendiciones, Dios amado Bendito cura mi cuerpo y mi alma",
+              "textOriginal": "Gracias muchas gracias bendiciones, Dios amado Bendito cura mi cuerpo y mi alma",
+              "authorDisplayName": "@Mario-of6px",
+              "authorProfileImageUrl": "https://yt3.ggpht.com/ytc/AIdro_m5DHdJOQs40hzoitGNZg5x-fmV6OYmJoszNAslGR0idT_rVnRjRUDprHsTC8XFm7CrIA=s48-c-k-c0x00ffffff-no-rj",
+              "authorChannelUrl": "http://www.youtube.com/@Mario-of6px",
+              "authorChannelId": {
+                "value": "UCucSilhC3MsmK077Fi69LpA"
+              },
+              "canRate": true,
+              "viewerRating": "none",
+              "likeCount": 0,
+              "publishedAt": "2026-08-24T02:38:10Z",
+              "updatedAt": "2026-08-24T02:38:10Z"
+            }
+          },
+          "canReply": true,
+          "totalReplyCount": 0,
+          "isPublic": true
+        }
+      },
+      {
+        "kind": "youtube#commentThread",
+        "etag": "KGUlFChNEttplRERzGpIrADbt1A",
+        "id": "Ugzw6rMJtkdD8drIh_Z4AaABAg",
+        "snippet": {
+          "channelId": "UCS4kVH1srJ9h9nqJPG2iDLg",
+          "videoId": "W5ACjyQuEf0",
+          "topLevelComment": {
+            "kind": "youtube#comment",
+            "etag": "4_pR7F8tUFZNV0YVEFJy5EqNZes",
+            "id": "Ugzw6rMJtkdD8drIh_Z4AaABAg",
+            "snippet": {
+              "channelId": "UCS4kVH1srJ9h9nqJPG2iDLg",
+              "videoId": "W5ACjyQuEf0",
+              "textDisplay": "Gratidão❤",
+              "textOriginal": "Gratidão❤",
+              "authorDisplayName": "@wolmergs",
+              "authorProfileImageUrl": "https://yt3.ggpht.com/7oHHBhwFcq3p78pBS2q_NyHmWy4_FZSD_9EVcjbh16oXGk1vmcO0RrCeM_13gA9kcYIfzgR6AZo=s48-c-k-c0x00ffffff-no-rj",
+              "authorChannelUrl": "http://www.youtube.com/@wolmergs",
+              "authorChannelId": {
+                "value": "UCCsgPs83sxlwocLYzA-iD7Q"
+              },
+              "canRate": true,
+              "viewerRating": "none",
+              "likeCount": 0,
+              "publishedAt": "2026-08-23T18:01:50Z",
+              "updatedAt": "2026-08-23T18:01:50Z"
+            }
+          },
+          "canReply": true,
+          "totalReplyCount": 0,
+          "isPublic": true
+        }
+      },
+      {
+        "kind": "youtube#commentThread",
+        "etag": "tOd7ntK9QF3yexhEqE5Qiuj2QzQ",
+        "id": "UgzzJjDb4KLD5BJTmod4AaABAg",
+        "snippet": {
+          "channelId": "UCS4kVH1srJ9h9nqJPG2iDLg",
+          "videoId": "W5ACjyQuEf0",
+          "topLevelComment": {
+            "kind": "youtube#comment",
+            "etag": "ijl9udb3pg_refi9JcfIdjfIwxg",
+            "id": "UgzzJjDb4KLD5BJTmod4AaABAg",
+            "snippet": {
+              "channelId": "UCS4kVH1srJ9h9nqJPG2iDLg",
+              "videoId": "W5ACjyQuEf0",
+              "textDisplay": "Dios Les bendiga gracias",
+              "textOriginal": "Dios Les bendiga gracias",
+              "authorDisplayName": "@OlgaJurado-o1u",
+              "authorProfileImageUrl": "https://yt3.ggpht.com/ytc/AIdro_mZwPWuPX67S792W5j9j63JWvTbBzBXKkE9c6InqltH2_MRJQW99mrizBm5CsnKXSSOsQ=s48-c-k-c0x00ffffff-no-rj",
+              "authorChannelUrl": "http://www.youtube.com/@OlgaJurado-o1u",
+              "authorChannelId": {
+                "value": "UCk4tmnb7fZQzgQ8id_UIGmw"
+              },
+              "canRate": true,
+              "viewerRating": "none",
+              "likeCount": 0,
+              "publishedAt": "2026-08-23T08:22:48Z",
+              "updatedAt": "2026-08-23T08:22:48Z"
+            }
+          },
+          "canReply": true,
+          "totalReplyCount": 0,
+          "isPublic": true
+        }
+      },
+      {
+        "kind": "youtube#commentThread",
+        "etag": "D0_dY-m0VLvmeY774RdA4JuGSng",
+        "id": "UgxpDZyd1NIAYbsSoA94AaABAg",
+        "snippet": {
+          "channelId": "UCS4kVH1srJ9h9nqJPG2iDLg",
+          "videoId": "W5ACjyQuEf0",
+          "topLevelComment": {
+            "kind": "youtube#comment",
+            "etag": "LH1qVxcbcmPAZ7Gu-8QcpHpR2XE",
+            "id": "UgxpDZyd1NIAYbsSoA94AaABAg",
+            "snippet": {
+              "channelId": "UCS4kVH1srJ9h9nqJPG2iDLg",
+              "videoId": "W5ACjyQuEf0",
+              "textDisplay": "Sanar la mente y el cuerpo es sanar el alma. Por que cuando tenemos paz interior podemos ver más allá de lo visible. El poder está dentro de ti. Aprende a manejar tus chakras y podrás volar.",
+              "textOriginal": "Sanar la mente y el cuerpo es sanar el alma. Por que cuando tenemos paz interior podemos ver más allá de lo visible. El poder está dentro de ti. Aprende a manejar tus chakras y podrás volar.",
+              "authorDisplayName": "@JohnalexanderOcampotangarife",
+              "authorProfileImageUrl": "https://yt3.ggpht.com/ytc/AIdro_nbnIwyYsF5KGzS2pWd-Bbv2zgtWKXIXYtKtnh9Q669BzQAGM9gxLELfbqgp3aEheu7BQ=s48-c-k-c0x00ffffff-no-rj",
+              "authorChannelUrl": "http://www.youtube.com/@JohnalexanderOcampotangarife",
+              "authorChannelId": {
+                "value": "UCFUVXzKOSbfjZ8nNhXfzDPw"
+              },
+              "canRate": true,
+              "viewerRating": "none",
+              "likeCount": 0,
+              "publishedAt": "2026-08-23T06:01:30Z",
+              "updatedAt": "2026-08-23T06:01:30Z"
+            }
+          },
+          "canReply": true,
+          "totalReplyCount": 0,
+          "isPublic": true
+        }
+      },
+      {
+        "kind": "youtube#commentThread",
+        "etag": "wWhRDhdNkROLsKTgY5DD5KgzU1o",
+        "id": "Ugz0MQlEJcnnGJa2Q_V4AaABAg",
+        "snippet": {
+          "channelId": "UCS4kVH1srJ9h9nqJPG2iDLg",
+          "videoId": "W5ACjyQuEf0",
+          "topLevelComment": {
+            "kind": "youtube#comment",
+            "etag": "u8jvn2IObZgResQb3DjwbN2RSug",
+            "id": "Ugz0MQlEJcnnGJa2Q_V4AaABAg",
+            "snippet": {
+              "channelId": "UCS4kVH1srJ9h9nqJPG2iDLg",
+              "videoId": "W5ACjyQuEf0",
+              "textDisplay": "Gracias por acompañarme en mi oración y agradecimiento de hoy. Esta música está llena de paz y de la presencia de Dios.",
+              "textOriginal": "Gracias por acompañarme en mi oración y agradecimiento de hoy. Esta música está llena de paz y de la presencia de Dios.",
+              "authorDisplayName": "@ligiapenaleon3638",
+              "authorProfileImageUrl": "https://yt3.ggpht.com/ytc/AIdro_mQm-4xtmBsYukhbhu5nEs1XfP0u5j033yvqeoGmS67KGw=s48-c-k-c0x00ffffff-no-rj",
+              "authorChannelUrl": "http://www.youtube.com/@ligiapenaleon3638",
+              "authorChannelId": {
+                "value": "UCiD-SW1cxi2ODmdIrYqomug"
+              },
+              "canRate": true,
+              "viewerRating": "none",
+              "likeCount": 0,
+              "publishedAt": "2026-08-22T11:50:11Z",
+              "updatedAt": "2026-08-22T11:50:11Z"
+            }
+          },
+          "canReply": true,
+          "totalReplyCount": 0,
+          "isPublic": true
+        }
+      },
+      {
+        "kind": "youtube#commentThread",
+        "etag": "ct5JdOo1N-qgImvGkwX7DU_u_0k",
+        "id": "UgwlfOZVB-WYq8vjbOt4AaABAg",
+        "snippet": {
+          "channelId": "UCS4kVH1srJ9h9nqJPG2iDLg",
+          "videoId": "W5ACjyQuEf0",
+          "topLevelComment": {
+            "kind": "youtube#comment",
+            "etag": "3Vjjns6hFwgUCrCus2lzXtoHJQo",
+            "id": "UgwlfOZVB-WYq8vjbOt4AaABAg",
+            "snippet": {
+              "channelId": "UCS4kVH1srJ9h9nqJPG2iDLg",
+              "videoId": "W5ACjyQuEf0",
+              "textDisplay": "Uwuuu nya",
+              "textOriginal": "Uwuuu nya",
+              "authorDisplayName": "@xheoelchico8928",
+              "authorProfileImageUrl": "https://yt3.ggpht.com/3c4MU72XZ_zumWbIlT85Ia_xKds5CJumLonMw-6YSBO5JwSdWuju1DgXdbPhHrbK7p5cA2Er5Q=s48-c-k-c0x00ffffff-no-rj",
+              "authorChannelUrl": "http://www.youtube.com/@xheoelchico8928",
+              "authorChannelId": {
+                "value": "UC9UpAdOdpSDULugU4H8_BFg"
+              },
+              "canRate": true,
+              "viewerRating": "none",
+              "likeCount": 0,
+              "publishedAt": "2026-08-22T05:01:48Z",
+              "updatedAt": "2026-08-22T05:01:48Z"
+            }
+          },
+          "canReply": true,
+          "totalReplyCount": 0,
+          "isPublic": true
+        }
+      },
+      {
+        "kind": "youtube#commentThread",
+        "etag": "m1IAecBFwM0RlwGlJMNb0IWLEbw",
+        "id": "UgwpwJMhf_NHXHnsnjd4AaABAg",
+        "snippet": {
+          "channelId": "UCS4kVH1srJ9h9nqJPG2iDLg",
+          "videoId": "W5ACjyQuEf0",
+          "topLevelComment": {
+            "kind": "youtube#comment",
+            "etag": "4X2vQTQQON_H_lO25FwaXhjL7VE",
+            "id": "UgwpwJMhf_NHXHnsnjd4AaABAg",
+            "snippet": {
+              "channelId": "UCS4kVH1srJ9h9nqJPG2iDLg",
+              "videoId": "W5ACjyQuEf0",
+              "textDisplay": "Arabes adoracion",
+              "textOriginal": "Arabes adoracion",
+              "authorDisplayName": "@olgacuriqueo",
+              "authorProfileImageUrl": "https://yt3.ggpht.com/ytc/AIdro_mix8ipP7ruoD2_f_SBXje8o2gnxtNGn3UVt_JxNZiLDA0=s48-c-k-c0x00ffffff-no-rj",
+              "authorChannelUrl": "http://www.youtube.com/@olgacuriqueo",
+              "authorChannelId": {
+                "value": "UC9J29uNL91pmxvGiPHcy_2Q"
+              },
+              "canRate": true,
+              "viewerRating": "none",
+              "likeCount": 0,
+              "publishedAt": "2026-08-21T15:46:44Z",
+              "updatedAt": "2026-08-21T15:46:44Z"
+            }
+          },
+          "canReply": true,
+          "totalReplyCount": 0,
+          "isPublic": true
+        }
+      },
+      {
+        "kind": "youtube#commentThread",
+        "etag": "Kdu4D49GCCpJ21k-S3xO1tK4dPU",
+        "id": "Ugxo6MjalosfGyfz3iF4AaABAg",
+        "snippet": {
+          "channelId": "UCS4kVH1srJ9h9nqJPG2iDLg",
+          "videoId": "W5ACjyQuEf0",
+          "topLevelComment": {
+            "kind": "youtube#comment",
+            "etag": "69wRjvIYdk7LylxD2KaOeEKfiZo",
+            "id": "Ugxo6MjalosfGyfz3iF4AaABAg",
+            "snippet": {
+              "channelId": "UCS4kVH1srJ9h9nqJPG2iDLg",
+              "videoId": "W5ACjyQuEf0",
+              "textDisplay": "Dios por favor sana a cristiano león de todo mal<br>Que le han puesto y que no tenga problemas a su corazoncito de 11 años, protégelo a él y a su familia",
+              "textOriginal": "Dios por favor sana a cristiano león de todo mal\nQue le han puesto y que no tenga problemas a su corazoncito de 11 años, protégelo a él y a su familia",
+              "authorDisplayName": "@paulariforifo",
+              "authorProfileImageUrl": "https://yt3.ggpht.com/L1a43Qrfo9gytwz1PU8Hekquy5gK0_ZtIjofZ7WY55y52uUu8d8uls8RBfHHYBnlAOaZKncPye8=s48-c-k-c0x00ffffff-no-rj",
+              "authorChannelUrl": "http://www.youtube.com/@paulariforifo",
+              "authorChannelId": {
+                "value": "UCleoLOXZK_5c-O2jBT9b7Pg"
+              },
+              "canRate": true,
+              "viewerRating": "none",
+              "likeCount": 0,
+              "publishedAt": "2026-08-21T10:10:16Z",
+              "updatedAt": "2026-08-21T10:10:16Z"
+            }
+          },
+          "canReply": true,
+          "totalReplyCount": 1,
+          "isPublic": true
+        },
+        "replies": {
+          "comments": [
+            {
+              "kind": "youtube#comment",
+              "etag": "m-XYd8RHTntryw5qffRd358GH6g",
+              "id": "Ugxo6MjalosfGyfz3iF4AaABAg.A_lahBdvKFZAa8NzITFq2t",
+              "snippet": {
+                "channelId": "UCS4kVH1srJ9h9nqJPG2iDLg",
+                "videoId": "W5ACjyQuEf0",
+                "textDisplay": "Gracias Dios por ver a todos con tus ojos, gracias por hacer todo nuevo ❤",
+                "textOriginal": "Gracias Dios por ver a todos con tus ojos, gracias por hacer todo nuevo ❤",
+                "parentId": "Ugxo6MjalosfGyfz3iF4AaABAg",
+                "authorDisplayName": "@EstherMontagutvanOoijen",
+                "authorProfileImageUrl": "https://yt3.ggpht.com/Jnw-VUig3DbKHk4y6BLSgDMBWIuTerFsU1_I21z7zlfPh-UEF_EZOG2Fq_h41HZ8Hiistc6l4w=s48-c-k-c0x00ffffff-no-rj",
+                "authorChannelUrl": "http://www.youtube.com/@EstherMontagutvanOoijen",
+                "authorChannelId": {
+                  "value": "UCMMquBRyNSxlUNb7fvze1dg"
+                },
+                "canRate": true,
+                "viewerRating": "none",
+                "likeCount": 0,
+                "publishedAt": "2026-08-30T15:52:10Z",
+                "updatedAt": "2026-08-30T15:52:10Z"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "kind": "youtube#commentThread",
+        "etag": "XfizRHm22DSbxgf2rzF0gxJx6jA",
+        "id": "UgysJgUrS9lGgdsGd-t4AaABAg",
+        "snippet": {
+          "channelId": "UCS4kVH1srJ9h9nqJPG2iDLg",
+          "videoId": "W5ACjyQuEf0",
+          "topLevelComment": {
+            "kind": "youtube#comment",
+            "etag": "JVeKAniqa6STbaPOOmtqQsOtIKs",
+            "id": "UgysJgUrS9lGgdsGd-t4AaABAg",
+            "snippet": {
+              "channelId": "UCS4kVH1srJ9h9nqJPG2iDLg",
+              "videoId": "W5ACjyQuEf0",
+              "textDisplay": "Dios está conmigo, soy elegida de Dios y Jesús Cristo su hijo, soy amor, prosperidad y abundancia ❤todo mis seres queridos están bendecidos con el amor de Dios y Jesús",
+              "textOriginal": "Dios está conmigo, soy elegida de Dios y Jesús Cristo su hijo, soy amor, prosperidad y abundancia ❤todo mis seres queridos están bendecidos con el amor de Dios y Jesús",
+              "authorDisplayName": "@paulariforifo",
+              "authorProfileImageUrl": "https://yt3.ggpht.com/L1a43Qrfo9gytwz1PU8Hekquy5gK0_ZtIjofZ7WY55y52uUu8d8uls8RBfHHYBnlAOaZKncPye8=s48-c-k-c0x00ffffff-no-rj",
+              "authorChannelUrl": "http://www.youtube.com/@paulariforifo",
+              "authorChannelId": {
+                "value": "UCleoLOXZK_5c-O2jBT9b7Pg"
+              },
+              "canRate": true,
+              "viewerRating": "none",
+              "likeCount": 0,
+              "publishedAt": "2026-08-21T10:08:28Z",
+              "updatedAt": "2026-08-21T10:08:28Z"
+            }
+          },
+          "canReply": true,
+          "totalReplyCount": 0,
+          "isPublic": true
+        }
+      },
+      {
+        "kind": "youtube#commentThread",
+        "etag": "vey3GNEWJxdP-IMk-ySHD-jWv9k",
+        "id": "UgwJUf0ZalNUip_W4xZ4AaABAg",
+        "snippet": {
+          "channelId": "UCS4kVH1srJ9h9nqJPG2iDLg",
+          "videoId": "W5ACjyQuEf0",
+          "topLevelComment": {
+            "kind": "youtube#comment",
+            "etag": "xJqQPIgI96gQnDt6630Mq1wdfW0",
+            "id": "UgwJUf0ZalNUip_W4xZ4AaABAg",
+            "snippet": {
+              "channelId": "UCS4kVH1srJ9h9nqJPG2iDLg",
+              "videoId": "W5ACjyQuEf0",
+              "textDisplay": "Toca mi alma y conmueve mi ser me llena de esperanza y de amor en un mundo tan caido",
+              "textOriginal": "Toca mi alma y conmueve mi ser me llena de esperanza y de amor en un mundo tan caido",
+              "authorDisplayName": "@virginiaortiz6296",
+              "authorProfileImageUrl": "https://yt3.ggpht.com/ytc/AIdro_nHn945Ow5_9FkmC2gl5jSt-GoR545brJg9XAe3rmPHHDY=s48-c-k-c0x00ffffff-no-rj",
+              "authorChannelUrl": "http://www.youtube.com/@virginiaortiz6296",
+              "authorChannelId": {
+                "value": "UCrTkzXXRmrLglnLGMM2lvZw"
+              },
+              "canRate": true,
+              "viewerRating": "none",
+              "likeCount": 0,
+              "publishedAt": "2026-08-20T14:35:24Z",
+              "updatedAt": "2026-08-20T14:35:24Z"
+            }
+          },
+          "canReply": true,
+          "totalReplyCount": 0,
+          "isPublic": true
+        }
+      },
+      {
+        "kind": "youtube#commentThread",
+        "etag": "sRxOb6iqGSH5PmHYDkIGEMg9Ndg",
+        "id": "UgyCMejRmME1ZcCWK8d4AaABAg",
+        "snippet": {
+          "channelId": "UCS4kVH1srJ9h9nqJPG2iDLg",
+          "videoId": "W5ACjyQuEf0",
+          "topLevelComment": {
+            "kind": "youtube#comment",
+            "etag": "8rIASuiAozVF7JrMzvCEl3tXQus",
+            "id": "UgyCMejRmME1ZcCWK8d4AaABAg",
+            "snippet": {
+              "channelId": "UCS4kVH1srJ9h9nqJPG2iDLg",
+              "videoId": "W5ACjyQuEf0",
+              "textDisplay": "Hola me siento perdido desde hace tiempo <br>Lo perdí todo mi familia,mi hogar,mis mascotas las amaba con todas mis fuerzas <br>Y la mujer que más he amado está con alguien más <br>Las noches son tan largas y los días muy cortos <br>Espero un día <br>todo mejore",
+              "textOriginal": "Hola me siento perdido desde hace tiempo \nLo perdí todo mi familia,mi hogar,mis mascotas las amaba con todas mis fuerzas \nY la mujer que más he amado está con alguien más \nLas noches son tan largas y los días muy cortos \nEspero un día \ntodo mejore",
+              "authorDisplayName": "@Spitdashit",
+              "authorProfileImageUrl": "https://yt3.ggpht.com/ytc/AIdro_nlBilyjMA1U52oKK26XZ_UcnniCFBmVBEaZcWRZocnDN18ZKMnESUSGCHsm8S0Thv9RQ=s48-c-k-c0x00ffffff-no-rj",
+              "authorChannelUrl": "http://www.youtube.com/@Spitdashit",
+              "authorChannelId": {
+                "value": "UCUAg01uHj0crYZqKIXoVSsQ"
+              },
+              "canRate": true,
+              "viewerRating": "none",
+              "likeCount": 0,
+              "publishedAt": "2026-08-20T10:06:49Z",
+              "updatedAt": "2026-08-20T10:06:49Z"
+            }
+          },
+          "canReply": true,
+          "totalReplyCount": 2,
+          "isPublic": true
+        },
+        "replies": {
+          "comments": [
+            {
+              "kind": "youtube#comment",
+              "etag": "GsAhRrA7l72TLcOvkjcFfsuLISQ",
+              "id": "UgyCMejRmME1ZcCWK8d4AaABAg.A_j0W8ax7L6A_lF_4zc3_L",
+              "snippet": {
+                "channelId": "UCS4kVH1srJ9h9nqJPG2iDLg",
+                "videoId": "W5ACjyQuEf0",
+                "textDisplay": "No te desanimes piensa que por algo suceden las cosas. Confía en Dios , entrega tus pesares a Jesús , te guiará  y saldrás adelante. 😊",
+                "textOriginal": "No te desanimes piensa que por algo suceden las cosas. Confía en Dios , entrega tus pesares a Jesús , te guiará  y saldrás adelante. 😊",
+                "parentId": "UgyCMejRmME1ZcCWK8d4AaABAg",
+                "authorDisplayName": "@ariana-p11ln",
+                "authorProfileImageUrl": "https://yt3.ggpht.com/ytc/AIdro_nB9Tm9qpNPeUVqazDqRe4FZV6uFd0W3Uq2mMGoCDO5-URC1guRJ6X6izUpduu-J5L48g=s48-c-k-c0x00ffffff-no-rj",
+                "authorChannelUrl": "http://www.youtube.com/@ariana-p11ln",
+                "authorChannelId": {
+                  "value": "UCCz-bQC9VZDkpAJKvaGzdMQ"
+                },
+                "canRate": true,
+                "viewerRating": "none",
+                "likeCount": 0,
+                "publishedAt": "2026-08-21T06:56:55Z",
+                "updatedAt": "2026-08-21T06:57:56Z"
+              }
+            },
+            {
+              "kind": "youtube#comment",
+              "etag": "WGabkT_UzBN0CUgf1dfzev6Nhg8",
+              "id": "UgyCMejRmME1ZcCWK8d4AaABAg.A_j0W8ax7L6Aa8OOTWzLXa",
+              "snippet": {
+                "channelId": "UCS4kVH1srJ9h9nqJPG2iDLg",
+                "videoId": "W5ACjyQuEf0",
+                "textDisplay": "Damos gracias a Dios por hacer todo nuevo. Cambiamos tu situación y tu voluntad. Gracias Padre porque estás conmigo, trabajando a través de mí y aunque duele como el nacer, lo que viene, mi hogar, mi armonía familiar, mi salud y mi entorno en orden lo recibo con los brazos abiertos ❤",
+                "textOriginal": "Damos gracias a Dios por hacer todo nuevo. Cambiamos tu situación y tu voluntad. Gracias Padre porque estás conmigo, trabajando a través de mí y aunque duele como el nacer, lo que viene, mi hogar, mi armonía familiar, mi salud y mi entorno en orden lo recibo con los brazos abiertos ❤",
+                "parentId": "UgyCMejRmME1ZcCWK8d4AaABAg",
+                "authorDisplayName": "@EstherMontagutvanOoijen",
+                "authorProfileImageUrl": "https://yt3.ggpht.com/Jnw-VUig3DbKHk4y6BLSgDMBWIuTerFsU1_I21z7zlfPh-UEF_EZOG2Fq_h41HZ8Hiistc6l4w=s48-c-k-c0x00ffffff-no-rj",
+                "authorChannelUrl": "http://www.youtube.com/@EstherMontagutvanOoijen",
+                "authorChannelId": {
+                  "value": "UCMMquBRyNSxlUNb7fvze1dg"
+                },
+                "canRate": true,
+                "viewerRating": "none",
+                "likeCount": 0,
+                "publishedAt": "2026-08-30T15:55:45Z",
+                "updatedAt": "2026-08-30T15:55:45Z"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "kind": "youtube#commentThread",
+        "etag": "VvlNW5tQSseBX94bidrjo8Nmd9c",
+        "id": "Ugzc4saBYi8lAqmD02p4AaABAg",
+        "snippet": {
+          "channelId": "UCS4kVH1srJ9h9nqJPG2iDLg",
+          "videoId": "W5ACjyQuEf0",
+          "topLevelComment": {
+            "kind": "youtube#comment",
+            "etag": "dtxXpv0tg9UZz-V2H_Hl8DYWYg4",
+            "id": "Ugzc4saBYi8lAqmD02p4AaABAg",
+            "snippet": {
+              "channelId": "UCS4kVH1srJ9h9nqJPG2iDLg",
+              "videoId": "W5ACjyQuEf0",
+              "textDisplay": "Mi frecuencia de dio favorito lo escucho diariamente cuando duermo",
+              "textOriginal": "Mi frecuencia de dio favorito lo escucho diariamente cuando duermo",
+              "authorDisplayName": "@Sonic_376",
+              "authorProfileImageUrl": "https://yt3.ggpht.com/Q41r2pTWXFAIOhOshzFH2MAhnru8y-CUP1ShP-g4QwRGrHt0QRrkzBSz5y251vW5-avIg9ekofc=s48-c-k-c0x00ffffff-no-rj",
+              "authorChannelUrl": "http://www.youtube.com/@Sonic_376",
+              "authorChannelId": {
+                "value": "UCNSi7wFtDG_H_ry_nh1L8kg"
+              },
+              "canRate": true,
+              "viewerRating": "none",
+              "likeCount": 0,
+              "publishedAt": "2026-08-20T02:01:37Z",
+              "updatedAt": "2026-08-20T02:01:37Z"
+            }
+          },
+          "canReply": true,
+          "totalReplyCount": 0,
+          "isPublic": true
+        }
+      },
+      {
+        "kind": "youtube#commentThread",
+        "etag": "6qx8adjqG5wF1gWx0dyFC8wWN9o",
+        "id": "UgyEvfmV2VWW9NMK16V4AaABAg",
+        "snippet": {
+          "channelId": "UCS4kVH1srJ9h9nqJPG2iDLg",
+          "videoId": "W5ACjyQuEf0",
+          "topLevelComment": {
+            "kind": "youtube#comment",
+            "etag": "cgIt5Tdvpu9KrA4apxnKylpaqwQ",
+            "id": "UgyEvfmV2VWW9NMK16V4AaABAg",
+            "snippet": {
+              "channelId": "UCS4kVH1srJ9h9nqJPG2iDLg",
+              "videoId": "W5ACjyQuEf0",
+              "textDisplay": "Sáname Señor solo una palabra tuya basta para gozar de salud absoluta y perfecta… confío en ti mi Dios creador del universo mi buen Jesús gracias gracias… recibo mi sanidad conforme a tu voluntad tú eres bueno mi Dios amado 🙏🙌🍃 gracias gracias !!",
+              "textOriginal": "Sáname Señor solo una palabra tuya basta para gozar de salud absoluta y perfecta… confío en ti mi Dios creador del universo mi buen Jesús gracias gracias… recibo mi sanidad conforme a tu voluntad tú eres bueno mi Dios amado 🙏🙌🍃 gracias gracias !!",
+              "authorDisplayName": "@sofiamatias-n6b",
+              "authorProfileImageUrl": "https://yt3.ggpht.com/ytc/AIdro_nz0WQ2urjkwjkAfqK_EdLBYiMnKV9tTCAehms64-BY7J4wgAZK-pM-tV9QNNg395wpAQ=s48-c-k-c0x00ffffff-no-rj",
+              "authorChannelUrl": "http://www.youtube.com/@sofiamatias-n6b",
+              "authorChannelId": {
+                "value": "UCCove2QIzDx73wrG7TD9xsA"
+              },
+              "canRate": true,
+              "viewerRating": "none",
+              "likeCount": 0,
+              "publishedAt": "2026-08-19T19:19:19Z",
+              "updatedAt": "2026-08-19T19:19:19Z"
+            }
+          },
+          "canReply": true,
+          "totalReplyCount": 0,
+          "isPublic": true
+        }
+      },
+      {
+        "kind": "youtube#commentThread",
+        "etag": "sXhXwLBqykhe0ZK7Pjumks5fQCI",
+        "id": "UgxZfTiCvcunfXzWFAd4AaABAg",
+        "snippet": {
+          "channelId": "UCS4kVH1srJ9h9nqJPG2iDLg",
+          "videoId": "W5ACjyQuEf0",
+          "topLevelComment": {
+            "kind": "youtube#comment",
+            "etag": "lGQH62Z47rsYGzNWrihcqt_AcZ4",
+            "id": "UgxZfTiCvcunfXzWFAd4AaABAg",
+            "snippet": {
+              "channelId": "UCS4kVH1srJ9h9nqJPG2iDLg",
+              "videoId": "W5ACjyQuEf0",
+              "textDisplay": "Ana de mi ❤ pasaron 6 años que encontre tu canal por esta hermosa frecuencia y hoy vuelvo a disfrutarla. Besos para vos❤",
+              "textOriginal": "Ana de mi ❤ pasaron 6 años que encontre tu canal por esta hermosa frecuencia y hoy vuelvo a disfrutarla. Besos para vos❤",
+              "authorDisplayName": "@ines.cartoser",
+              "authorProfileImageUrl": "https://yt3.ggpht.com/ytc/AIdro_latFmt0ZuXefl4OwEhx5DHm7VpOBGnEa4AuvmETGYvfIoC=s48-c-k-c0x00ffffff-no-rj",
+              "authorChannelUrl": "http://www.youtube.com/@ines.cartoser",
+              "authorChannelId": {
+                "value": "UCmC6L0KyWMsRJkyw6b_2_Dw"
+              },
+              "canRate": true,
+              "viewerRating": "none",
+              "likeCount": 1,
+              "publishedAt": "2026-08-19T04:21:24Z",
+              "updatedAt": "2026-08-19T04:21:24Z"
+            }
+          },
+          "canReply": true,
+          "totalReplyCount": 2,
+          "isPublic": true
+        },
+        "replies": {
+          "comments": [
+            {
+              "kind": "youtube#comment",
+              "etag": "zsa_Ir3242VYJ9JrT0JuXKJsVdk",
+              "id": "UgxZfTiCvcunfXzWFAd4AaABAg.A_fpBL1MUuOA_fvRFscjJb",
+              "snippet": {
+                "channelId": "UCS4kVH1srJ9h9nqJPG2iDLg",
+                "videoId": "W5ACjyQuEf0",
+                "textDisplay": "Me emociona saber que después de tanto tiempo sigues encontrando en esta música un espacio para disfrutar y conectar. Gracias de corazón por seguir aquí y formar parte de este camino. Un abrazo enorme y muchas bendiciones 🤍🙏✨",
+                "textOriginal": "Me emociona saber que después de tanto tiempo sigues encontrando en esta música un espacio para disfrutar y conectar. Gracias de corazón por seguir aquí y formar parte de este camino. Un abrazo enorme y muchas bendiciones 🤍🙏✨",
+                "parentId": "UgxZfTiCvcunfXzWFAd4AaABAg",
+                "authorDisplayName": "@SatChit",
+                "authorProfileImageUrl": "https://yt3.ggpht.com/FnohK9fdiiY-qyeOE6oiklkyWtRDC1WOCq6V_aG3EfAM2TO1JfjwMRTrPqv8i9xNouT5W1HnsA=s48-c-k-c0x00ffffff-no-rj",
+                "authorChannelUrl": "http://www.youtube.com/@SatChit",
+                "authorChannelId": {
+                  "value": "UCS4kVH1srJ9h9nqJPG2iDLg"
+                },
+                "canRate": true,
+                "viewerRating": "none",
+                "likeCount": 1,
+                "publishedAt": "2026-08-19T05:16:00Z",
+                "updatedAt": "2026-08-19T05:16:00Z"
+              }
+            },
+            {
+              "kind": "youtube#comment",
+              "etag": "_i3sGV6C7sZSrqLSDXw7v6ma4ek",
+              "id": "UgxZfTiCvcunfXzWFAd4AaABAg.A_fpBL1MUuOA_nIyW1SWRI",
+              "snippet": {
+                "channelId": "UCS4kVH1srJ9h9nqJPG2iDLg",
+                "videoId": "W5ACjyQuEf0",
+                "textDisplay": "​@SatChit❤❤❤❤",
+                "textOriginal": "​@SatChit❤❤❤❤",
+                "parentId": "UgxZfTiCvcunfXzWFAd4AaABAg",
+                "authorDisplayName": "@ines.cartoser",
+                "authorProfileImageUrl": "https://yt3.ggpht.com/ytc/AIdro_latFmt0ZuXefl4OwEhx5DHm7VpOBGnEa4AuvmETGYvfIoC=s48-c-k-c0x00ffffff-no-rj",
+                "authorChannelUrl": "http://www.youtube.com/@ines.cartoser",
+                "authorChannelId": {
+                  "value": "UCmC6L0KyWMsRJkyw6b_2_Dw"
+                },
+                "canRate": true,
+                "viewerRating": "none",
+                "likeCount": 0,
+                "publishedAt": "2026-08-22T02:05:05Z",
+                "updatedAt": "2026-08-22T02:05:05Z"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "kind": "youtube#commentThread",
+        "etag": "oCHdb0gpV1O4xxFMPp1ZfbbeAAU",
+        "id": "Ugy8SCOtZgEama_ge4B4AaABAg",
+        "snippet": {
+          "channelId": "UCS4kVH1srJ9h9nqJPG2iDLg",
+          "videoId": "W5ACjyQuEf0",
+          "topLevelComment": {
+            "kind": "youtube#comment",
+            "etag": "qdWdOPrsasuYczuNlc6QF4bFMP0",
+            "id": "Ugy8SCOtZgEama_ge4B4AaABAg",
+            "snippet": {
+              "channelId": "UCS4kVH1srJ9h9nqJPG2iDLg",
+              "videoId": "W5ACjyQuEf0",
+              "textDisplay": "Grasias a elsenor santos Amen ❤",
+              "textOriginal": "Grasias a elsenor santos Amen ❤",
+              "authorDisplayName": "@JuanjoseVielmajuarez-g9i",
+              "authorProfileImageUrl": "https://yt3.ggpht.com/ytc/AIdro_lOLm-ghLUyNeR63dHQLSJT7oFA7-F0BvqAJOjYEsiDZh4OjaFpfbdHReaGhCF6aq9AXw=s48-c-k-c0x00ffffff-no-rj",
+              "authorChannelUrl": "http://www.youtube.com/@JuanjoseVielmajuarez-g9i",
+              "authorChannelId": {
+                "value": "UC42pasc42AJmEM2sl_g5d0w"
+              },
+              "canRate": true,
+              "viewerRating": "none",
+              "likeCount": 0,
+              "publishedAt": "2026-08-18T20:41:05Z",
+              "updatedAt": "2026-08-18T20:41:05Z"
+            }
+          },
+          "canReply": true,
+          "totalReplyCount": 0,
+          "isPublic": true
+        }
+      },
+      {
+        "kind": "youtube#commentThread",
+        "etag": "Uiez_F0P0PVLIp8dEDqs_uRWLf8",
+        "id": "UgxUcyaF691Y_HJUx8V4AaABAg",
+        "snippet": {
+          "channelId": "UCS4kVH1srJ9h9nqJPG2iDLg",
+          "videoId": "W5ACjyQuEf0",
+          "topLevelComment": {
+            "kind": "youtube#comment",
+            "etag": "lCnsoE2O_UMpJGa5SEXtCM2e-eo",
+            "id": "UgxUcyaF691Y_HJUx8V4AaABAg",
+            "snippet": {
+              "channelId": "UCS4kVH1srJ9h9nqJPG2iDLg",
+              "videoId": "W5ACjyQuEf0",
+              "textDisplay": "decreto salud, sabidura, fortaleza y abundancia, amen",
+              "textOriginal": "decreto salud, sabidura, fortaleza y abundancia, amen",
+              "authorDisplayName": "@elianacallecalle3653",
+              "authorProfileImageUrl": "https://yt3.ggpht.com/ytc/AIdro_lCI7maAK4GKkv6rHumpVDKYwkQqbVwny-QcfJkuck=s48-c-k-c0x00ffffff-no-rj",
+              "authorChannelUrl": "http://www.youtube.com/@elianacallecalle3653",
+              "authorChannelId": {
+                "value": "UCNjW22jtye0LFQaHHpukPMw"
+              },
+              "canRate": true,
+              "viewerRating": "none",
+              "likeCount": 0,
+              "publishedAt": "2026-08-18T16:54:00Z",
+              "updatedAt": "2026-08-18T16:54:00Z"
+            }
+          },
+          "canReply": true,
+          "totalReplyCount": 0,
+          "isPublic": true
+        }
+      },
+      {
+        "kind": "youtube#commentThread",
+        "etag": "WXXGs_1-oRDVgZ-uIIgmVT_XKT0",
+        "id": "UgxT27s5qnSJkQ8D6nV4AaABAg",
+        "snippet": {
+          "channelId": "UCS4kVH1srJ9h9nqJPG2iDLg",
+          "videoId": "W5ACjyQuEf0",
+          "topLevelComment": {
+            "kind": "youtube#comment",
+            "etag": "L-ZPekQlw5Vw-3qRMGgyhfvG2IE",
+            "id": "UgxT27s5qnSJkQ8D6nV4AaABAg",
+            "snippet": {
+              "channelId": "UCS4kVH1srJ9h9nqJPG2iDLg",
+              "videoId": "W5ACjyQuEf0",
+              "textDisplay": "?",
+              "textOriginal": "?",
+              "authorDisplayName": "@JorgeTeminski-p1t8z",
+              "authorProfileImageUrl": "https://yt3.ggpht.com/ytc/AIdro_m3yH3CkDYbBlrEro0QnKb_ItobeFHLwKuQcGuP0f6Bn7OoKZ8W5OF5gGcuK2Gkd9LxEg=s48-c-k-c0x00ffffff-no-rj",
+              "authorChannelUrl": "http://www.youtube.com/@JorgeTeminski-p1t8z",
+              "authorChannelId": {
+                "value": "UCtP1VhqeD2BdVFu77Ge0_Vw"
+              },
+              "canRate": true,
+              "viewerRating": "none",
+              "likeCount": 0,
+              "publishedAt": "2026-08-18T14:06:04Z",
+              "updatedAt": "2026-08-18T14:06:04Z"
+            }
+          },
+          "canReply": true,
+          "totalReplyCount": 0,
+          "isPublic": true
+        }
+      },
+      {
+        "kind": "youtube#commentThread",
+        "etag": "VRd8brY_sdDVzvawF5GX5fVFfjY",
+        "id": "Ugzzh9ti-tU1a7vVVuZ4AaABAg",
+        "snippet": {
+          "channelId": "UCS4kVH1srJ9h9nqJPG2iDLg",
+          "videoId": "W5ACjyQuEf0",
+          "topLevelComment": {
+            "kind": "youtube#comment",
+            "etag": "3J4rUbRDEDXB9uwyCuatWGVat-Q",
+            "id": "Ugzzh9ti-tU1a7vVVuZ4AaABAg",
+            "snippet": {
+              "channelId": "UCS4kVH1srJ9h9nqJPG2iDLg",
+              "videoId": "W5ACjyQuEf0",
+              "textDisplay": "Ese era el disparo para mi cabeza, me llamó la atención con alta frecuencia para q me quede mirando algo lindo",
+              "textOriginal": "Ese era el disparo para mi cabeza, me llamó la atención con alta frecuencia para q me quede mirando algo lindo",
+              "authorDisplayName": "@JorgeTeminski-p1t8z",
+              "authorProfileImageUrl": "https://yt3.ggpht.com/ytc/AIdro_m3yH3CkDYbBlrEro0QnKb_ItobeFHLwKuQcGuP0f6Bn7OoKZ8W5OF5gGcuK2Gkd9LxEg=s48-c-k-c0x00ffffff-no-rj",
+              "authorChannelUrl": "http://www.youtube.com/@JorgeTeminski-p1t8z",
+              "authorChannelId": {
+                "value": "UCtP1VhqeD2BdVFu77Ge0_Vw"
+              },
+              "canRate": true,
+              "viewerRating": "none",
+              "likeCount": 0,
+              "publishedAt": "2026-08-18T14:05:52Z",
+              "updatedAt": "2026-08-18T14:05:52Z"
+            }
+          },
+          "canReply": true,
+          "totalReplyCount": 0,
+          "isPublic": true
+        }
+      },
+      {
+        "kind": "youtube#commentThread",
+        "etag": "eM1HAgETgn6SIT5mP7ri9J2Juh8",
+        "id": "Ugx10R123VZZDjNWTAJ4AaABAg",
+        "snippet": {
+          "channelId": "UCS4kVH1srJ9h9nqJPG2iDLg",
+          "videoId": "W5ACjyQuEf0",
+          "topLevelComment": {
+            "kind": "youtube#comment",
+            "etag": "LFvWN7Ie-Y082s3lSyTMp-ZTfTE",
+            "id": "Ugx10R123VZZDjNWTAJ4AaABAg",
+            "snippet": {
+              "channelId": "UCS4kVH1srJ9h9nqJPG2iDLg",
+              "videoId": "W5ACjyQuEf0",
+              "textDisplay": "Y cuidado que no te disparé esos colores con otra cosa",
+              "textOriginal": "Y cuidado que no te disparé esos colores con otra cosa",
+              "authorDisplayName": "@JorgeTeminski-p1t8z",
+              "authorProfileImageUrl": "https://yt3.ggpht.com/ytc/AIdro_m3yH3CkDYbBlrEro0QnKb_ItobeFHLwKuQcGuP0f6Bn7OoKZ8W5OF5gGcuK2Gkd9LxEg=s48-c-k-c0x00ffffff-no-rj",
+              "authorChannelUrl": "http://www.youtube.com/@JorgeTeminski-p1t8z",
+              "authorChannelId": {
+                "value": "UCtP1VhqeD2BdVFu77Ge0_Vw"
+              },
+              "canRate": true,
+              "viewerRating": "none",
+              "likeCount": 0,
+              "publishedAt": "2026-08-18T14:01:20Z",
+              "updatedAt": "2026-08-18T14:01:20Z"
+            }
+          },
+          "canReply": true,
+          "totalReplyCount": 0,
+          "isPublic": true
+        }
+      },
+      {
+        "kind": "youtube#commentThread",
+        "etag": "Hlj679BLWYgiJQfS8JUY6m8UrzQ",
+        "id": "Ugz_hI3KZDamh_5V2Kp4AaABAg",
+        "snippet": {
+          "channelId": "UCS4kVH1srJ9h9nqJPG2iDLg",
+          "videoId": "W5ACjyQuEf0",
+          "topLevelComment": {
+            "kind": "youtube#comment",
+            "etag": "FYDYW9lk7-fDV9l8k-oZGcHKvYs",
+            "id": "Ugz_hI3KZDamh_5V2Kp4AaABAg",
+            "snippet": {
+              "channelId": "UCS4kVH1srJ9h9nqJPG2iDLg",
+              "videoId": "W5ACjyQuEf0",
+              "textDisplay": "Tu que estás leyendo esto quiero que sepas. Que todo pasa. Solo hay que regresar a ti, regresar a tu centro. Todo está dentro de ti. Eres libre de ansiedad eres libre de miedo libre de depresión. Eres luz eres divinidad eres uno con dios 🙏🏻✨",
+              "textOriginal": "Tu que estás leyendo esto quiero que sepas. Que todo pasa. Solo hay que regresar a ti, regresar a tu centro. Todo está dentro de ti. Eres libre de ansiedad eres libre de miedo libre de depresión. Eres luz eres divinidad eres uno con dios 🙏🏻✨",
+              "authorDisplayName": "@brisslugo-h9y",
+              "authorProfileImageUrl": "https://yt3.ggpht.com/ytc/AIdro_nQOpDkUErP0ZFR5f1D4_RF4B6MpoVlcI8BiE9bnHtLK2kTtYGMEVjV758hJCkjgHpNgA=s48-c-k-c0x00ffffff-no-rj",
+              "authorChannelUrl": "http://www.youtube.com/@brisslugo-h9y",
+              "authorChannelId": {
+                "value": "UCMmhHNanW0LxW8AMOdZdb2A"
+              },
+              "canRate": true,
+              "viewerRating": "none",
+              "likeCount": 0,
+              "publishedAt": "2026-08-18T06:01:02Z",
+              "updatedAt": "2026-08-18T06:01:02Z"
+            }
+          },
+          "canReply": true,
+          "totalReplyCount": 1,
+          "isPublic": true
+        },
+        "replies": {
+          "comments": [
+            {
+              "kind": "youtube#comment",
+              "etag": "EUfMphKWzAlXTIABWYGmJPkWGfA",
+              "id": "Ugz_hI3KZDamh_5V2Kp4AaABAg.A_dQnDiaEeFAa8OYGSA81T",
+              "snippet": {
+                "channelId": "UCS4kVH1srJ9h9nqJPG2iDLg",
+                "videoId": "W5ACjyQuEf0",
+                "textDisplay": "Muchas gracias por vernos a todos con los ojos correctos ❤",
+                "textOriginal": "Muchas gracias por vernos a todos con los ojos correctos ❤",
+                "parentId": "Ugz_hI3KZDamh_5V2Kp4AaABAg",
+                "authorDisplayName": "@EstherMontagutvanOoijen",
+                "authorProfileImageUrl": "https://yt3.ggpht.com/Jnw-VUig3DbKHk4y6BLSgDMBWIuTerFsU1_I21z7zlfPh-UEF_EZOG2Fq_h41HZ8Hiistc6l4w=s48-c-k-c0x00ffffff-no-rj",
+                "authorChannelUrl": "http://www.youtube.com/@EstherMontagutvanOoijen",
+                "authorChannelId": {
+                  "value": "UCMMquBRyNSxlUNb7fvze1dg"
+                },
+                "canRate": true,
+                "viewerRating": "none",
+                "likeCount": 0,
+                "publishedAt": "2026-08-30T15:57:05Z",
+                "updatedAt": "2026-08-30T15:57:05Z"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "kind": "youtube#commentThread",
+        "etag": "jvZyA28tPfUjeG_IJnwRr-djShc",
+        "id": "UgzcOEjcUE1huNW5DxN4AaABAg",
+        "snippet": {
+          "channelId": "UCS4kVH1srJ9h9nqJPG2iDLg",
+          "videoId": "W5ACjyQuEf0",
+          "topLevelComment": {
+            "kind": "youtube#comment",
+            "etag": "tfouBZPb8tv4dlK-yiXXr6zJ1Eg",
+            "id": "UgzcOEjcUE1huNW5DxN4AaABAg",
+            "snippet": {
+              "channelId": "UCS4kVH1srJ9h9nqJPG2iDLg",
+              "videoId": "W5ACjyQuEf0",
+              "textDisplay": "Esto me recuerda a mi esposa fallecida quien verdaderamente fue un ángel emi vida me imagino ir por el universo viajando y ver pasar las estrellas y meteoros en mi camino para reencontrarme con ese Angel divino que hoy me llama a su lado gracias Dios mío por hacer posible mi paso por la tierra gracias por todo lo que me diste  como este inmenso amor y la facultad de compartirlo con quién ame hoy dejo de ser humano para convertirme en ser de luz y amor gracias mi ángel mi Dios mis seres de luz que me guiaron Amen",
+              "textOriginal": "Esto me recuerda a mi esposa fallecida quien verdaderamente fue un ángel emi vida me imagino ir por el universo viajando y ver pasar las estrellas y meteoros en mi camino para reencontrarme con ese Angel divino que hoy me llama a su lado gracias Dios mío por hacer posible mi paso por la tierra gracias por todo lo que me diste  como este inmenso amor y la facultad de compartirlo con quién ame hoy dejo de ser humano para convertirme en ser de luz y amor gracias mi ángel mi Dios mis seres de luz que me guiaron Amen",
+              "authorDisplayName": "@RodolfoMoralesPerez-n3u",
+              "authorProfileImageUrl": "https://yt3.ggpht.com/ytc/AIdro_ktgf3psRkAgKqgtBrHqhFCpTwn8CtlBGMPzkRqQ28gVAm_OArHXAgXv_ztPUnBWg1sIA=s48-c-k-c0x00ffffff-no-rj",
+              "authorChannelUrl": "http://www.youtube.com/@RodolfoMoralesPerez-n3u",
+              "authorChannelId": {
+                "value": "UCmVC3blf282fvv_i21jJWtg"
+              },
+              "canRate": true,
+              "viewerRating": "none",
+              "likeCount": 0,
+              "publishedAt": "2026-08-18T02:55:05Z",
+              "updatedAt": "2026-08-18T02:55:05Z"
+            }
+          },
+          "canReply": true,
+          "totalReplyCount": 1,
+          "isPublic": true
+        },
+        "replies": {
+          "comments": [
+            {
+              "kind": "youtube#comment",
+              "etag": "W_29atobzZgnPCtCwi4InJT9XRY",
+              "id": "UgzcOEjcUE1huNW5DxN4AaABAg.A_d5WFP0FilAa8Ojcgq2WX",
+              "snippet": {
+                "channelId": "UCS4kVH1srJ9h9nqJPG2iDLg",
+                "videoId": "W5ACjyQuEf0",
+                "textDisplay": "Que hermosa dedicatoria a este ser y recuerda que siempre llegan otros para vivir experiencias similares contigo, en una nueva etapa ❤",
+                "textOriginal": "Que hermosa dedicatoria a este ser y recuerda que siempre llegan otros para vivir experiencias similares contigo, en una nueva etapa ❤",
+                "parentId": "UgzcOEjcUE1huNW5DxN4AaABAg",
+                "authorDisplayName": "@EstherMontagutvanOoijen",
+                "authorProfileImageUrl": "https://yt3.ggpht.com/Jnw-VUig3DbKHk4y6BLSgDMBWIuTerFsU1_I21z7zlfPh-UEF_EZOG2Fq_h41HZ8Hiistc6l4w=s48-c-k-c0x00ffffff-no-rj",
+                "authorChannelUrl": "http://www.youtube.com/@EstherMontagutvanOoijen",
+                "authorChannelId": {
+                  "value": "UCMMquBRyNSxlUNb7fvze1dg"
+                },
+                "canRate": true,
+                "viewerRating": "none",
+                "likeCount": 0,
+                "publishedAt": "2026-08-30T15:58:46Z",
+                "updatedAt": "2026-08-30T15:58:46Z"
+              }
+            }
+          ]
+        }
+      }
+    ]
+  }
+}

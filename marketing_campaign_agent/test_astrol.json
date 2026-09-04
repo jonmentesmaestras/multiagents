@@ -1,0 +1,143 @@
+{
+    "avatar": {
+        "name": "Estudiante y aspirante a astrólogo o entusiasta de la astrología",
+        "demographics": {
+            "age_range": null,
+            "gender": null,
+            "language": null
+        },
+        "description": "Personas apasionadas por la astrología, desde principiantes sin conocimientos previos hasta practicantes que desean estructurar y profundizar sus interpretaciones del mapa astral, ganar seguridad en la lectura de signos, casas y aspectos, o realizar consultas profesionales de forma acreditada."
+    },
+    "offer": {
+        "description": "Curso online completo de astrología denominado 'Jornada do Mapa Astral', que abarca desde el nivel básico hasta el avançado estructurado en 11 módulos, con pago único de R$ 197,00 o en 12 cuotas de R$ 20,37.",
+        "deliverables": [
+            "Acesso imediato e vitalício ao conteúdo completo do curso organizado em 11 módulos",
+            "Certificado digital reconhecido e válido para atuação profissional (acreditado ABRATH / ABED)",
+            "Suporte para tirar dúvidas ao longo do aprendizado",
+            "Acesso à Comunidade VIP exclusiva de alunos",
+            "Apostila completa para download e bônus de software astrológico (Veja Plus)"
+        ]
+    },
+    "main_promise": "Aprender a interpretar mapas astrales con confianza, claridad y profundidad desde el nivel básico hasta el avanzado, integrando todos sus elementos para uso personal o profesional.",
+    "deseos": [
+        "Interpretar mapas astrales con confianza, claridad y profundidad técnica.",
+        "Realizar consultas y atenciones personalizadas con análisis astrológicos completos.",
+        "Utilizar la astrología como una herramienta práctica de autoconocimiento y orientación personal."
+    ],
+    "problemas": [
+        "Dificultad y confusión al intentar conectar e integrar signos, casas y aspectos en un mapa astral.",
+        "Falta de seguridad y método al momento de interpretar las informaciones de una carta natal.",
+        "No saber por dónde empezar el estudio astrológico o cómo avanzar hacia la práctica profesional."
+    ],
+    "youtube_keywords": [
+        "como interpretar mapa astral paso a paso",
+        "curso de astrologia para principiantes",
+        "como leer casas y aspectos en astrologia",
+        "como hacer lecturas de carta astral profesionales",
+        "aprender astrologia desde cero"
+    ],
+    "evidence": [
+        {
+            "field": "offer.description",
+            "quote": "Descubra a\nJornada do Mapa Astral\n, uma jornada meticulosamente esculpida para os apaixonados pelos\nmistérios celestes\n.",
+            "kind": "explicit"
+        },
+        {
+            "field": "offer.deliverables.0",
+            "quote": "Acesso imediato e vitalício ao conteúdo completo",
+            "kind": "explicit"
+        },
+        {
+            "field": "offer.deliverables.1",
+            "quote": "Certificado digital reconhecido, válido para atuação profissional",
+            "kind": "explicit"
+        },
+        {
+            "field": "offer.deliverables.2",
+            "quote": "Suporte disponível para tirar todas as suas dúvidas ao longo do aprendizado",
+            "kind": "explicit"
+        },
+        {
+            "field": "offer.deliverables.3",
+            "quote": "Comunidade exclusiva de alunos para compartilhar sua evolução e se inspirar",
+            "kind": "explicit"
+        },
+        {
+            "field": "offer.deliverables.4",
+            "quote": "Apostila completa para download",
+            "kind": "explicit"
+        },
+        {
+            "field": "main_promise",
+            "quote": "Interpretar mapas astrais com confiança e profundidade",
+            "kind": "explicit"
+        },
+        {
+            "field": "avatar",
+            "quote": "Se você está dando os primeiros passos ou já trilha caminhos estelares",
+            "kind": "inference"
+        },
+        {
+            "field": "deseos.0",
+            "quote": "Interpretar mapas astrais com confiança e profundidade",
+            "kind": "explicit"
+        },
+        {
+            "field": "deseos.1",
+            "quote": "Realizar atendimentos personalizados com análises completas",
+            "kind": "explicit"
+        },
+        {
+            "field": "deseos.2",
+            "quote": "Utilizar a astrologia como ferramenta de autoconhecimento e orientação",
+            "kind": "explicit"
+        },
+        {
+            "field": "problemas.0",
+            "quote": "É Fácil Se Perder\ne Não Saber Como Juntar Todas As Informações Do Mapa Astral",
+            "kind": "explicit"
+        },
+        {
+            "field": "problemas.1",
+            "quote": "Entenda\ncomo interpretar os principais elementos da Astrologia de forma conectada",
+            "kind": "explicit"
+        },
+        {
+            "field": "problemas.2",
+            "quote": "Desvende o Universo da Astrologia, mesmo que esteja começando agora.",
+            "kind": "explicit"
+        },
+        {
+            "field": "youtube_keywords.0",
+            "quote": "Interpretar mapas astrais com confiança e profundidade",
+            "kind": "inference"
+        },
+        {
+            "field": "youtube_keywords.1",
+            "quote": "Desvende o Universo da Astrologia, mesmo que esteja começando agora.",
+            "kind": "inference"
+        },
+        {
+            "field": "youtube_keywords.2",
+            "quote": "Entre\nSignos\n,\nCasas\ne\nAspectos",
+            "kind": "inference"
+        },
+        {
+            "field": "youtube_keywords.3",
+            "quote": "Realizar atendimentos personalizados com análises completas",
+            "kind": "inference"
+        },
+        {
+            "field": "youtube_keywords.4",
+            "quote": "Como usar a astrologia para autoconhecimento e crescimento pessoal.",
+            "kind": "inference"
+        }
+    ],
+    "source_info": {
+        "url": "https://cursodeastrologiaalfa.com/",
+        "requested_url": "https://cursodeastrologiaalfa.com/",
+        "page_type": "TSL",
+        "page_language": "pt-BR",
+        "youtube_language": "es"
+    }
+}

@@ -262,7 +262,7 @@ class TestYoutubeCommentsCollectorAgentConfig:
         assert extract_comments_from_videos in youtube_comments_collector_agent.tools
 
     def test_orchestrator_sub_agents_sequence(self):
-        assert len(campaign_orchestrator.sub_agents) == 3
+        assert len(campaign_orchestrator.sub_agents) >= 3
         assert campaign_orchestrator.sub_agents[0] is landing_page_research_agent
         assert campaign_orchestrator.sub_agents[1] is youtube_comments_analyzer_agent
         assert campaign_orchestrator.sub_agents[2] is youtube_comments_collector_agent

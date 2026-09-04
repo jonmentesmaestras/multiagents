@@ -1,0 +1,161 @@
+{
+    "avatar": {
+        "name": "Personas cristianas en crisis de pareja",
+        "demographics": {
+            "age_range": null,
+            "gender": null,
+            "language": null
+        },
+        "description": "Hombres y mujeres creyentes que están experimentando peleas, distanciamiento, desamor o separación en su matrimonio o noviazgo, y que buscan en la oración y la fe un camino para restaurar su relación y recuperar su paz y autoestima."
+    },
+    "offer": {
+        "description": "Un guía digital pagada de 30 días ('O Milagre das 4 Semanas') que combina oraciones estratégicas con base bíblica, versículos y reflexiones para ayudar a restaurar relaciones de pareja en crisis o rotas, además de fortalecer la fe y recuperar la autoestima.",
+        "deliverables": [
+            "Guía 'O Milagre das 4 Semanas' con 30 versículos bíblicos y 30 oraciones diarias completas, junto con sugerencias de uso, reflexiones semanales, checklist de preparación y guía de posicionamiento",
+            "Bônus 01: Planner de Evolução para imprimir para registrar sentimientos y oraciones",
+            "Bônus 02: Guía práctico 'Conexões Perdidas' con 25 mensajes para iniciar la reaproximación de forma sutil",
+            "Bônus 03: Acceso a Grupo de WhatsApp con Devocionales semanales",
+            "Bônus 04: 1 mes de acceso gratuito a la aplicación 'Divina Conexão'",
+            "Bônus 05: Guía 'Aprenda Como Fazer Falta' sobre control emocional y valoración personal",
+            "Bônus 06: Checklist con 12 Frases Secretas para despertar el 'Instinto del Héroe'",
+            "Bônus 07: Aula Secreta en Video sobre cómo posicionarse durante el proceso de restauración"
+        ]
+    },
+    "main_promise": "Guiar al usuario durante 30 días mediante una rutina estratégica de oraciones bíblicas para restaurar su relación quebrada, recuperar su autoestima y encontrar paz interior.",
+    "deseos": [
+        "Restaurar la conexión emocional, la confianza, la intimidad y el respeto mutuo con la pareja",
+        "Recuperar la autoestima, la paz interior y el control emocional personal",
+        "Lograr que la pareja regrese o reconsidere la separación con un corazón arrepentido"
+    ],
+    "problemas": [
+        "Peleas constantes, distanciamiento emocional, silencio y frialdad en la relación",
+        "Resentimientos acumulados por infidelidades o separación previa",
+        "Sensación de desesperación, falta de control y haber intentado todo sin obtener resultados"
+    ],
+    "youtube_keywords": [
+        "oraciones para restaurar el matrimonio",
+        "como salvar mi matrimonio con fe",
+        "devocional de 30 dias para parejas en crisis",
+        "oracion para recuperar a mi pareja",
+        "como superar el distanciamiento en el matrimonio"
+    ],
+    "evidence": [
+        {
+            "field": "offer.description",
+            "quote": "" O Milagre das 4 Semanas " é um guia exclusivo e inspirado, que combina a sabedoria com uma sequência muito poderosa de orações projetadas para ajudar a restaurar relacionamentos quebrados",
+            "kind": "explicit"
+        },
+        {
+            "field": "offer.deliverables.0",
+            "quote": "30 orações completas com base bíblica , 1 para cada dia, que fala diretamente com o seu coração, específicas e voltadas para a restauração do seu relacionamento",
+            "kind": "explicit"
+        },
+        {
+            "field": "offer.deliverables.1",
+            "quote": "Planner de Evolução para imprimir",
+            "kind": "explicit"
+        },
+        {
+            "field": "offer.deliverables.2",
+            "quote": "Conexões Perdidas: 25 Mensagens para iniciar a Reaproximação de forma sutil",
+            "kind": "explicit"
+        },
+        {
+            "field": "offer.deliverables.3",
+            "quote": "Grupo no Whatsapp com Devocionais",
+            "kind": "explicit"
+        },
+        {
+            "field": "offer.deliverables.4",
+            "quote": "Aplicativo Divina Conexão",
+            "kind": "explicit"
+        },
+        {
+            "field": "offer.deliverables.5",
+            "quote": "Guia Aprenda como Fazer Falta",
+            "kind": "explicit"
+        },
+        {
+            "field": "offer.deliverables.6",
+            "quote": "Checklist com 12 Frases Secretas para despertar o Instinto do Herói",
+            "kind": "explicit"
+        },
+        {
+            "field": "offer.deliverables.7",
+            "quote": "Aula Secreta em Vídeo",
+            "kind": "explicit"
+        },
+        {
+            "field": "main_promise",
+            "quote": "restaurar relacionamentos quebrados , e principalmente recuperar sua autoestima criando uma nova rotina de orações pelos próximos 30 dias",
+            "kind": "explicit"
+        },
+        {
+            "field": "avatar",
+            "quote": "O Milagre das 4 Semanas foi criado para ajudar tanto mulheres quanto homens que estão passando por dificuldades no relacionamento.",
+            "kind": "inference"
+        },
+        {
+            "field": "deseos.0",
+            "quote": "fortalecer a conexão emocional e espiritual entre você e seu marido, pedindo por restauração da confiança , da intimidade e do respeito mútuo .",
+            "kind": "inference"
+        },
+        {
+            "field": "deseos.1",
+            "quote": "recuperar sua autoestima criando uma nova rotina de orações pelos próximos 30 dias , mesmo quando tudo parece perdido! Ajudando a encontrar sua paz interna.",
+            "kind": "inference"
+        },
+        {
+            "field": "deseos.2",
+            "quote": "sendo uma ponte entre o que você quer e como pedir isso para algo maior em que você acredita .",
+            "kind": "inference"
+        },
+        {
+            "field": "problemas.0",
+            "quote": "As brigas, o distanciamento, e até o silêncio estão destruindo aquilo que você construiu com tanto amor?",
+            "kind": "inference"
+        },
+        {
+            "field": "problemas.1",
+            "quote": "A oração número 9 pede ajuda para dissolver qualquer ressentimento causado por infidelidades…",
+            "kind": "inference"
+        },
+        {
+            "field": "problemas.2",
+            "quote": "Você já tentou de tudo para restaurar seu relacionamento, seja no seu casamento, noivado ou namoro.. mas nada parece funcionar?",
+            "kind": "inference"
+        },
+        {
+            "field": "youtube_keywords.0",
+            "quote": "Aprenda a Praticar a\nOração como a Bíblia Ensina\ne Entregue a Deus a\nRestauração do seu Relacionamento",
+            "kind": "inference"
+        },
+        {
+            "field": "youtube_keywords.1",
+            "quote": "Aprenda a Praticar a\nOração como a Bíblia Ensina\ne Entregue a Deus a\nRestauração do seu Relacionamento",
+            "kind": "inference"
+        },
+        {
+            "field": "youtube_keywords.2",
+            "quote": "Aprenda a Praticar a\nOração como a Bíblia Ensina\ne Entregue a Deus a\nRestauração do seu Relacionamento",
+            "kind": "inference"
+        },
+        {
+            "field": "youtube_keywords.3",
+            "quote": "Aprenda a Praticar a\nOração como a Bíblia Ensina\ne Entregue a Deus a\nRestauração do seu Relacionamento",
+            "kind": "inference"
+        },
+        {
+            "field": "youtube_keywords.4",
+            "quote": "Aprenda a Praticar a\nOração como a Bíblia Ensina\ne Entregue a Deus a\nRestauração do seu Relacionamento",
+            "kind": "inference"
+        }
+    ],
+    "source_info": {
+        "url": "https://www.metodoreconquista30dias.online/milagre04semanas",
+        "requested_url": "https://www.metodoreconquista30dias.online/milagre04semanas",
+        "page_type": "VSL",
+        "page_language": "pt",
+        "youtube_language": "es"
+    }
+}

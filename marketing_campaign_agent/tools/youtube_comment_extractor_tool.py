@@ -75,6 +75,7 @@ def _parse_video_entries(videos: Union[list[dict[str, Any]], list[str], str, Any
 
     if isinstance(videos, list):
         entries = []
+        seen_urls: set[str] = set()
         for item in videos:
             if isinstance(item, dict):
                 href = (
@@ -99,14 +100,28 @@ def _parse_video_entries(videos: Union[list[dict[str, Any]], list[str], str, Any
                     or ""
                 )
                 if href and isinstance(href, str) and href.strip():
+                    normalized = _normalize_youtube_url(href)
+                    if normalized in seen_urls:
+                        existing = next(entry for entry in entries if entry["video_href"] == normalized)
+                        keyword = str(keywords).strip()
+                        if keyword and keyword not in existing["video_keywords"].split("; "):
+                            existing["video_keywords"] = "; ".join(filter(None, [existing["video_keywords"], keyword]))
+                        if not existing["video_title"] and title:
+                            existing["video_title"] = str(title).strip()
+                        continue
+                    seen_urls.add(normalized)
                     entries.append({
-                        "video_href": _normalize_youtube_url(href),
+                        "video_href": normalized,
                         "video_keywords": str(keywords).strip(),
                         "video_title": str(title).strip(),
                     })
             elif isinstance(item, str) and item.strip():
+                normalized = _normalize_youtube_url(item)
+                if normalized in seen_urls:
+                    continue
+                seen_urls.add(normalized)
                 entries.append({
-                    "video_href": _normalize_youtube_url(item),
+                    "video_href": normalized,
                     "video_keywords": "",
                     "video_title": "",
                 })
@@ -164,8 +179,18 @@ def get_video_comment_count_api(
     )
 
     try:
-        with urllib.request.urlopen(req, timeout=15) as response:
-            data = json.loads(response.read().decode("utf-8"))
+        last_error = None
+        for attempt in range(3):
+            try:
+                with urllib.request.urlopen(req, timeout=15) as response:
+                    data = json.loads(response.read().decode("utf-8"))
+                break
+            except (urllib.error.URLError, TimeoutError, json.JSONDecodeError) as exc:
+                last_error = exc
+                if attempt == 2:
+                    raise
+        else:  # pragma: no cover - the loop either breaks or raises
+            raise last_error or RuntimeError("YouTube API request failed")
         items = data.get("items", [])
         if not items:
             return 0
@@ -179,8 +204,9 @@ def get_video_comment_count_api(
 
 def fetch_video_comments_api(
     video_id_or_url: str,
-    max_comments: int = 50,
+    max_comments: Optional[int] = None,
     max_months: int = 3,
+    window_days: Optional[int] = 90,
     min_comments_threshold: int = 100,
     order: str = "time",
     api_key: Optional[str] = None,
@@ -190,7 +216,8 @@ def fetch_video_comments_api(
 
     Args:
         video_id_or_url: Video ID or YouTube watch URL.
-        max_comments: Maximum comments to collect (default: 50).
+        max_comments: Optional maximum comments to collect. ``None`` paginates
+            until YouTube has no more pages.
         max_months: Filter comments published within max_months (default: 3).
         min_comments_threshold: Minimum total comments required to process video (default: 100).
         order: 'time' (newest first) or 'relevance' (top comments).
@@ -218,23 +245,24 @@ def fetch_video_comments_api(
             return None
 
     collected_comments: list[dict[str, Any]] = []
-    cutoff_date = (
-        datetime.datetime.now(datetime.timezone.utc) - datetime.timedelta(days=max_months * 30.5)
-        if max_months > 0
-        else None
-    )
+    now_utc = datetime.datetime.now(datetime.timezone.utc)
+    days = window_days if window_days is not None else (max_months * 30.5 if max_months > 0 else None)
+    cutoff_date = now_utc - datetime.timedelta(days=days) if days is not None else None
 
     api_order = "time" if order.lower() in ("time", "newest", "recent") else "relevance"
     page_token = ""
 
-    while len(collected_comments) < max_comments:
-        per_page = min(max_comments - len(collected_comments), 100)
+    seen_comment_ids: set[str] = set()
+    while max_comments is None or len(collected_comments) < max_comments:
+        per_page = 100 if max_comments is None else min(max_comments - len(collected_comments), 100)
         query_params = {
             "part": "snippet,replies",
             "videoId": video_id,
             "maxResults": str(per_page),
             "order": api_order,
             "key": key,
+            # Avoid serialising HTML anchors and timestamps into the model context.
+            "textFormat": "plainText",
         }
         if page_token:
             query_params["pageToken"] = page_token
@@ -247,17 +275,30 @@ def fetch_video_comments_api(
             headers={"User-Agent": "MarketingCampaignAgent-CommentCollector/1.0"},
         )
 
-        with urllib.request.urlopen(req, timeout=15) as response:
-            data = json.loads(response.read().decode("utf-8"))
+        last_error = None
+        for attempt in range(3):
+            try:
+                with urllib.request.urlopen(req, timeout=15) as response:
+                    data = json.loads(response.read().decode("utf-8"))
+                break
+            except (urllib.error.URLError, TimeoutError, json.JSONDecodeError) as exc:
+                last_error = exc
+                if attempt == 2:
+                    raise
+        else:  # pragma: no cover
+            raise last_error or RuntimeError("YouTube API request failed")
 
         items = data.get("items", [])
         if not items:
             break
 
-        stop_pagination = False
         for item in items:
-            if len(collected_comments) >= max_comments:
+            if max_comments is not None and len(collected_comments) >= max_comments:
                 break
+
+            comment_id = str(item.get("id", ""))
+            if comment_id and comment_id in seen_comment_ids:
+                continue
 
             top_snippet = (
                 item.get("snippet", {})
@@ -272,17 +313,16 @@ def fetch_video_comments_api(
                 continue
 
             # Check cutoff date
-            if published_str and cutoff_date:
+            pub_dt = None
+            if cutoff_date:
                 try:
                     pub_dt = datetime.datetime.fromisoformat(published_str.replace("Z", "+00:00"))
-                    if pub_dt < cutoff_date:
-                        # If ordered by time (newest first), older comments mean subsequent comments are even older
-                        if api_order == "time":
-                            stop_pagination = True
-                            break
+                    if pub_dt < cutoff_date or pub_dt > now_utc:
                         continue
                 except Exception:
-                    pass
+                    # A missing/invalid date cannot be proven to be inside the window.
+                    if cutoff_date:
+                        continue
 
             # Extract replies if available
             raw_replies = item.get("replies", {}).get("comments", [])
@@ -298,24 +338,36 @@ def fetch_video_comments_api(
                     })
 
             collected_comments.append({
+                "comment_id": comment_id,
+                "video_id": video_id,
+                "video_href": f"https://www.youtube.com/watch?v={video_id}",
                 "Author": author,
                 "Msg": text,
                 "Reply": reply_list,
+                "published_at": published_str,
+                "updated_at": top_snippet.get("updatedAt", ""),
+                "_published_at": published_str,
             })
-
-        if stop_pagination:
-            break
+            if comment_id:
+                seen_comment_ids.add(comment_id)
 
         page_token = data.get("nextPageToken", "")
         if not page_token:
             break
 
+    # YouTube may return a pinned/highlighted thread before chronological items.
+    # Impose the required newest-first order locally after all pages are read.
+    collected_comments.sort(
+        key=lambda comment: comment.get("_published_at", ""), reverse=True
+    )
+    for comment in collected_comments:
+        comment.pop("_published_at", None)
     return collected_comments
 
 
 def fetch_video_comments_playwright(
     video_url: str,
-    max_comments: int = 50,
+    max_comments: Optional[int] = None,
     max_months: int = 3,
     min_comments_threshold: int = 100,
     order: str = "time",
@@ -359,11 +411,13 @@ def fetch_video_comments_playwright(
 
 def extract_comments_from_videos(
     videos: Union[list[dict[str, Any]], list[str], str, Any],
-    max_comments_per_video: int = 50,
+    max_comments_per_video: Optional[int] = None,
     max_months: int = 3,
+    window_days: int = 90,
     min_comments_threshold: int = 100,
     order: str = "time",
     api_key: Optional[str] = None,
+    include_excluded: bool = False,
 ) -> list[dict[str, Any]]:
     """Iterates through YouTube videos, checks total comments > 100, extracts comments
     from 3 months ago to the most current comment sorted by newest, and returns a structured JSON.
@@ -373,7 +427,7 @@ def extract_comments_from_videos(
     Args:
         videos: Array of video objects containing 'video_href' and 'video_keywords'
                 (e.g., output of YoutubeCommentsAnalyzer), list of URLs, or JSON string.
-        max_comments_per_video: Max comments to extract per video (default: 50).
+        max_comments_per_video: Optional cap; ``None`` collects all pages.
         max_months: Max comment age in months (default: 3).
         min_comments_threshold: Minimum comments required to process video (default: 100).
         order: Sort order: 'time' (newest first) or 'relevance'.
@@ -411,6 +465,7 @@ def extract_comments_from_videos(
             f"[Comment Collector] Processing {full_url} (keywords='{keywords}', threshold={min_comments_threshold}, months={max_months})"
         )
         video_comments: Optional[list[dict[str, Any]]] = None
+        api_failed = False
 
         # 1. Try YouTube Data API v3 if key is available
         if key:
@@ -419,6 +474,7 @@ def extract_comments_from_videos(
                     video_id_or_url=full_url,
                     max_comments=max_comments_per_video,
                     max_months=max_months,
+                    window_days=window_days,
                     min_comments_threshold=min_comments_threshold,
                     order=order,
                     api_key=key,
@@ -428,9 +484,10 @@ def extract_comments_from_videos(
                     f"[Comment Collector] YouTube Data API failed for {full_url}: {e}. Trying Playwright fallback..."
                 )
                 video_comments = None
+                api_failed = True
 
         # 2. Fallback to Playwright scraper if API failed or no key
-        if video_comments is None and not key:
+        if video_comments is None and (not key or api_failed):
             video_comments = fetch_video_comments_playwright(
                 video_url=full_url,
                 max_comments=max_comments_per_video,
@@ -442,12 +499,22 @@ def extract_comments_from_videos(
         # 3. Check if bypassed due to total comments <= 100
         if video_comments is None:
             logger.info(f"[Comment Collector] Bypassing URL {full_url} (total comments <= {min_comments_threshold} or unavailable).")
+            if include_excluded:
+                results.append({
+                    "video_href": full_url,
+                    "video_keywords": keywords,
+                    "3_months_comments": [],
+                    "collection_status": "excluded_by_rule",
+                    "collection_error": "comment_count_below_threshold_or_unavailable",
+                })
             continue
 
         results.append({
             "video_href": full_url,
             "video_keywords": keywords,
             "3_months_comments": video_comments,
+            "collection_status": "complete" if not api_failed else "partial",
+            "collection_error": "api_failed_fallback_used" if api_failed else None,
         })
 
     return results

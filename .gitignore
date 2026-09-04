@@ -40,3 +40,9 @@ env/
 # OS files
 .DS_Store
 Thumbs.db
+
+# Databases & ADK Runtime
+*.db
+*.sqlite
+*.sqlite3
+.adk/

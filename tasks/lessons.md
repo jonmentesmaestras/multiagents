@@ -23,3 +23,7 @@
   2. Prohibir expresamente la extrapolación basada en el nombre del dominio o la empresa.
   3. Diferenciar claramente la **oferta principal de la página** (lead magnet, producto) frente a la biografía del instructor o enlaces secundarios del footer.
   4. Definir el avatar del cliente como el **consumidor final de esa oferta concreta**, no el perfil profesional del autor.
+
+## 6. Exclusión de binarios de sesión (.adk/*.db) y variantes de .env (.env*)
+- **Patrón:** Las bases de datos SQLite locales (`session.db`) pueden superar el límite de tamaño de GitHub (>100MB) y provocar fallos de codificación UTF-8 en herramientas de IA. Asimismo, copias locales accidentales (ej. `.env copy`) pueden filtrar claves de API si `.gitignore` solo especifica `.env`.
+- **Solución Elegante:** Configurar `.gitignore` con `.env*` y excluir directorios de persistencia local como `.adk/`, `*.db`, `*.sqlite`, evitando que archivos pesados o sensibles ingresen al historial de Git.

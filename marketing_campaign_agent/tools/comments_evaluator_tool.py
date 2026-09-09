@@ -133,7 +133,8 @@ def evaluate_classified_comments_metrics(
     # 2. If not, are there more than 50 comments in problems?
     # 3. If sum up deseos and problems all together is up to 100 -> validated traction.
     # Otherwise -> insufficient traction.
-    coverage_verified = coverage["status"] in {"verified", "unverified"}
+    # An unknown coverage state cannot support a market rejection or acceptance.
+    coverage_verified = coverage["status"] == "verified"
     technical_incomplete = technical_error_count > 0
     threshold_reached = deseos_above_50 or problemas_above_50 or total_above_100
     possible_threshold = maximum_possible_relevant >= 100
@@ -149,6 +150,10 @@ def evaluate_classified_comments_metrics(
             "Se recomienda al usuario considerar continuar con el siguiente paso de la investigación "
             "y avanzar con el desarrollo de la oferta / clon adaptado al español."
         )
+    elif coverage["status"] == "unverified":
+        decision = "INCOMPLETE_SEARCH_COVERAGE"
+        conclusion = "No se demostró la cobertura de búsqueda y extracción necesaria para decidir."
+        recommendation = "Completar el registro por consulta y validar todos los candidatos antes de aceptar o rechazar."
     elif technical_incomplete or coverage["status"] == "incomplete":
         decision = "INCOMPLETE_ANALYSIS"
         conclusion = ("No es posible emitir una conclusión definitiva porque existen errores técnicos, "
@@ -175,6 +180,7 @@ def evaluate_classified_comments_metrics(
         )
 
     processing_status = ("THRESHOLD_REACHED" if is_offer_accepted else
+                         "INCOMPLETE_SEARCH_COVERAGE" if decision == "INCOMPLETE_SEARCH_COVERAGE" else
                          "INCOMPLETE_ANALYSIS" if decision == "INCOMPLETE_ANALYSIS" else
                          "HUMAN_REVIEW_REQUIRED" if decision == "HUMAN_REVIEW_REQUIRED" else
                          "THRESHOLD_NOT_REACHED")

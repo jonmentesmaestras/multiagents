@@ -21,7 +21,9 @@ from marketing_campaign_agent.instructions import (
     YOUTUBE_COMMENT_EXTRACTOR_INSTRUCTION,
 )
 from marketing_campaign_agent.comments_pipeline import (
+    BatchedVideoAnalyzerAgent,
     BatchedCommentsClassifierAgent,
+    DETERMINISTIC_GENERATION_SEED,
     DeterministicCommentsCollectorAgent,
     report_metrics_context,
 )
@@ -49,16 +51,18 @@ landing_page_research_agent = GroundedLandingPageAgent(
     tools=[],
     include_contents="none",
     before_model_callback=current_source_only,
-    generate_content_config=types.GenerateContentConfig(response_mime_type="application/json"),
+    generate_content_config=types.GenerateContentConfig(
+        response_mime_type="application/json", temperature=0,
+        seed=DETERMINISTIC_GENERATION_SEED, candidate_count=1),
 )
 
 # -- Sub agent 2: Youtube Comments Analyzer Agent ---
-youtube_comments_analyzer_agent = LlmAgent(
+youtube_comments_analyzer_agent = BatchedVideoAnalyzerAgent(
     name="YoutubeCommentsAnalyzer",
     model=MODEL_NAME,
     instruction=YOUTUBE_COMMENTS_ANALYZER_INSTRUCTION,
     output_key="youtube_videos_research",
-    tools=[search_and_collect_youtube_data],
+    tools=[],
 )
 
 # -- Sub agent 3: Youtube Comments Collector Agent ---
@@ -68,7 +72,9 @@ youtube_comments_collector_agent = DeterministicCommentsCollectorAgent(
     instruction=YOUTUBE_COMMENTS_COLLECTOR_INSTRUCTION,
     output_key="youtube_comments_collected",
     tools=[extract_comments_from_videos],
-    generate_content_config=types.GenerateContentConfig(response_mime_type="application/json"),
+    generate_content_config=types.GenerateContentConfig(
+        response_mime_type="application/json", temperature=0,
+        seed=DETERMINISTIC_GENERATION_SEED, candidate_count=1),
 )
 
 # Alias for backward compatibility
@@ -80,7 +86,9 @@ youtube_comments_classifier_agent = BatchedCommentsClassifierAgent(
     model=MODEL_NAME,
     instruction=YOUTUBE_COMMENTS_CLASSIFIER_INSTRUCTION,
     output_key="youtube_comments_classified",
-    generate_content_config=types.GenerateContentConfig(response_mime_type="application/json"),
+    generate_content_config=types.GenerateContentConfig(
+        response_mime_type="application/json", temperature=0,
+        seed=DETERMINISTIC_GENERATION_SEED, candidate_count=1),
 )
 
 # Alias for backward compatibility
@@ -95,6 +103,8 @@ market_research_report_agent = LlmAgent(
     tools=[evaluate_classified_comments_metrics, validate_comments_integrity],
     include_contents="none",
     before_model_callback=report_metrics_context,
+    generate_content_config=types.GenerateContentConfig(
+        temperature=0, seed=DETERMINISTIC_GENERATION_SEED, candidate_count=1),
 )
 
 # Alias for backward compatibility

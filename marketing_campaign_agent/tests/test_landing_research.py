@@ -20,7 +20,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 from marketing_campaign_agent.instructions import LANDING_PAGE_COPYWRITER_INSTRUCTION
 from marketing_campaign_agent.landing_research import (
     GroundedCampaignOrchestrator, GroundedLandingPageAgent, STATUS_KEY, STATE_KEYS,
-    current_source_only, requested_url, validate_research,
+    KeywordLanguageError, current_source_only, requested_url, validate_research,
 )
 from marketing_campaign_agent.tools import landing_page_scraper as scraper
 
@@ -40,7 +40,7 @@ SOURCE = {
 def valid_analysis():
     fields = ["offer.description", "offer.deliverables.0", "main_promise", "avatar"]
     fields += [f"{key}.{i}" for key, n in (("deseos", 3), ("problemas", 3),
-                                         ("youtube_keywords", 5)) for i in range(n)]
+                                         ("youtube_keywords", 12)) for i in range(n)]
     return {
         "offer": {"description": "Guía PDF y tutoriales", "deliverables": ["Guía PDF"]},
         "avatar": {"name": "Personas interesadas en frecuencias", "description": "Buscan bienestar",
@@ -48,8 +48,14 @@ def valid_analysis():
         "main_promise": "Aprender a aplicar frecuencias en la vida diaria",
         "deseos": ["Relajación", "Concentración", "Descanso"],
         "problemas": ["Estrés", "Distracción", "Dificultad para descansar"],
-        "youtube_keywords": ["frecuencias relajación", "frecuencias concentración",
-                             "frecuencias descanso", "aplicar frecuencias", "frecuencias bienestar"],
+        "youtube_keywords": [
+            "cómo aplicar frecuencias", "guía de frecuencias para principiantes",
+            "frecuencias para aliviar estrés", "frecuencias para mejorar concentración",
+            "frecuencias para descansar", "frecuencias para relajación",
+            "frecuencias para mantener el enfoque", "frecuencias para sueño profundo",
+            "cómo usar frecuencias diariamente", "qué frecuencias ayudan al bienestar",
+            "experiencias usando frecuencias", "testimonios sobre frecuencias de sanación",
+        ],
         "evidence": [{"field": f, "quote": COPY,
                       "kind": "explicit" if f.startswith("offer.") or f == "main_promise"
                       else "inference"} for f in fields],
@@ -58,7 +64,7 @@ def valid_analysis():
 
 class StubModel(BaseLlm):
     model: str = "offline-test"
-    output: str
+    output: str | list[str]
     requests: list = Field(default_factory=list)
     partial_text: str | None = None
 
@@ -67,8 +73,10 @@ class StubModel(BaseLlm):
         if self.partial_text:
             yield LlmResponse(partial=True, content=types.Content(role="model", parts=[
                 types.Part.from_text(text=self.partial_text)]))
+        output = (self.output[min(len(self.requests) - 1, len(self.output) - 1)]
+                  if isinstance(self.output, list) else self.output)
         yield LlmResponse(content=types.Content(role="model", parts=[
-            types.Part.from_text(text=self.output)]))
+            types.Part.from_text(text=output)]))
 
 
 class DownstreamAgent(BaseAgent):
@@ -172,9 +180,65 @@ def test_fabricated_quote_and_missing_evidence_are_rejected():
     with pytest.raises(ValueError, match="no existe"):
         validate_research(json.dumps(data), SOURCE)
     data = valid_analysis()
-    data["evidence"].pop()
+    data["evidence"] = [item for item in data["evidence"]
+                        if item["field"] != "problemas.2"]
     with pytest.raises(ValueError, match="Falta evidencia"):
         validate_research(json.dumps(data), SOURCE)
+
+
+def test_derived_youtube_keywords_do_not_require_literal_quotes():
+    data = valid_analysis()
+    for item in data["evidence"]:
+        if item["field"].startswith("youtube_keywords."):
+            item["quote"] = "Consulta derivada en español que no aparece literalmente"
+    assert validate_research(json.dumps(data), SOURCE)["youtube_keywords"] == data["youtube_keywords"]
+
+    data["evidence"] = [item for item in data["evidence"]
+                        if not item["field"].startswith("youtube_keywords.")]
+    assert validate_research(json.dumps(data), SOURCE)["youtube_keywords"] == data["youtube_keywords"]
+
+
+def test_youtube_query_matrix_requires_exactly_twelve_entries():
+    data = valid_analysis()
+    data["youtube_keywords"] = data["youtube_keywords"][:10]
+    with pytest.raises(ValueError):
+        validate_research(json.dumps(data), SOURCE)
+
+
+def test_ambiguous_youtube_query_without_landing_anchor_is_rejected():
+    data = valid_analysis()
+    data["youtube_keywords"][0] = "cómo evitar problemas y mejorar resultados"
+    with pytest.raises(ValueError, match="Búsquedas ambiguas"):
+        validate_research(json.dumps(data), SOURCE)
+
+
+def test_exact_landing_title_is_a_valid_testimonial_search_anchor():
+    data = valid_analysis()
+    data["youtube_keywords"][0] = (
+        "protocolo venda em dólar opiniones y testimonios de alumnos"
+    )
+    source = {**SOURCE, "title": "Protocolo Venda em Dólar"}
+    result = validate_research(json.dumps(data), source)
+    assert result["youtube_keywords"][0] == data["youtube_keywords"][0]
+
+
+def test_mixed_portuguese_youtube_queries_are_rejected_before_search():
+    data = valid_analysis()
+    data["youtube_keywords"][0] = "curso de harmonização facial com preenchimento"
+    with pytest.raises(KeywordLanguageError, match="completamente en español"):
+        validate_research(json.dumps(data), SOURCE)
+
+
+def test_agent_repairs_foreign_query_language_once_before_publishing():
+    mixed = valid_analysis()
+    mixed["youtube_keywords"][0] = "curso de harmonização com preenchimento"
+    session, _, model, downstream, _ = asyncio.run(run_pipeline(
+        SOURCE, output=[json.dumps(mixed), json.dumps(valid_analysis())]))
+    assert len(model.requests) == 2
+    assert "CORRECCIÓN OBLIGATORIA" in model.requests[1].contents[0].parts[0].text
+    assert session.state["landing_page_research"] is not None
+    assert session.state["landing_page_research_status"]["status"] == "validated"
+    assert all(agent.calls == 1 for agent in downstream)
 
 
 def test_demographics_require_explicit_evidence():
@@ -250,6 +314,23 @@ def test_async_scraper_closes_browser_on_failure_and_success(status, timeout):
     assert ("error" in result) == (status == 404 or timeout)
     if status == 200 and not timeout:
         assert COPY in result["main_content"]
+
+
+def test_browser_403_uses_validated_http_fallback():
+    page = MagicMock(url=URL)
+    page.goto = AsyncMock(return_value=MagicMock(status=403))
+    context = MagicMock(new_page=AsyncMock(return_value=page))
+    browser = MagicMock(new_context=AsyncMock(return_value=context), close=AsyncMock())
+    playwright = MagicMock()
+    playwright.chromium.launch = AsyncMock(return_value=browser)
+    manager = MagicMock(__aenter__=AsyncMock(return_value=playwright), __aexit__=AsyncMock())
+    fallback = {**SOURCE, "http_status": 200, "extraction_method": "http_fallback"}
+    with patch.object(scraper, "async_playwright", return_value=manager), \
+            patch.object(scraper, "_scrape_page_http", new=AsyncMock(return_value=fallback)) as http:
+        result = asyncio.run(scraper._scrape_page(URL))
+    http.assert_awaited_once_with(URL)
+    browser.close.assert_awaited_once()
+    assert result == fallback
 
 
 def test_markdown_url_and_ambiguous_urls():

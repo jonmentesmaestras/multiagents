@@ -78,16 +78,15 @@ def parse_view_count(view_text: str) -> Optional[int]:
 
 def search_youtube_videos(
     keywords: Union[list[str], str],
-    min_views: int = 100_000,
-    max_results_per_keyword: int = 1,
+    min_views: int = 0,
+    max_results_per_keyword: int = 50,
 ) -> list[dict[str, Any]]:
-    """Searches YouTube for videos matching given keywords, sorted by popularity,
-    and returns videos that meet the minimum view threshold (>= 100K views).
+    """Searches YouTube for videos matching given keywords.
 
     Args:
         keywords: A list of keyword strings or a single keyword string.
-        min_views: Minimum number of views required (default: 100,000). Videos below this are skipped.
-        max_results_per_keyword: Number of qualified videos to collect per keyword (default: 1).
+        min_views: Optional minimum number of views. Defaults to zero.
+        max_results_per_keyword: Maximum candidates per keyword (up to 50).
 
     Returns:
         A list of dictionaries with structure:
@@ -143,8 +142,7 @@ def search_youtube_videos(
                 try:
                     logger.info(f"Searching YouTube for keyword: '{kw}'")
                     encoded_kw = urllib.parse.quote_plus(kw)
-                    # Use direct popularity sort parameter &sp=CAMSAhAB as base/reliable target
-                    search_url = f"https://www.youtube.com/results?search_query={encoded_kw}&sp=CAMSAhAB"
+                    search_url = f"https://www.youtube.com/results?search_query={encoded_kw}"
 
                     try:
                         page.goto(search_url, wait_until="domcontentloaded", timeout=30000)
@@ -222,6 +220,18 @@ def search_youtube_videos(
                         if not views_text and meta_items:
                             views_text = meta_items[0].inner_text().strip()
 
+                        description_el = (
+                            video_el.query_selector("#description-text")
+                            or video_el.query_selector("yt-formatted-string.metadata-snippet-text")
+                        )
+                        description = ((description_el.inner_text() or "").strip()[:500]
+                                       if description_el else "")
+                        channel_el = (
+                            video_el.query_selector("ytd-channel-name a")
+                            or video_el.query_selector("#channel-name a")
+                        )
+                        channel_title = (channel_el.inner_text() or "").strip() if channel_el else ""
+
                         # Parse and validate views against threshold
                         parsed_views = parse_view_count(views_text)
 
@@ -229,16 +239,24 @@ def search_youtube_videos(
                             logger.info(
                                 f"Skipping video '{title}' - Views ({views_text} -> {parsed_views}) below threshold ({min_views})."
                             )
-                            # Per instruction: If first video is less than 100K views, skip and bypass to next keyword
-                            break
+                            continue
 
                         logger.info(
                             f"Found matching video: '{title}' ({views_text} -> {parsed_views or 'N/A'}) - {full_url}"
                         )
                         collected_videos.append({
+                            "video_keywords": kw,
                             "video_title": title,
                             "video_href": full_url,
+                            "video_id": full_url.split("v=")[-1].split("&")[0],
                             "video_views": views_text or f"{parsed_views or min_views} views",
+                            "view_count": parsed_views,
+                            "comment_count": None,
+                            "published_at": None,
+                            "video_description": description,
+                            "channel_title": channel_title,
+                            "default_language": "unknown",
+                            "audio_language": "unknown",
                         })
                         kw_collected_count += 1
 

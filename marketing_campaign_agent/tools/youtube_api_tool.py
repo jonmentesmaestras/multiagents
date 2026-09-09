@@ -57,17 +57,16 @@ def extract_video_id(video_id_or_url: str) -> str:
 
 def search_youtube_videos_api(
     keywords: Union[list[str], str],
-    min_views: int = 100_000,
-    max_results_per_keyword: int = 10,
+    min_views: int = 0,
+    max_results_per_keyword: int = 50,
     api_key: Optional[str] = None,
 ) -> list[dict[str, Any]]:
-    """Searches YouTube videos using official YouTube Data API v3, filtered by popularity (viewCount),
-    Spanish relevance, and minimum view threshold (>= 100K).
+    """Searches YouTube videos using official YouTube Data API v3.
 
     Args:
         keywords: A single keyword string or list of keyword strings.
-        min_views: Minimum number of views (default: 100,000).
-        max_results_per_keyword: Maximum videos to collect per keyword (default: 10).
+        min_views: Optional minimum view count. Defaults to zero; relevance is decided later.
+        max_results_per_keyword: Maximum videos to collect per keyword (up to 50).
         api_key: Optional explicit API key. If omitted, uses YOUTUBE_API_KEY from .env.
 
     Returns:
@@ -109,7 +108,7 @@ def search_youtube_videos_api(
                 f"?part=snippet"
                 f"&q={encoded_query}"
                 f"&type=video"
-                f"&order=viewCount"
+                f"&order=relevance"
                 f"&relevanceLanguage=es"
                 f"&maxResults={max_results_per_keyword}"
                 f"&key={key}"
@@ -167,13 +166,28 @@ def search_youtube_videos_api(
                     continue
 
                 formatted_views = f"{format_view_count(view_count)} views"
+                raw_comments = statistics.get("commentCount")
+                try:
+                    comment_count = int(raw_comments) if raw_comments is not None else None
+                except (ValueError, TypeError):
+                    comment_count = None
                 video_url = f"https://www.youtube.com/watch?v={vid_id}"
 
                 collected_videos.append({
                     "video_keywords": kw,
                     "video_title": title,
                     "video_href": video_url,
+                    "video_id": vid_id,
                     "video_views": formatted_views,
+                    "view_count": view_count,
+                    "comment_count": comment_count,
+                    "published_at": snippet.get("publishedAt"),
+                    "video_description": snippet.get("description", "").strip()[:500],
+                    "channel_title": snippet.get("channelTitle", "").strip(),
+                    "default_language": snippet.get("defaultLanguage") or "unknown",
+                    "audio_language": snippet.get("defaultAudioLanguage") or "unknown",
+                    "search_source": "youtube_api",
+                    "metadata_status": "complete",
                 })
                 kw_collected += 1
 
@@ -270,10 +284,57 @@ def collect_youtube_comments_api(
     return collected_comments
 
 
+def enrich_youtube_video_metadata(
+    videos: list[dict[str, Any]], api_key: str
+) -> list[dict[str, Any]]:
+    """Add authoritative metadata to browser search results in API batches."""
+    enriched = [dict(video) for video in videos]
+    ids = list(dict.fromkeys(
+        video_id for video_id in (extract_video_id(str(item.get("video_href", "")))
+                                  for item in enriched) if video_id
+    ))
+    details: dict[str, dict[str, Any]] = {}
+    for start in range(0, len(ids), 50):
+        batch = ids[start:start + 50]
+        url = (
+            "https://www.googleapis.com/youtube/v3/videos?part=snippet,statistics"
+            f"&id={','.join(batch)}&key={api_key}"
+        )
+        request = urllib.request.Request(url, headers={"User-Agent": "MarketingCampaignAgent/1.0"})
+        with urllib.request.urlopen(request, timeout=15) as response:
+            payload = json.loads(response.read().decode("utf-8"))
+        details.update({str(item.get("id")): item for item in payload.get("items", [])})
+
+    for item in enriched:
+        video_id = extract_video_id(str(item.get("video_href", "")))
+        detail = details.get(video_id)
+        item["video_id"] = video_id
+        item["search_source"] = "playwright_fallback"
+        if not detail:
+            item["metadata_status"] = "unavailable"
+            continue
+        snippet = detail.get("snippet", {})
+        statistics = detail.get("statistics", {})
+        item.update({
+            "video_title": snippet.get("title", item.get("video_title", "")).strip(),
+            "video_description": snippet.get("description", "").strip()[:500],
+            "channel_title": snippet.get("channelTitle", "").strip(),
+            "default_language": snippet.get("defaultLanguage") or "unknown",
+            "audio_language": snippet.get("defaultAudioLanguage") or "unknown",
+            "published_at": snippet.get("publishedAt"),
+            "view_count": int(statistics.get("viewCount", 0)),
+            "comment_count": (int(statistics["commentCount"])
+                              if statistics.get("commentCount") is not None else None),
+            "metadata_status": "complete",
+        })
+        item["video_views"] = f"{format_view_count(item['view_count'])} views"
+    return enriched
+
+
 def search_and_collect_youtube_data(
     keywords: Union[list[str], str],
-    min_views: int = 100_000,
-    max_results_per_keyword: int = 10,
+    min_views: int = 0,
+    max_results_per_keyword: int = 50,
     api_key: Optional[str] = None,
 ) -> list[dict[str, Any]]:
     """Master tool for YouTube video research and collection.
@@ -282,8 +343,8 @@ def search_and_collect_youtube_data(
 
     Args:
         keywords: List of keyword strings or a single keyword.
-        min_views: Minimum views threshold (default: 100,000).
-        max_results_per_keyword: Top videos per keyword (default: 10).
+        min_views: Optional minimum view count. Defaults to zero.
+        max_results_per_keyword: Up to 50 candidates per keyword.
         api_key: Optional API key.
 
     Returns:
@@ -293,12 +354,17 @@ def search_and_collect_youtube_data(
                     "video_keywords": str,
                     "video_title": str,
                     "video_href": str,
-                    "video_views": str
+                    "video_views": str,
+                    "video_description": str,
+                    "channel_title": str,
+                    "default_language": str,
+                    "audio_language": str
                 }
             ]
     """
     key = api_key or _get_api_key()
 
+    api_error = None
     if key:
         try:
             logger.info("[YouTube Tool] Attempting search via official YouTube Data API v3...")
@@ -312,6 +378,7 @@ def search_and_collect_youtube_data(
                 logger.info(f"[YouTube Tool] YouTube Data API v3 successfully returned {len(results)} videos.")
                 return results
         except Exception as e:
+            api_error = f"{type(e).__name__}: {e}"
             logger.warning(f"[YouTube Tool] YouTube Data API failed ({e}). Falling back to Playwright scraper...")
 
     # Fallback to Playwright scraper
@@ -335,6 +402,19 @@ def search_and_collect_youtube_data(
         entry = dict(item)
         if "video_keywords" not in entry:
             entry["video_keywords"] = kw_default
+        entry["search_source"] = "playwright_fallback"
+        entry["metadata_status"] = "missing"
+        if api_error:
+            entry["api_search_error"] = api_error
         enriched_results.append(entry)
 
+    if key and enriched_results:
+        try:
+            return enrich_youtube_video_metadata(enriched_results, key)
+        except Exception as exc:
+            error = f"{type(exc).__name__}: {exc}"
+            logger.warning(f"[YouTube Tool] Could not enrich fallback metadata ({error}).")
+            for entry in enriched_results:
+                entry["metadata_status"] = "error"
+                entry["metadata_error"] = error
     return enriched_results

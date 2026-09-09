@@ -207,7 +207,7 @@ def fetch_video_comments_api(
     max_comments: Optional[int] = None,
     max_months: int = 3,
     window_days: Optional[int] = 90,
-    min_comments_threshold: int = 100,
+    min_comments_threshold: int = 0,
     order: str = "time",
     api_key: Optional[str] = None,
 ) -> Optional[list[dict[str, Any]]]:
@@ -369,7 +369,7 @@ def fetch_video_comments_playwright(
     video_url: str,
     max_comments: Optional[int] = None,
     max_months: int = 3,
-    min_comments_threshold: int = 100,
+    min_comments_threshold: int = 0,
     order: str = "time",
 ) -> Optional[list[dict[str, Any]]]:
     """Fallback extractor using Playwright from youtube-comments-collector."""
@@ -414,7 +414,7 @@ def extract_comments_from_videos(
     max_comments_per_video: Optional[int] = None,
     max_months: int = 3,
     window_days: int = 90,
-    min_comments_threshold: int = 100,
+    min_comments_threshold: int = 0,
     order: str = "time",
     api_key: Optional[str] = None,
     include_excluded: bool = False,

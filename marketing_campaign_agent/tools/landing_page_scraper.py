@@ -6,7 +6,19 @@ from typing import Any
 from urllib.parse import urlparse
 
 from bs4 import BeautifulSoup, Comment, NavigableString, Tag
+import httpx
 from playwright.async_api import async_playwright
+
+
+_HTTP_HEADERS = {
+    "User-Agent": (
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+        "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36"
+    ),
+    "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
+    "Accept-Language": "es-ES,es;q=0.9,en;q=0.8",
+    "Upgrade-Insecure-Requests": "1",
+}
 
 
 def _attr_to_str(val: Any) -> str:
@@ -75,6 +87,12 @@ async def _scrape_page(url: str) -> dict[str, Any]:
             context = await browser.new_context(viewport={"width": 1280, "height": 800})
             page = await context.new_page()
             response = await page.goto(url, wait_until="domcontentloaded", timeout=30000)
+            # Some page builders reject automated Chromium while serving the
+            # same public HTML to a regular HTTP client. Keep the fallback
+            # limited to that access-denied response and validate its content
+            # through the same extraction path below.
+            if response is not None and response.status == 403:
+                return await _scrape_page_http(url)
             if response is None or response.status >= 400:
                 status = response.status if response else "sin respuesta"
                 return {"error": f"La navegación falló: HTTP {status}.", "url": page.url}
@@ -96,6 +114,28 @@ async def _scrape_page(url: str) -> dict[str, Any]:
             return result
         finally:
             await browser.close()
+
+
+async def _scrape_page_http(url: str) -> dict[str, Any]:
+    """Recover public landing HTML when an automated browser receives 403."""
+    async with httpx.AsyncClient(
+        headers=_HTTP_HEADERS, follow_redirects=True, timeout=30.0
+    ) as client:
+        response = await client.get(url)
+    if response.status_code >= 400:
+        return {
+            "error": f"La navegación falló: HTTP 403 y respaldo HTTP {response.status_code}.",
+            "url": str(response.url),
+        }
+    final_url = str(response.url)
+    if urlparse(final_url).scheme not in ("http", "https"):
+        return {"error": "La navegación terminó en una URL inválida.", "url": final_url}
+    soup = BeautifulSoup(response.text, "html.parser")
+    title = soup.title.get_text(" ", strip=True) if soup.title else ""
+    result = extract_landing_content(response.text, final_url, title)
+    result["http_status"] = response.status_code
+    result["extraction_method"] = "http_fallback"
+    return result
 
 
 def extract_landing_content(html_content: str, final_url: str, page_title: str) -> dict[str, Any]:

@@ -21,6 +21,10 @@ from .tools.youtube_api_tool import extract_video_id, search_and_collect_youtube
 CLASSIFICATION_BATCH_SIZE = max(1, int(os.getenv("COMMENTS_BATCH_SIZE", "25")))
 CLASSIFICATION_CONCURRENCY = max(1, int(os.getenv("COMMENTS_CONCURRENCY", "1")))
 CLASSIFICATION_TARGET = max(1, int(os.getenv("COMMENTS_TARGET", "100")))
+CLASSIFICATION_REQUEST_TIMEOUT_SECONDS = max(
+    1, int(os.getenv("COMMENTS_BATCH_TIMEOUT_SECONDS", "90")))
+VIDEO_VALIDATION_REQUEST_TIMEOUT_SECONDS = max(
+    1, int(os.getenv("VIDEO_VALIDATION_TIMEOUT_SECONDS", "90")))
 RECOVERY_ROUNDS = 3
 RECOVERY_SECONDS = max(1, int(os.getenv("COMMENTS_RECOVERY_SECONDS", "600")))
 RATE_LIMIT_BACKOFF_SECONDS = max(1, int(os.getenv("COMMENTS_RATE_LIMIT_BACKOFF_SECONDS", "60")))
@@ -45,7 +49,7 @@ def _market_signal_counts(results):
 def _market_signal_reached_counts(desires, problems, total_target=None):
     if total_target is None:
         total_target = CLASSIFICATION_TARGET
-    return desires > 50 or problems > 50 or desires + problems >= total_target
+    return desires + problems >= total_target
 
 
 def _market_signal_reached(results):
@@ -87,6 +91,14 @@ def generate_response(client, **kwargs):
         return client.models.generate_content(**kwargs)
     except StopIteration as exc:
         raise RuntimeError('El proveedor terminó sin respuesta') from exc
+
+
+async def generate_response_async(client, *, timeout_seconds=None, **kwargs):
+    """Run one cancelable Gemini request with an end-to-end deadline."""
+    return await asyncio.wait_for(
+        client.aio.models.generate_content(**kwargs),
+        timeout=timeout_seconds or CLASSIFICATION_REQUEST_TIMEOUT_SECONDS,
+    )
 
 
 def _decode(value: Any) -> Any:
@@ -272,6 +284,19 @@ class BatchedVideoAnalyzerAgent(LlmAgent):
                          if text else None)
 
         candidates_by_id = {}
+        resume = bool(ctx.session.state.get("video_analysis_resume"))
+        saved_value = ctx.session.state.get("youtube_videos_research") if resume else None
+        try:
+            saved_decisions = _decode(saved_value) if saved_value else []
+        except (ValueError, TypeError):
+            saved_decisions = []
+        if not isinstance(saved_decisions, list):
+            saved_decisions = []
+        saved_by_id = {
+            str(item.get("video_id")): item for item in saved_decisions
+            if isinstance(item, dict) and item.get("video_id")
+            and item.get("relevance_decision") in {"accepted", "rejected"}
+        }
         decisions = []
         ledger = {}
         client = None
@@ -281,13 +306,21 @@ class BatchedVideoAnalyzerAgent(LlmAgent):
                        if str(value).strip()]
             if not queries:
                 raise ValueError("La landing validada no contiene consultas de YouTube")
-            yield emit({"youtube_videos_research": None, "youtube_search_status": {
-                "status": "searching", "query_count": len(queries), "queries": {},
+            yield emit({"youtube_videos_research": (
+                            json.dumps(list(saved_by_id.values()), ensure_ascii=False)
+                            if resume else None),
+                        "youtube_search_status": {
+                "status": "resuming_search" if resume else "searching",
+                "query_count": len(queries), "queries": {},
                 "candidate_count": 0, "candidates_decided": 0,
+                "resume_saved_count": len(saved_by_id),
                 "max_candidates_per_query": 50,
                 "validation_batch_size": VIDEO_VALIDATION_BATCH_SIZE,
+                "request_timeout_seconds": VIDEO_VALIDATION_REQUEST_TIMEOUT_SECONDS,
                 "min_views": 0,
-            }}, f"Búsqueda iniciada: {len(queries)} consultas, hasta 50 candidatos por consulta.")
+            }}, (f"Búsqueda reanudada con {len(saved_by_id)} decisiones guardadas. "
+                  if resume else "Búsqueda iniciada: ")
+                 + f"{len(queries)} consultas, hasta 50 candidatos por consulta.")
 
             for position, query in enumerate(queries, 1):
                 ledger[query] = {"status": "searching", "requested": 50,
@@ -338,8 +371,12 @@ class BatchedVideoAnalyzerAgent(LlmAgent):
             for item in raw_candidates:
                 item["video_keywords"] = "; ".join(item.pop("found_by_queries"))
             candidate_count = len(raw_candidates)
+            decisions = [saved_by_id[str(item["video_id"])] for item in raw_candidates
+                         if str(item["video_id"]) in saved_by_id]
             eligible_candidates = []
             for item in raw_candidates:
+                if str(item["video_id"]) in saved_by_id:
+                    continue
                 comment_count = item.get("comment_count")
                 try:
                     comment_count = int(comment_count) if comment_count is not None else None
@@ -416,8 +453,22 @@ class BatchedVideoAnalyzerAgent(LlmAgent):
                 last_error = None
                 for attempt in range(1, VIDEO_VALIDATION_ATTEMPTS + 1):
                     try:
-                        response = await asyncio.to_thread(
-                            generate_response, client, model=self.model, contents=prompt,
+                        yield emit({"youtube_search_status": {
+                            "status": "validating", "query_count": len(queries),
+                            "queries": deepcopy(ledger), "candidate_count": candidate_count,
+                            "candidates_decided": len(decisions),
+                            "current_batch": batch_number, "total_batches": total_batches,
+                            "attempt": attempt,
+                            "request_timeout_seconds": VIDEO_VALIDATION_REQUEST_TIMEOUT_SECONDS,
+                            "request_started_at": time.time(),
+                            "resume_saved_count": len(saved_by_id),
+                            "max_candidates_per_query": 50,
+                            "validation_batch_size": VIDEO_VALIDATION_BATCH_SIZE,
+                            "min_views": 0,
+                        }})
+                        response = await generate_response_async(
+                            client, timeout_seconds=VIDEO_VALIDATION_REQUEST_TIMEOUT_SECONDS,
+                            model=self.model, contents=prompt,
                             config=types.GenerateContentConfig(
                                 response_mime_type="application/json", temperature=0,
                                 seed=DETERMINISTIC_GENERATION_SEED + attempt - 1,
@@ -460,6 +511,8 @@ class BatchedVideoAnalyzerAgent(LlmAgent):
                     "queries": deepcopy(ledger), "candidate_count": len(raw_candidates),
                     "candidates_decided": len(decisions) - pending,
                     "candidates_review": pending, "current_batch": batch_number,
+                    "resume_saved_count": len(saved_by_id),
+                    "request_timeout_seconds": VIDEO_VALIDATION_REQUEST_TIMEOUT_SECONDS,
                     "total_batches": total_batches, "max_candidates_per_query": 50,
                     "validation_batch_size": VIDEO_VALIDATION_BATCH_SIZE, "min_views": 0,
                 }}, f"Bloque {batch_number}/{total_batches} guardado: "
@@ -475,9 +528,13 @@ class BatchedVideoAnalyzerAgent(LlmAgent):
                 "query_count": len(queries), "completed_queries": len(queries) - query_errors,
                 "query_error_count": query_errors, "queries": ledger,
                 "candidate_count": candidate_count,
-                "validated_candidate_count": len(eligible_candidates),
+                "validated_candidate_count": sum(
+                    isinstance(item.get("comment_count"), int)
+                    and item["comment_count"] > 100 for item in raw_candidates),
                 "candidates_decided": accepted + rejected,
                 "candidates_review": pending, "accepted": accepted, "rejected": rejected,
+                "resume_saved_count": len(saved_by_id),
+                "request_timeout_seconds": VIDEO_VALIDATION_REQUEST_TIMEOUT_SECONDS,
                 "max_candidates_per_query": 50,
                 "validation_batch_size": VIDEO_VALIDATION_BATCH_SIZE, "min_views": 0,
             }
@@ -511,32 +568,72 @@ class DeterministicCommentsCollectorAgent(LlmAgent):
                          content=types.Content(role="model", parts=[types.Part.from_text(text=text)]) if text else None)
 
         saved = ctx.session.state.get("youtube_comments_collected") if ctx.session.state.get("comments_resume") else None
+        saved_collection_status = dict(ctx.session.state.get("youtube_comments_collection_status") or {})
         candidate_count = accepted_count = rejected_count = 0
+        result = []
         yield emit({"youtube_comments_collected": saved,
                     "youtube_comments_collection_status": {"status": "collecting", "invocation_id": ctx.invocation_id}})
         try:
+            candidates = _decode(ctx.session.state.get("youtube_videos_research"))
+            if not isinstance(candidates, list):
+                raise ValueError("La validación de videos no devolvió una lista")
+            candidate_count = len(candidates)
+            videos = [item for item in candidates if isinstance(item, dict)
+                      and item.get("relevance_decision") == "accepted"
+                      and str(item.get("detected_language", "")).lower().startswith("es")]
+            accepted_count = len(videos)
+            rejected_count = candidate_count - accepted_count
             if saved:
-                result = _decode(saved)
-            else:
-                candidates = _decode(ctx.session.state.get("youtube_videos_research"))
-                if not isinstance(candidates, list):
-                    raise ValueError("La validación de videos no devolvió una lista")
-                candidate_count = len(candidates)
-                videos = [item for item in candidates if isinstance(item, dict)
-                          and item.get("relevance_decision") == "accepted"
-                          and str(item.get("detected_language", "")).lower().startswith("es")]
-                accepted_count = len(videos)
-                rejected_count = candidate_count - accepted_count
+                result = _decode(saved) or []
+                if not isinstance(result, list):
+                    raise ValueError("El punto de recuperación de comentarios no es válido")
+                # Older checkpoints may not retain the accepted candidate list.
+                # The saved video records are sufficient to finish their recovery.
                 if not videos:
-                    raise ValueError("Ningún candidato superó la validación semántica contra la landing")
+                    videos = [item for item in result if isinstance(item, dict)]
+                    accepted_count = len(videos)
+                    rejected_count = max(0, candidate_count - accepted_count)
+            if not videos:
+                raise ValueError("Ningún candidato superó la validación semántica contra la landing")
+            processed_urls = {item.get("video_href") for item in result if isinstance(item, dict)}
+            remaining_videos = ([] if saved and saved_collection_status.get("status") == "complete" else
+                                [item for item in videos if item.get("video_href") not in processed_urls])
+            if remaining_videos:
                 yield emit({"youtube_comments_collection_status": {
                     "status": "collecting", "invocation_id": ctx.invocation_id,
                     "candidate_count": candidate_count, "accepted_videos": accepted_count,
-                    "rejected_videos": rejected_count,
+                    "rejected_videos": rejected_count, "videos_processed": len(result),
+                    "videos_pending": len(remaining_videos),
                 }}, f"Validación de videos terminada: {accepted_count} aceptados y "
                      f"{rejected_count} rechazados. Recolectando comentarios solo de los aceptados.")
-                result = await asyncio.to_thread(
-                    extract_comments_from_videos, videos, include_excluded=True)
+                loop = asyncio.get_running_loop()
+                progress_queue = asyncio.Queue()
+
+                def on_video_collected(item, index, total):
+                    loop.call_soon_threadsafe(progress_queue.put_nowait, (item, index, total))
+
+                worker = asyncio.create_task(asyncio.to_thread(
+                    extract_comments_from_videos, remaining_videos, include_excluded=True,
+                    on_video_collected=on_video_collected))
+                while not worker.done() or not progress_queue.empty():
+                    try:
+                        item, _, _ = await asyncio.wait_for(progress_queue.get(), timeout=1)
+                    except asyncio.TimeoutError:
+                        continue
+                    result, _ = _consolidate_videos([*result, item])
+                    comment_count = sum(len(v.get("3_months_comments", [])) for v in result)
+                    yield emit({
+                        "youtube_comments_collected": json.dumps(result, ensure_ascii=False),
+                        "youtube_comments_collection_status": {
+                            "status": "collecting", "invocation_id": ctx.invocation_id,
+                            "candidate_count": candidate_count, "accepted_videos": accepted_count,
+                            "rejected_videos": rejected_count, "videos_processed": len(result),
+                            "videos_pending": accepted_count - len(result),
+                            "comment_count": comment_count,
+                        }}, f"Video {len(result)}/{accepted_count} completado; "
+                            f"{comment_count} comentarios guardados.")
+                collected_now = await worker
+                result, _ = _consolidate_videos([*result, *collected_now])
             if not isinstance(result, list) or not result:
                 raise ValueError("No hay videos recolectados para procesar")
             result, consolidation = _consolidate_videos(result)
@@ -593,10 +690,12 @@ class DeterministicCommentsCollectorAgent(LlmAgent):
                         "comment_count": count, "consolidation": consolidation, "issues": [{k: v.get(k) for k in
                         ("video_href", "collection_status", "collection_error")} for v in partial]}}, message)
         except Exception as exc:
-            yield emit({"youtube_comments_collected": None,
+            saved_progress = json.dumps(result, ensure_ascii=False) if result else None
+            yield emit({"youtube_comments_collected": saved_progress,
                         "youtube_comments_collection_status": {"status": "error", "invocation_id": ctx.invocation_id,
                         "candidate_count": candidate_count, "accepted_videos": accepted_count,
                         "rejected_videos": rejected_count,
+                        "videos_processed": len(result),
                         "error": f"{type(exc).__name__}: {exc}"}}, f"Extracción detenida: {exc}")
 
 
@@ -658,18 +757,13 @@ class BatchedCommentsClassifierAgent(LlmAgent):
             desires_count, problems_count = _market_signal_counts(results)
             valid_count = desires_count + problems_count
             if _market_signal_reached(results):
-                payload = json.dumps(results, ensure_ascii=False)
-                yield emit({"youtube_comments_classified": payload,
-                            "youtube_comments_classification_status": {
-                                "status": "complete", "invocation_id": ctx.invocation_id,
+                yield emit({"youtube_comments_classification_status": {
+                                "status": "classifying", "invocation_id": ctx.invocation_id,
                                 "source_count": len(source), "result_count": len(results),
-                                "review_count": sum(1 for x in results if x.get("decision") == "requiere_revision"),
-                                "invalid_source_count": invalid_source_count, "target": CLASSIFICATION_TARGET,
-                                "desires_count": desires_count, "problems_count": problems_count,
-                                "target_reached": True, "stop_reason": "market_signal_threshold"}},
-                           f"Se alcanzó el umbral de mercado: {valid_count} deseos/problemas. "
-                           "Se detiene la clasificación y se genera el informe.")
-                return
+                                "target_reached": True, "target": CLASSIFICATION_TARGET,
+                                "desires_count": desires_count, "problems_count": problems_count}},
+                           f"Se alcanzó el umbral provisional de {CLASSIFICATION_TARGET}; "
+                           "se continúa para completar la cobertura de la fuente.")
             remaining = [item for item in source if str(item["comment_id"]) not in completed]
             pending_batches = (len(remaining) + CLASSIFICATION_BATCH_SIZE - 1) // CLASSIFICATION_BATCH_SIZE
             completed_batches = len(results) // CLASSIFICATION_BATCH_SIZE
@@ -717,8 +811,8 @@ class BatchedCommentsClassifierAgent(LlmAgent):
                             "problema usa P1-P3; para no_aplica o requiere_revision usa null."
                             if attempt and details.get("message") else ""
                         )
-                        response = await asyncio.to_thread(
-                            generate_response, client, model=self.model,
+                        response = await generate_response_async(
+                            client, model=self.model,
                             contents=prompt + retry_note,
                             config=types.GenerateContentConfig(
                                 response_mime_type="application/json", temperature=0,
@@ -783,7 +877,9 @@ class BatchedCommentsClassifierAgent(LlmAgent):
                         "status": "classifying", "invocation_id": ctx.invocation_id,
                         "batch": first_batch, "total_batches": total_batches,
                         "concurrency": CLASSIFICATION_CONCURRENCY,
-                        "result_count": len(results), "source_count": len(source)}},
+                        "result_count": len(results), "source_count": len(source),
+                        "request_timeout_seconds": CLASSIFICATION_REQUEST_TIMEOUT_SECONDS,
+                        "request_started_at": time.time()}},
                         ((f"Clasificando lote {first_batch}/{total_batches} "
                           if CLASSIFICATION_CONCURRENCY == 1 else
                           f"Clasificando lote {first_batch}/{total_batches}, hasta {CLASSIFICATION_CONCURRENCY} en paralelo ")
@@ -792,7 +888,7 @@ class BatchedCommentsClassifierAgent(LlmAgent):
                         for offset in range(len(chunk)):
                             yield emit({}, f"Clasificando lote {first_batch + offset}/{total_batches} en paralelo.")
                     for completed_batch in asyncio.as_completed(tasks):
-                        batch_number, materialized, _ = await completed_batch
+                        batch_number, materialized, batch_error = await completed_batch
                         results.extend(materialized)
                         for item in materialized:
                             if item.get("decision") in {"deseo", "problema", "no_aplica"}:
@@ -802,7 +898,15 @@ class BatchedCommentsClassifierAgent(LlmAgent):
                         valid_count = desires_count + problems_count
                         yield emit({"youtube_comments_classified": json.dumps(results, ensure_ascii=False),
                                     "youtube_comments_classification_cache": dict(cache),
-                                    "youtube_comments_checkpoint": {"fingerprint": fingerprint, "result_count": len(results)}},
+                                    "youtube_comments_checkpoint": {"fingerprint": fingerprint, "result_count": len(results)},
+                                    "youtube_comments_classification_status": {
+                                        "status": "classifying", "invocation_id": ctx.invocation_id,
+                                        "batch": batch_number, "total_batches": total_batches,
+                                        "result_count": len(results), "source_count": len(source),
+                                        "request_timeout_seconds": CLASSIFICATION_REQUEST_TIMEOUT_SECONDS,
+                                        "request_finished_at": time.time(),
+                                        "last_error": batch_error,
+                                    }},
                                    f"Lote {batch_number} guardado: {len(results)}/{len(source)} comentarios; "
                                    f"deseos: {desires_count}; problemas: {problems_count}; "
                                    f"total relevante: {valid_count}/{CLASSIFICATION_TARGET}.")
@@ -811,8 +915,6 @@ class BatchedCommentsClassifierAgent(LlmAgent):
                         if not task.done():
                             task.cancel()
                     await asyncio.gather(*tasks, return_exceptions=True)
-                if _market_signal_reached(results):
-                    break
                 if permanent_failure or transient_failure:
                     break
 
@@ -838,7 +940,7 @@ class BatchedCommentsClassifierAgent(LlmAgent):
                     })
             for round_number in range(int(recovery.get('round', 0)) + 1, RECOVERY_ROUNDS + 1):
                 pending = [x for x in results if technical_pending(x)]
-                if not pending or _market_signal_reached(results) or permanent_failure:
+                if not pending or permanent_failure:
                     break
                 if time.time() >= recovery['deadline']:
                     break
@@ -884,16 +986,13 @@ class BatchedCommentsClassifierAgent(LlmAgent):
                                 'youtube_comments_recovery': dict(recovery)},
                                f'Recuperación {round_number}: {len(pending_ids)} errores técnicos pendientes; '
                                f'{valid_count}/{CLASSIFICATION_TARGET} deseos o problemas.')
-                    if _market_signal_reached(results):
-                        break
                     if transient_failure:
                         break
                 recovery['progress'] = before - sum(technical_pending(x) for x in results)
             technical_count = sum(technical_pending(x) for x in results)
             recovery = {**recovery, 'status': 'finished',
                         'pending_ids': [x['comment_id'] for x in results if technical_pending(x)],
-                        'stop_reason': ('target_reached' if _market_signal_reached(results) else
-                                        'permanent_error' if permanent_failure else
+                        'stop_reason': ('permanent_error' if permanent_failure else
                                         'resolved' if not technical_count else
                                         'rate_limited' if transient_failure and transient_failure.get('rate_limited') else
                                         'deadline' if time.time() >= recovery['deadline'] or recovery.get('wait_exceeds_deadline') else 'attempts_exhausted')}
@@ -910,7 +1009,7 @@ class BatchedCommentsClassifierAgent(LlmAgent):
                         "invalid_source_count": invalid_source_count, "target": CLASSIFICATION_TARGET,
                         "desires_count": desires_count, "problems_count": problems_count,
                         "target_reached": target_reached,
-                        "stop_reason": "market_signal_threshold" if target_reached else "source_exhausted"}}, payload)
+                         "stop_reason": "source_exhausted"}}, payload)
         except Exception as exc:
             yield emit({"youtube_comments_classified": json.dumps(results, ensure_ascii=False),
                         "youtube_comments_classification_status": {"status": "error", "invocation_id": ctx.invocation_id,
@@ -919,4 +1018,5 @@ class BatchedCommentsClassifierAgent(LlmAgent):
                         f"Se conservaron {len(results)} decisiones. El informe indicará el error pendiente.")
         finally:
             if client is not None:
+                await client.aio.aclose()
                 await asyncio.to_thread(client.close)

@@ -22,8 +22,16 @@ ROOT = Path(__file__).resolve().parent
 
 def eligible_for_restart(state):
     run = state.get('pipeline_run') or {}
-    return (run.get('status') == 'active' and run.get('stage', -1) >= 2
-            and bool(state.get('youtube_comments_collected')))
+    if run.get('status') != 'active':
+        return False
+    stage = run.get('stage', -1)
+    video_checkpoint = state.get('youtube_search_status') or {}
+    can_resume_videos = (
+        stage == 1 and video_checkpoint.get('status') in {'validating', 'incomplete'}
+        and bool(state.get('youtube_videos_research'))
+        and bool(state.get('landing_page_research')))
+    can_resume_comments = stage >= 2 and bool(state.get('youtube_comments_collected'))
+    return can_resume_videos or can_resume_comments
 
 
 def interrupted_sessions():

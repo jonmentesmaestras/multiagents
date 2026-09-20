@@ -7,7 +7,7 @@ import os
 import re
 import sys
 from pathlib import Path
-from typing import Any, Optional, Union
+from typing import Any, Callable, Optional, Union
 import urllib.error
 import urllib.parse
 import urllib.request
@@ -418,6 +418,7 @@ def extract_comments_from_videos(
     order: str = "time",
     api_key: Optional[str] = None,
     include_excluded: bool = False,
+    on_video_collected: Optional[Callable[[dict[str, Any], int, int], None]] = None,
 ) -> list[dict[str, Any]]:
     """Iterates through YouTube videos, checks total comments > 100, extracts comments
     from 3 months ago to the most current comment sorted by newest, and returns a structured JSON.
@@ -457,7 +458,8 @@ def extract_comments_from_videos(
     key = api_key or _get_api_key()
     results: list[dict[str, Any]] = []
 
-    for entry in video_entries:
+    total_videos = len(video_entries)
+    for video_index, entry in enumerate(video_entries, 1):
         full_url = entry["video_href"]
         keywords = entry.get("video_keywords", "")
 
@@ -500,22 +502,28 @@ def extract_comments_from_videos(
         if video_comments is None:
             logger.info(f"[Comment Collector] Bypassing URL {full_url} (total comments <= {min_comments_threshold} or unavailable).")
             if include_excluded:
-                results.append({
+                result = {
                     "video_href": full_url,
                     "video_keywords": keywords,
                     "3_months_comments": [],
                     "collection_status": "excluded_by_rule",
                     "collection_error": "comment_count_below_threshold_or_unavailable",
-                })
+                }
+                results.append(result)
+                if on_video_collected:
+                    on_video_collected(result, video_index, total_videos)
             continue
 
-        results.append({
+        result = {
             "video_href": full_url,
             "video_keywords": keywords,
             "3_months_comments": video_comments,
             "collection_status": "complete" if not api_failed else "partial",
             "collection_error": "api_failed_fallback_used" if api_failed else None,
-        })
+        }
+        results.append(result)
+        if on_video_collected:
+            on_video_collected(result, video_index, total_videos)
 
     return results
 

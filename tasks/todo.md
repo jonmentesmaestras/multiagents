@@ -60,3 +60,22 @@
 - [x] 3. Ejecutar suite de pruebas con `pytest` para asegurar que ningún test unitario o de integración se rompa (66/66 aprobadas).
 - [x] 4. Validar la extracción con el scraper y verificar que los textos de frecuencias, bienestar y guía gratuita estén presentes en el payload.
 - [x] 5. Actualizar `tasks/lessons.md` con la lección 5 sobre Strict Grounding y prevención de alucinaciones por dominio.
+
+---
+
+# Plan: Exclusión en .gitignore de Archivos JSON de Revisión Humana
+
+- [x] 1. Identificar patrones de archivos y carpetas de `revision_humana` en el repositorio (`marketing_campaign_agent/docs/revision_humana/**/*.json`, etc.).
+- [x] 2. Añadir directivas precisas en `.gitignore` (`*revision_humana*.json` y `**/revision_humana/**/*.json`) asegurando ignorar únicamente los JSON y preservar otros tipos de archivos (como HTMLs).
+- [x] 3. Desindexar de la caché de Git los archivos JSON existentes que ya se encontraban rastreados (`git rm --cached`).
+- [x] 4. Validar las reglas con `git check-ignore` y comprobar el estado limpio en `git status`.
+- [x] 5. Registrar lección aprendida en `tasks/lessons.md`.
+
+---
+
+## Revisión Final: Exclusión de JSONs de Revisión Humana
+
+- **Patrones `.gitignore`**: Se agregaron las reglas `*revision_humana*.json` y `**/revision_humana/**/*.json`.
+- **Desindexación de Git**: Se desindexaron sin eliminarse del disco los archivos JSON previamente comiteados en `marketing_campaign_agent/docs/revision_humana/`.
+- **Verificación**: `git check-ignore -v` confirmó el calce exacto con archivos JSON sin afectar archivos HTML ni documentación general.
+

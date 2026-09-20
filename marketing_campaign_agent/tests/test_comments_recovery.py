@@ -33,7 +33,9 @@ def video(vid, ids, status="complete"):
 
 def response(ids, decision="deseo"):
     return MagicMock(text=json.dumps([{"comment_id": i, "decision": decision,
-                                     "category_id": "D1" if decision == "deseo" else None} for i in ids]))
+                                     "category_id": ("D1" if decision == "deseo" else
+                                                     "P1" if decision == "problema" else None)}
+                                    for i in ids]))
 
 
 class Stage(BaseAgent):
@@ -70,7 +72,12 @@ async def run_pipeline(fetch_results, model_results, *, resume=False, initial=No
     await service.create_session(app_name="test", user_id="u", session_id="s", state=initial or {})
     runner = Runner(agent=root, app_name="test", session_service=service)
     client = MagicMock()
-    client.models.generate_content.side_effect = model_results
+    generate_content = AsyncMock(side_effect=model_results)
+    client.aio.models.generate_content = generate_content
+    client.aio.aclose = AsyncMock()
+    # Keep the existing assertions readable while the classifier uses the
+    # cancelable async transport in production.
+    client.models.generate_content = generate_content
     with patch("marketing_campaign_agent.comments_pipeline.extract_comments_from_videos",
                side_effect=deepcopy(fetch_results)) as fetch, patch("google.genai.Client", return_value=client), \
             patch('marketing_campaign_agent.comments_pipeline.asyncio.sleep', new_callable=AsyncMock), \
@@ -190,6 +197,75 @@ def test_resume_uses_saved_collection_and_skips_landing_and_video_search():
     assert "Reanudando" in messages[0]
 
 
+def test_incomplete_collection_resume_fetches_only_missing_video():
+    first = video("a", ["a"])
+    candidates = [{
+        "video_href": f"https://www.youtube.com/watch?v={vid}",
+        "relevance_decision": "accepted", "detected_language": "es",
+    } for vid in ("a", "b")]
+    state, _, stages, fetch, _ = asyncio.run(run_pipeline(
+        [[video("b", ["b"])]], [response(["a", "b"])], resume=True, initial={
+            STATUS_KEY: {"status": "validated", "invocation_id": "previous"},
+            "landing_page_research": json.dumps(RESEARCH),
+            "youtube_videos_research": json.dumps(candidates),
+            "youtube_comments_collected": json.dumps([first]),
+            "youtube_comments_collection_status": {"status": "collecting"},
+        }))
+    assert stages[0].calls == stages[1].calls == 0
+    assert fetch.call_count == 1
+    assert [item["video_href"] for item in fetch.call_args.args[0]] == [candidates[1]["video_href"]]
+    assert state["youtube_comments_collection_status"]["status"] == "complete"
+    assert state["youtube_comments_classification_status"]["result_count"] == 2
+
+
+def test_collection_emits_and_persists_progress_per_video():
+    async def scenario():
+        collector = DeterministicCommentsCollectorAgent(name="collector", model="offline")
+        service = InMemorySessionService()
+        candidates = [{
+            "video_href": f"https://www.youtube.com/watch?v={vid}",
+            "relevance_decision": "accepted", "detected_language": "es",
+        } for vid in ("a", "b")]
+        await service.create_session(app_name="test", user_id="u", session_id="progress", state={
+            "youtube_videos_research": json.dumps(candidates),
+        })
+        runner = Runner(agent=collector, app_name="test", session_service=service)
+
+        def extract(_videos, **kwargs):
+            rows = [video("a", ["a"]), video("b", ["b"])]
+            for index, row in enumerate(rows, 1):
+                kwargs["on_video_collected"](row, index, len(rows))
+            return rows
+
+        with patch("marketing_campaign_agent.comments_pipeline.extract_comments_from_videos", side_effect=extract):
+            events = [event async for event in runner.run_async(
+                user_id="u", session_id="progress", new_message=types.Content(
+                    role="user", parts=[types.Part.from_text(text="run")]))]
+        messages = [part.text for event in events if event.content
+                    for part in event.content.parts or [] if part.text]
+        session = await service.get_session(app_name="test", user_id="u", session_id="progress")
+        assert any("Video 1/2 completado" in message for message in messages)
+        assert any("Video 2/2 completado" in message for message in messages)
+        assert len(json.loads(session.state["youtube_comments_collected"])) == 2
+
+    asyncio.run(scenario())
+
+
+def test_classifier_timeout_is_bounded_and_preserves_checkpoint():
+    async def never_returns(**_kwargs):
+        await asyncio.Event().wait()
+
+    with patch("marketing_campaign_agent.comments_pipeline.CLASSIFICATION_REQUEST_TIMEOUT_SECONDS", 1):
+        state, messages, _, _, client = asyncio.run(run_pipeline(
+            [[video("a", ["a"])]], never_returns))
+    assert client.aio.models.generate_content.call_count == 4
+    assert state["youtube_comments_checkpoint"]["result_count"] == 1
+    assert state["youtube_comments_classification_status"]["status"] == "complete"
+    assert state["youtube_comments_classification_status"]["technical_error_count"] == 1
+    assert state["youtube_comments_recovery"]["stop_reason"] == "attempts_exhausted"
+    assert any("Lote 1 guardado" in message for message in messages)
+
+
 def test_failed_batch_does_not_hide_progress_or_discard_other_batches():
     ids = [str(i) for i in range(26)]
     state, messages, _, _, client = asyncio.run(run_pipeline(
@@ -278,7 +354,7 @@ def test_rate_limit_opens_circuit_and_does_not_send_every_batch():
     assert rows[0]['failure']['retry_after'] == 60
 
 
-def test_threshold_during_recovery_stops_further_calls():
+def test_threshold_during_recovery_completes_source_before_deciding():
     def model(**kw):
         batch = json.loads(kw['contents'].split('COMENTARIOS=')[1])
         return MagicMock(text='[]') if len(batch) > 10 else response([x['comment_id'] for x in batch])
@@ -288,28 +364,35 @@ def test_threshold_during_recovery_stops_further_calls():
     assert state['youtube_comments_classification_status']['target_reached']
     assert len(json.loads(state['youtube_comments_classified'])) == 25
     assert state['market_research_metrics']['processing_status'] == 'THRESHOLD_REACHED'
+    assert state['market_research_metrics']['decision'] == 'ACCEPT_OFFER'
+    assert state['market_research_metrics']['summary']['status'] == 'APPROVED'
+    assert 'umbral combinado' in state['market_research_metrics']['conclusion']
     assert not any('INCOMPLETE_ANALYSIS' in message for message in messages)
     assert any('ACCEPT OFFER' in message for message in messages)
 
 
-def test_independent_desire_threshold_stops_classification():
-    ids = [str(i) for i in range(75)]
+def test_only_combined_threshold_is_evaluated_after_full_classification():
+    ids = [str(i) for i in range(125)]
 
     def model(**kwargs):
         batch = json.loads(kwargs['contents'].split('COMENTARIOS=', 1)[1])
-        return response([item['comment_id'] for item in batch], 'deseo')
+        decision = 'deseo' if int(batch[0]['comment_id']) < 50 else 'problema'
+        return response([item['comment_id'] for item in batch], decision)
 
     with patch('marketing_campaign_agent.comments_pipeline.CLASSIFICATION_BATCH_SIZE', 25), \
             patch('marketing_campaign_agent.comments_pipeline.CLASSIFICATION_CONCURRENCY', 1):
         state, messages, _, _, client = asyncio.run(run_pipeline([[video('a', ids)]], model))
 
     rows = json.loads(state['youtube_comments_classified'])
-    assert len(rows) == 75
-    assert client.models.generate_content.call_count == 3
+    assert len(rows) == 125
+    assert client.models.generate_content.call_count == 5
     assert state['youtube_comments_classification_status']['target_reached']
     assert state['market_research_metrics']['processing_status'] == 'THRESHOLD_REACHED'
-    assert _market_signal_reached_counts(51, 0, 100)
+    assert not _market_signal_reached_counts(51, 0, 100)
     assert not _market_signal_reached_counts(50, 49, 100)
+    assert _market_signal_reached_counts(51, 49, 100)
+    assert _market_signal_reached_counts(30, 70, 100)
+    assert _market_signal_reached_counts(0, 100, 100)
     assert not any('en paralelo' in message for message in messages if 'Clasificando lote' in message)
 
 
@@ -333,6 +416,52 @@ def test_only_interrupted_comment_runs_are_restarted():
     assert eligible_for_restart({'pipeline_run': {'status': 'active', 'stage': 3},
                                  'youtube_comments_collected': '[{}]'})
     assert not eligible_for_restart({'pipeline_run': {'status': 'active', 'stage': 1}})
+    assert eligible_for_restart({
+        'pipeline_run': {'status': 'active', 'stage': 1},
+        'landing_page_research': json.dumps(RESEARCH),
+        'youtube_videos_research': json.dumps([{'video_id': 'saved'}]),
+        'youtube_search_status': {'status': 'validating'},
+    })
+
+
+def test_orchestrator_resumes_video_validation_before_comment_stages():
+    async def scenario():
+        saved = [{"video_id": "saved", "video_href": "https://youtube.com/watch?v=saved",
+                  "relevance_decision": "accepted", "detected_language": "es"}]
+        stages = [
+            Stage(name="landing", seed=True),
+            Stage(name="YoutubeCommentsAnalyzer", video_candidates=saved, search_status={
+                "status": "complete", "query_count": 12, "completed_queries": 12,
+                "query_error_count": 0, "candidate_count": 1, "candidates_decided": 1,
+                "candidates_review": 0, "accepted": 1, "rejected": 0,
+            }),
+            Stage(name="collector"), Stage(name="classifier"), Stage(name="report"),
+        ]
+        initial = {
+            STATUS_KEY: {"status": "validated", "invocation_id": "old"},
+            "landing_page_research": json.dumps(RESEARCH),
+            "youtube_videos_research": json.dumps(saved),
+            "youtube_search_status": {"status": "validating", "candidate_count": 2,
+                                      "candidates_decided": 1},
+            "pipeline_run": {"status": "active", "stage": 1, "restart_attempts": 0},
+        }
+        service = InMemorySessionService()
+        await service.create_session(app_name="test", user_id="u", session_id="video-resume",
+                                     state=initial)
+        root = GroundedCampaignOrchestrator(name="pipeline", sub_agents=stages)
+        runner = Runner(agent=root, app_name="test", session_service=service)
+        events = [event async for event in runner.run_async(
+            user_id="u", session_id="video-resume",
+            new_message=types.Content(role="user", parts=[types.Part.from_text(text="reanuda")]))]
+        state = (await service.get_session(
+            app_name="test", user_id="u", session_id="video-resume")).state
+        messages = [part.text for event in events if event.content
+                    for part in event.content.parts or [] if part.text]
+        assert [stage.calls for stage in stages] == [0, 1, 1, 1, 1]
+        assert state["video_analysis_resume"] is True
+        assert any("Reanudando la validación de videos" in message for message in messages)
+
+    asyncio.run(scenario())
 
 
 def test_automatic_resume_reuses_checkpoint_without_user_word():

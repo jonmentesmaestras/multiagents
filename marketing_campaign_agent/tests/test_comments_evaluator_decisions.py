@@ -41,3 +41,32 @@ def test_confirmed_threshold_is_accepted_even_with_semantic_review():
     result = evaluate_classified_comments_metrics(rows, source_comments=rows)
     assert result['decision'] == 'ACCEPT_OFFER'
     assert result['is_offer_accepted'] is True
+
+
+def test_threshold_does_not_override_incomplete_source_coverage():
+    classified = [row(i, 'deseo') for i in range(100)]
+    source = classified + [row(100, 'no_aplica')]
+    result = evaluate_classified_comments_metrics(
+        classified,
+        source_comments=source,
+        collection_status={'status': 'complete'},
+        classification_status={'status': 'complete', 'target_reached': True},
+    )
+    assert result['coverage']['status'] == 'incomplete'
+    assert result['decision'] == 'INCOMPLETE_ANALYSIS'
+    assert result['is_offer_accepted'] is None
+
+
+def test_only_combined_relevant_total_determines_market_threshold():
+    cases = [
+        (51, 0, 'DO_NOT_ACCEPT_OFFER'),
+        (50, 49, 'DO_NOT_ACCEPT_OFFER'),
+        (51, 49, 'ACCEPT_OFFER'),
+        (30, 70, 'ACCEPT_OFFER'),
+        (0, 100, 'ACCEPT_OFFER'),
+    ]
+    for desires, problems, expected in cases:
+        rows = ([row(i, 'deseo') for i in range(desires)]
+                + [row(desires + i, 'problema') for i in range(problems)])
+        result = evaluate_classified_comments_metrics(rows, source_comments=rows)
+        assert result['decision'] == expected, (desires, problems)

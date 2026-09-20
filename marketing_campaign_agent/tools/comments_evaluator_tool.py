@@ -53,9 +53,13 @@ def _parse_classified_comments(classified_comments: Union[list[dict[str, Any]], 
 def evaluate_classified_comments_metrics(
     classified_comments: Union[list[dict[str, Any]], str, Any],
     source_comments: Union[list[dict[str, Any]], str, Any, None] = None,
+    *,
+    search_status: dict[str, Any] | None = None,
+    collection_status: dict[str, Any] | None = None,
+    classification_status: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
-    """Evaluates the classified comments dataset against market traction thresholds
-    (>50 in deseos, >50 in problemas, or >=100 total combined) to determine whether
+    """Evaluates the classified comments dataset against the market traction threshold
+    (>=100 deseos and problemas combined) to determine whether
     to accept the offer and proceed with a Spanish clone.
 
     Args:
@@ -68,11 +72,9 @@ def evaluate_classified_comments_metrics(
             "deseos_count": int,
             "problemas_count": int,
             "total_classified": int,
-            "deseos_above_50": bool,
-            "problemas_above_50": bool,
             "total_above_100": bool,
-            "is_offer_accepted": bool,
-            "decision": "ACCEPT_OFFER" | "DO_NOT_ACCEPT_OFFER",
+            "is_offer_accepted": bool | None,
+            "decision": "ACCEPT_OFFER" | "DO_NOT_ACCEPT_OFFER" | "INCOMPLETE_SEARCH_COVERAGE" | "INCOMPLETE_ANALYSIS" | "HUMAN_REVIEW_REQUIRED",
             "conclusion": str,
             "recommendation": str,
             "summary": dict
@@ -124,23 +126,40 @@ def evaluate_classified_comments_metrics(
     semantic_review_count = max(0, len(review_rows) - technical_error_count)
     maximum_possible_relevant = total_classified + semantic_review_count
 
-    deseos_above_50 = deseos_count > 50
-    problemas_above_50 = problemas_count > 50
     total_above_100 = total_classified >= 100
 
-    # Decision logic:
-    # 1. Are there more than 50 comments in deseos?
-    # 2. If not, are there more than 50 comments in problems?
-    # 3. If sum up deseos and problems all together is up to 100 -> validated traction.
-    # Otherwise -> insufficient traction.
+    search_incomplete = bool(
+        search_status is not None and search_status.get("status") != "complete"
+    )
+    processing_incomplete = bool(
+        collection_status is not None and collection_status.get("status") != "complete"
+    ) or bool(
+        classification_status is not None and classification_status.get("status") != "complete"
+    )
+    if classification_status and classification_status.get("invalid_source_count", 0):
+        processing_incomplete = True
+    if coverage["status"] != "verified":
+        processing_incomplete = True
+
+    # The only market threshold is the combined total of deseos and problemas.
     # An unknown coverage state cannot support a market rejection or acceptance.
     coverage_verified = coverage["status"] == "verified"
     technical_incomplete = technical_error_count > 0
-    threshold_reached = deseos_above_50 or problemas_above_50 or total_above_100
+    threshold_reached = total_above_100
     possible_threshold = maximum_possible_relevant >= 100
-    is_offer_accepted = (not technical_incomplete and coverage_verified and threshold_reached)
+    is_offer_accepted = (
+        not search_incomplete
+        and not processing_incomplete
+        and not technical_incomplete
+        and coverage_verified
+        and threshold_reached
+    )
 
-    if is_offer_accepted:
+    if search_incomplete:
+        decision = "INCOMPLETE_SEARCH_COVERAGE"
+        conclusion = "No se demostró la cobertura completa de búsqueda en YouTube necesaria para decidir."
+        recommendation = "Completar la búsqueda y validar todos los candidatos antes de decidir."
+    elif is_offer_accepted:
         decision = "ACCEPT_OFFER"
         conclusion = (
             f"La landing page de Brasil cuenta con suficiente volumen de audiencia comentando activamente "
@@ -154,7 +173,7 @@ def evaluate_classified_comments_metrics(
         decision = "INCOMPLETE_SEARCH_COVERAGE"
         conclusion = "No se demostró la cobertura de búsqueda y extracción necesaria para decidir."
         recommendation = "Completar el registro por consulta y validar todos los candidatos antes de aceptar o rechazar."
-    elif technical_incomplete or coverage["status"] == "incomplete":
+    elif technical_incomplete or processing_incomplete or coverage["status"] == "incomplete":
         decision = "INCOMPLETE_ANALYSIS"
         conclusion = ("No es posible emitir una conclusión definitiva porque existen errores técnicos, "
                       "comentarios faltantes o problemas de integridad pendientes.")
@@ -171,13 +190,28 @@ def evaluate_classified_comments_metrics(
         decision = "DO_NOT_ACCEPT_OFFER"
         conclusion = (
             f"El problema o deseo de la landing page actualmente NO cuenta con suficiente audiencia "
-            f"comentando en YouTube en español (Deseos: {deseos_count} <= 50, Problemas: {problemas_count} <= 50, "
-            f"Total: {total_classified} < 100)."
+            f"comentando en YouTube en español (Deseos: {deseos_count}, Problemas: {problemas_count}, "
+            f"Total combinado: {total_classified} < 100)."
         )
         recommendation = (
             "Se recomienda profundizar más en la investigación o explorar otros ángulos y "
             "NO proceder con ningún clon en español por ahora."
         )
+
+    if decision in {"INCOMPLETE_SEARCH_COVERAGE", "INCOMPLETE_ANALYSIS", "HUMAN_REVIEW_REQUIRED"}:
+        is_offer_accepted = None
+
+    decision_reasons = []
+    if search_incomplete:
+        decision_reasons.append("search_coverage_incomplete")
+    if processing_incomplete:
+        decision_reasons.append("processing_or_comment_coverage_incomplete")
+    if technical_incomplete:
+        decision_reasons.append("technical_errors_pending")
+    if threshold_reached:
+        decision_reasons.append("combined_threshold_reached")
+    elif possible_threshold:
+        decision_reasons.append("semantic_review_could_reach_threshold")
 
     processing_status = ("THRESHOLD_REACHED" if is_offer_accepted else
                          "INCOMPLETE_SEARCH_COVERAGE" if decision == "INCOMPLETE_SEARCH_COVERAGE" else
@@ -189,8 +223,6 @@ def evaluate_classified_comments_metrics(
         "deseos_count": deseos_count,
         "problemas_count": problemas_count,
         "total_classified": total_classified,
-        "deseos_above_50": deseos_above_50,
-        "problemas_above_50": problemas_above_50,
         "total_above_100": total_above_100,
         "semantic_review_count": semantic_review_count,
         "technical_error_count": technical_error_count,
@@ -200,6 +232,7 @@ def evaluate_classified_comments_metrics(
         "processing_status": processing_status,
         "is_offer_accepted": is_offer_accepted,
         "decision": decision,
+        "decision_reasons": decision_reasons,
         "conclusion": conclusion,
         "recommendation": recommendation,
         "summary": {

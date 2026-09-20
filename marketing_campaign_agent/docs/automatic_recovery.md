@@ -6,6 +6,8 @@ La recolección recupera solo videos parciales, hasta tres rondas, fusionando lo
 
 COMMENTS_RECOVERY_SECONDS configura el presupuesto de recuperación por etapa (600 segundos por defecto). No se inicia un nuevo lote después de vencer el presupuesto; una petición ya iniciada puede terminar dentro del timeout de su proveedor. COMMENTS_TARGET conserva el umbral de parada (100 por defecto).
 
+COMMENTS_BATCH_TIMEOUT_SECONDS limita de extremo a extremo cada petición de clasificación (90 segundos por defecto). Al vencer, la petición asíncrona se cancela, el lote queda registrado como error técnico y entra en la recuperación acotada. La recolección guarda un checkpoint y muestra el total después de cada video, por lo que una reanudación procesa únicamente los videos que faltan. Una colección ya marcada como completa nunca se vuelve a extraer.
+
 Los comentarios ambiguos se conservan para revisión humana. Al terminar se genera el informe y se exportan HTML y JSON bajo docs/revision_humana/<sesión>. El JSON incluye también los pendientes de revisión. Los archivos se regeneran al terminar otra ejecución de la misma sesión; guarda una copia antes de añadir anotaciones personales al JSON.
 
 ## Arranque con recuperación tras reinicios

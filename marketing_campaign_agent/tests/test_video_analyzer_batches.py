@@ -1,6 +1,6 @@
 import asyncio
 import json
-from unittest.mock import MagicMock, patch
+from unittest.mock import AsyncMock, MagicMock, patch
 
 from google.adk.runners import Runner
 from google.adk.sessions import InMemorySessionService
@@ -36,7 +36,7 @@ def decisions_from_prompt(contents=None, **kwargs):
     } for row in videos]))
 
 
-async def run_analyzer(search_side_effect, model_side_effect, landing=None):
+async def run_analyzer(search_side_effect, model_side_effect, landing=None, initial=None):
     landing = landing or {
         "offer": {"description": "Guía de biodescodificación"},
         "main_promise": "Comprender el origen emocional de síntomas",
@@ -46,13 +46,12 @@ async def run_analyzer(search_side_effect, model_side_effect, landing=None):
         "youtube_keywords": ["biodescodificación migrañas", "biodescodificación ansiedad"],
     }
     service = InMemorySessionService()
-    await service.create_session(app_name="test", user_id="u", session_id="s", state={
-        "landing_page_research": json.dumps(landing),
-    })
+    state = {"landing_page_research": json.dumps(landing), **(initial or {})}
+    await service.create_session(app_name="test", user_id="u", session_id="s", state=state)
     agent = BatchedVideoAnalyzerAgent(name="YoutubeCommentsAnalyzer", model="offline", tools=[])
     runner = Runner(agent=agent, app_name="test", session_service=service)
     client = MagicMock()
-    client.models.generate_content.side_effect = model_side_effect
+    client.aio.models.generate_content = AsyncMock(side_effect=model_side_effect)
     with patch("marketing_campaign_agent.comments_pipeline.search_and_collect_youtube_data",
                side_effect=search_side_effect) as search, \
             patch("google.genai.Client", return_value=client):
@@ -87,14 +86,14 @@ def test_queries_are_separate_and_validation_uses_batches_of_ten():
         "biodescodificación migrañas", "biodescodificación ansiedad"]
     assert all(call.kwargs == {"min_views": 0, "max_results_per_keyword": 50}
                for call in search.call_args_list)
-    assert client.models.generate_content.call_count == 3
+    assert client.aio.models.generate_content.call_count == 3
     batch_sizes = [len(json.loads(call.kwargs["contents"].split("VIDEOS=", 1)[1]))
-                   for call in client.models.generate_content.call_args_list]
+                   for call in client.aio.models.generate_content.call_args_list]
     assert batch_sizes == [10, 10, 3]
     assert all(call.kwargs["config"].temperature == 0
                and call.kwargs["config"].seed == 17
                and call.kwargs["config"].candidate_count == 1
-               for call in client.models.generate_content.call_args_list)
+               for call in client.aio.models.generate_content.call_args_list)
     assert state["youtube_search_status"]["status"] == "complete"
     assert state["youtube_search_status"]["candidate_count"] == 23
     assert state["youtube_search_status"]["candidates_decided"] == 23
@@ -116,7 +115,7 @@ def test_truncated_json_retries_only_the_failed_batch():
 
     state, _, _, client = asyncio.run(run_analyzer(lambda query, **kwargs: rows, model))
 
-    assert client.models.generate_content.call_count == 3
+    assert client.aio.models.generate_content.call_count == 3
     assert state["youtube_search_status"]["status"] == "complete"
     assert state["youtube_search_status"]["candidate_count"] == 11
     assert state["youtube_search_status"]["candidates_decided"] == 11
@@ -130,7 +129,7 @@ def test_comment_floor_is_applied_before_semantic_validation():
         decisions_from_prompt,
     ))
 
-    assert client.models.generate_content.call_count == 1
+    assert client.aio.models.generate_content.call_count == 1
     saved = json.loads(state["youtube_videos_research"])
     low = next(item for item in saved if item["video_id"] == rows[0]["video_id"])
     high = next(item for item in saved if item["video_id"] == rows[1]["video_id"])
@@ -148,7 +147,7 @@ def test_unknown_comment_count_is_pending_when_metadata_recovery_failed():
         decisions_from_prompt,
     ))
 
-    assert client.models.generate_content.call_count == 0
+    assert client.aio.models.generate_content.call_count == 0
     saved = json.loads(state["youtube_videos_research"])[0]
     assert saved["relevance_decision"] == "requires_review"
     assert saved["selection_reason"] == "comment_count_unknown"
@@ -215,7 +214,45 @@ def test_missing_evidence_is_resolved_per_video_without_stopping_coverage():
     saved = {item["video_id"]: item for item in json.loads(state["youtube_videos_research"])}
     assert state["youtube_search_status"]["status"] == "complete"
     assert state["youtube_search_status"]["candidates_review"] == 0
-    assert client.models.generate_content.call_count == 1
+    assert client.aio.models.generate_content.call_count == 1
     assert saved[rejected["video_id"]]["relevance_evidence"] == rejected["video_title"]
     assert saved[unsupported_acceptance["video_id"]]["relevance_decision"] == "rejected"
     assert saved[unsupported_acceptance["video_id"]]["selection_reason"] == "missing_relevance_evidence"
+
+
+def test_resume_reuses_saved_decisions_and_validates_only_pending_candidates():
+    rows = [candidate(index) for index in range(15)]
+    saved = [{**item, "relevance_decision": "accepted", "detected_language": "es",
+              "relevance_reason": "Decisión guardada", "relevance_evidence": item["video_title"],
+              "video_keywords": "biodescodificación migrañas"}
+             for item in rows[:10]]
+    state, _, _, client = asyncio.run(run_analyzer(
+        lambda query, **kwargs: rows,
+        decisions_from_prompt,
+        initial={"video_analysis_resume": True,
+                 "youtube_videos_research": json.dumps(saved)}))
+
+    assert client.aio.models.generate_content.call_count == 1
+    pending_batch = json.loads(
+        client.aio.models.generate_content.call_args.kwargs["contents"].split("VIDEOS=", 1)[1])
+    assert {item["video_id"] for item in pending_batch} == {
+        item["video_id"] for item in rows[10:]}
+    assert state["youtube_search_status"]["status"] == "complete"
+    assert state["youtube_search_status"]["resume_saved_count"] == 10
+    assert len(json.loads(state["youtube_videos_research"])) == 15
+
+
+def test_video_validation_request_has_end_to_end_timeout():
+    async def never_returns(**kwargs):
+        await asyncio.Event().wait()
+
+    with patch("marketing_campaign_agent.comments_pipeline.VIDEO_VALIDATION_ATTEMPTS", 1), \
+            patch("marketing_campaign_agent.comments_pipeline.VIDEO_VALIDATION_REQUEST_TIMEOUT_SECONDS", 1):
+        state, _, _, client = asyncio.run(run_analyzer(
+            lambda query, **kwargs: [candidate(99)], never_returns))
+
+    assert client.aio.models.generate_content.call_count == 1
+    assert state["youtube_search_status"]["status"] == "incomplete"
+    saved = json.loads(state["youtube_videos_research"])
+    assert saved[0]["relevance_decision"] == "requires_review"
+    assert saved[0]["validation_failure_kind"] == "technical_error"

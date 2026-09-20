@@ -7,7 +7,7 @@ from urllib.parse import urlparse
 
 from bs4 import BeautifulSoup, Comment, NavigableString, Tag
 import httpx
-from playwright.async_api import async_playwright
+from playwright.async_api import async_playwright, TimeoutError as PlaywrightTimeoutError
 
 
 _HTTP_HEADERS = {
@@ -31,16 +31,22 @@ def _attr_to_str(val: Any) -> str:
 
 def content_error(title: str, content: str) -> str | None:
     """Reject empty extracts and common HTTP-200 challenge/error documents."""
-    if not isinstance(content, str) or len(content.split()) < 20:
+    if not isinstance(content, str):
         return "La página no contiene suficiente texto para analizar su oferta."
     error_titles = ("access denied", "just a moment", "page not found", "403 forbidden",
-                    "404 not found", "verify you are human", "attention required")
+                    "404 not found", "verify you are human", "attention required",
+                    "javascript required")
     challenge_text = ("verify you are human", "checking your browser",
-                      "enable javascript and cookies to continue")
+                      "enable javascript and cookies to continue",
+                      "this site requires javascript", "javascript is disabled",
+                      "enable javascript in your browser", "please enable javascript",
+                      "you need to enable javascript to run this app")
     if any(x in title.lower() for x in error_titles) or any(
         x in content[:1500].lower() for x in challenge_text
     ):
         return "La página devolvió un bloqueo de acceso o una página de error."
+    if len(content.split()) <= 20:
+        return "La página no contiene suficiente texto para analizar su oferta."
     return None
 
 
@@ -72,6 +78,7 @@ async def scrape_landing_page(url: str) -> dict[str, Any]:
             "error": f"No se pudo extraer la landing: {type(exc).__name__}: {exc}",
             "url": cleaned_url,
             "requested_url": cleaned_url,
+            "extraction_method": "browser",
         }
 
 
@@ -86,7 +93,26 @@ async def _scrape_page(url: str) -> dict[str, Any]:
         try:
             context = await browser.new_context(viewport={"width": 1280, "height": 800})
             page = await context.new_page()
+            documents = []
+            def remember_document(reply):
+                if reply.request.is_navigation_request() and reply.frame == page.main_frame:
+                    documents.append(reply)
+            page.on("response", remember_document)
             response = await page.goto(url, wait_until="domcontentloaded", timeout=30000)
+            if (response is not None and response.status == 403
+                    and response.headers.get("cf-mitigated") == "challenge"):
+                try:
+                    await page.wait_for_function(r"""() => {
+                        const title = document.title.toLowerCase();
+                        return document.body && document.body.innerText.length > 100
+                            && !/just a moment|un momento|attention required/.test(title)
+                            && !/security verification|verificación de seguridad|verify you are human/i
+                                .test(document.body.innerText);
+                    }""", timeout=10000)
+                except PlaywrightTimeoutError:
+                    pass
+                if documents:
+                    response = documents[-1]
             # Some page builders reject automated Chromium while serving the
             # same public HTML to a regular HTTP client. Keep the fallback
             # limited to that access-denied response and validate its content
@@ -110,7 +136,24 @@ async def _scrape_page(url: str) -> dict[str, Any]:
             }""")
             await page.wait_for_timeout(1000)
             result = extract_landing_content(await page.content(), page.url, await page.title())
+            # A client-rendered landing may still be showing its initial shell.
+            # Give it one bounded opportunity to replace that shell with real
+            # offer copy. If it does not, preserve the explicit extraction
+            # failure so the orchestrator can request a PDF/screenshots.
+            if result.get("error"):
+                try:
+                    await page.wait_for_function(r"""() => {
+                        const text = document.body?.innerText || '';
+                        return text.trim().split(/\s+/).length > 20
+                            && !/this site requires javascript|javascript is disabled|enable javascript in your browser|please enable javascript|you need to enable javascript to run this app/i.test(text);
+                    }""", timeout=5000)
+                    await page.wait_for_timeout(500)
+                    result = extract_landing_content(
+                        await page.content(), page.url, await page.title())
+                except PlaywrightTimeoutError:
+                    pass
             result["http_status"] = response.status
+            result.setdefault("extraction_method", "browser")
             return result
         finally:
             await browser.close()

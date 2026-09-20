@@ -46,3 +46,8 @@ Thumbs.db
 *.sqlite
 *.sqlite3
 .adk/
+
+# Human review JSON files
+*revision_humana*.json
+**/revision_humana/**/*.json
+

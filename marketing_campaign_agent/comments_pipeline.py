@@ -31,6 +31,43 @@ RATE_LIMIT_BACKOFF_SECONDS = max(1, int(os.getenv("COMMENTS_RATE_LIMIT_BACKOFF_S
 VIDEO_VALIDATION_BATCH_SIZE = 10
 VIDEO_VALIDATION_ATTEMPTS = 3
 DETERMINISTIC_GENERATION_SEED = 17
+USAGE_METRICS_ENABLED = os.getenv("GEMINI_USAGE_METRICS", "0").lower() in {"1", "true", "yes", "on"}
+COMMENTS_STOP_ON_TARGET = os.getenv("COMMENTS_STOP_ON_TARGET", "0").lower() in {"1", "true", "yes", "on"}
+COMMENTS_ADAPTIVE_RECOVERY = os.getenv("COMMENTS_ADAPTIVE_RECOVERY", "0").lower() in {"1", "true", "yes", "on"}
+
+
+def _thinking_config(stage):
+    """Return an opt-in thinking config; unset means preserve provider defaults."""
+    level = os.getenv(f"GEMINI_THINKING_{stage.upper()}", "").strip().lower()
+    if not level:
+        return None
+    levels = {
+        "minimal": types.ThinkingLevel.MINIMAL,
+        "low": types.ThinkingLevel.LOW,
+        "medium": types.ThinkingLevel.MEDIUM,
+        "high": types.ThinkingLevel.HIGH,
+    }
+    return types.ThinkingConfig(thinking_level=levels.get(level, types.ThinkingLevel.MINIMAL))
+
+
+def _usage_snapshot(response):
+    """Extract provider counters without retaining prompt/response content."""
+    usage = getattr(response, "usage_metadata", None)
+    if usage is None:
+        return {}
+    fields = (
+        "prompt_token_count", "candidates_token_count", "thoughts_token_count",
+        "cached_content_token_count", "total_token_count",
+    )
+    return {field: int(value) for field in fields
+            if (value := getattr(usage, field, None)) is not None}
+
+
+def _add_usage(total, response):
+    if not USAGE_METRICS_ENABLED:
+        return
+    for key, value in _usage_snapshot(response).items():
+        total[key] = total.get(key, 0) + value
 
 _GENERIC_VIDEO_WORDS = {
     "artificial", "chatgpt", "como", "con", "crear", "curso", "de", "del",
@@ -167,15 +204,35 @@ def _fingerprint(value):
 
 def report_metrics_context(callback_context, llm_request):
     """Give the report verified counts without copying the whole dataset again."""
+    from .tools.comments_evaluator_tool import is_safe_early_completion
+
     metrics = callback_context.state.get("market_research_metrics")
-    if not metrics or metrics.get("coverage", {}).get("status") != "verified":
+    classification = callback_context.state.get("youtube_comments_classification_status") or {}
+    coverage_verified = bool(metrics and metrics.get("coverage", {}).get("status") == "verified")
+    safe_positive_early_stop = bool(
+        metrics
+        and is_safe_early_completion(classification)
+        and metrics.get("decision") == "ACCEPT_OFFER"
+        and metrics.get("threshold_reached") is True
+        and metrics.get("is_offer_accepted") is True
+    )
+    if not (coverage_verified or safe_positive_early_stop):
         raise ValueError("El informe requiere métricas calculadas con cobertura verificada")
     payload = {"landing_page_research": _decode(callback_context.state.get("landing_page_research")),
-               "metrics": metrics}
+               "metrics": metrics,
+               "classification_scope": ("early_stop_after_confirmed_threshold"
+                                        if safe_positive_early_stop else "complete_source")}
+    scope_instruction = (
+        "Las métricas provienen del conjunto procesado hasta alcanzar evidencia positiva suficiente; "
+        "no afirmes que se clasificó la fuente completa. "
+        if safe_positive_early_stop else
+        "Las métricas provienen de la fuente completamente clasificada. "
+    )
     llm_request.contents = [types.Content(role="user", parts=[types.Part.from_text(
         text="Redacta el informe en español usando estas métricas verificadas por Python. "
-             "Conserva exactamente los conteos y la decisión suministrados. No necesitas volver a "
-             "llamar las herramientas de conteo: ya fueron ejecutadas sobre el conjunto completo.\n"
+             "Conserva exactamente los conteos y la decisión suministrados. "
+             + scope_instruction
+             + "No necesitas volver a llamar las herramientas de conteo.\n"
              + json.dumps(payload, ensure_ascii=False))])]
 
 
@@ -417,6 +474,8 @@ class BatchedVideoAnalyzerAgent(LlmAgent):
                 client = __import__("google.genai", fromlist=["Client"]).Client(
                     http_options=types.HttpOptions(
                         timeout=60000, retry_options=types.HttpRetryOptions(attempts=1)))
+            usage_metrics = {}
+            validation_fallback_count = 0
 
             landing_context = {
                 "offer": landing.get("offer", {}),
@@ -472,7 +531,10 @@ class BatchedVideoAnalyzerAgent(LlmAgent):
                             config=types.GenerateContentConfig(
                                 response_mime_type="application/json", temperature=0,
                                 seed=DETERMINISTIC_GENERATION_SEED + attempt - 1,
-                                candidate_count=1))
+                                candidate_count=1,
+                                **({"thinking_config": thinking_config}
+                                   if (thinking_config := _thinking_config("video")) else {})))
+                        _add_usage(usage_metrics, response)
                         parsed = _validate_video_batch(_decode(response.text), batch, landing_context)
                         break
                     except Exception as exc:
@@ -481,11 +543,49 @@ class BatchedVideoAnalyzerAgent(LlmAgent):
                             prompt += ("\nREINTENTO: la respuesta anterior fue inválida: "
                                        f"{last_error}. Corrige únicamente el formato y conserva todos los IDs.")
                 if parsed is None:
-                    parsed = [{"video_id": item["video_id"], "decision": "requires_review",
-                               "language": item.get("audio_language") or item.get("default_language") or "unknown",
-                               "reason": f"Bloque no validado tras {VIDEO_VALIDATION_ATTEMPTS} intentos: {last_error}",
-                               "evidence": item.get("video_title", ""),
-                               "failure_kind": "technical_error"} for item in batch]
+                    # A malformed multi-video response must not poison the
+                    # entire batch. Retry only this failed batch one video at
+                    # a time, while keeping the strict ID validation.
+                    if len(batch) > 1 and "Videos faltantes, repetidos o con identificadores desconocidos" in str(last_error):
+                        validation_fallback_count += 1
+                        recovered = []
+                        prompt_prefix = prompt.split("VIDEOS=", 1)[0]
+                        for item in batch:
+                            single_prompt = prompt_prefix + "VIDEOS=" + json.dumps([{
+                                key: item.get(key) for key in (
+                                    "video_id", "video_title", "video_description", "channel_title",
+                                    "default_language", "audio_language", "video_keywords")
+                            }], ensure_ascii=False)
+                            try:
+                                response = await generate_response_async(
+                                    client, timeout_seconds=VIDEO_VALIDATION_REQUEST_TIMEOUT_SECONDS,
+                                    model=self.model, contents=single_prompt,
+                                    config=types.GenerateContentConfig(
+                                        response_mime_type="application/json", temperature=0,
+                                        seed=DETERMINISTIC_GENERATION_SEED,
+                                        candidate_count=1,
+                                        **({"thinking_config": thinking_config}
+                                           if (thinking_config := _thinking_config("video")) else {})))
+                                _add_usage(usage_metrics, response)
+                                recovered.extend(_validate_video_batch(
+                                    _decode(response.text), [item], landing_context))
+                            except Exception as fallback_exc:
+                                recovered.append({
+                                    "video_id": item["video_id"],
+                                    "decision": "requires_review",
+                                    "language": item.get("audio_language") or item.get("default_language") or "unknown",
+                                    "reason": "Video no validado tras fallo de cobertura del lote: "
+                                              f"{type(fallback_exc).__name__}: {fallback_exc}",
+                                    "evidence": item.get("video_title", ""),
+                                    "failure_kind": "technical_error",
+                                })
+                        parsed = recovered
+                    else:
+                        parsed = [{"video_id": item["video_id"], "decision": "requires_review",
+                                   "language": item.get("audio_language") or item.get("default_language") or "unknown",
+                                   "reason": f"Bloque no validado tras {VIDEO_VALIDATION_ATTEMPTS} intentos: {last_error}",
+                                   "evidence": item.get("video_title", ""),
+                                   "failure_kind": "technical_error"} for item in batch]
                 by_id = {str(item["video_id"]): item for item in batch}
                 for decision in parsed:
                     source = by_id[str(decision["video_id"])]
@@ -515,6 +615,8 @@ class BatchedVideoAnalyzerAgent(LlmAgent):
                     "request_timeout_seconds": VIDEO_VALIDATION_REQUEST_TIMEOUT_SECONDS,
                     "total_batches": total_batches, "max_candidates_per_query": 50,
                     "validation_batch_size": VIDEO_VALIDATION_BATCH_SIZE, "min_views": 0,
+                    **({"usage": dict(usage_metrics)} if USAGE_METRICS_ENABLED else {}),
+                    "validation_fallback_count": validation_fallback_count,
                 }}, f"Bloque {batch_number}/{total_batches} guardado: "
                     f"{len(decisions)}/{candidate_count} candidatos procesados.")
 
@@ -537,6 +639,7 @@ class BatchedVideoAnalyzerAgent(LlmAgent):
                 "request_timeout_seconds": VIDEO_VALIDATION_REQUEST_TIMEOUT_SECONDS,
                 "max_candidates_per_query": 50,
                 "validation_batch_size": VIDEO_VALIDATION_BATCH_SIZE, "min_views": 0,
+                "validation_fallback_count": validation_fallback_count,
             }
             yield emit({"youtube_videos_research": json.dumps(decisions, ensure_ascii=False),
                         "youtube_search_status": status},
@@ -712,6 +815,15 @@ class BatchedCommentsClassifierAgent(LlmAgent):
         results = []
         client = None
         source = []
+        usage_metrics = {}
+        early_stop_reached = False
+        adaptive_recovery = {
+            "full_batch_failures": 0,
+            "sub_batches_requested": 0,
+            "singleton_requests": 0,
+            "comments_recovered": 0,
+            "comments_pending": 0,
+        }
         try:
             collected = _decode(ctx.session.state.get("youtube_comments_collected")) or []
             source = []
@@ -763,8 +875,12 @@ class BatchedCommentsClassifierAgent(LlmAgent):
                                 "target_reached": True, "target": CLASSIFICATION_TARGET,
                                 "desires_count": desires_count, "problems_count": problems_count}},
                            f"Se alcanzó el umbral provisional de {CLASSIFICATION_TARGET}; "
-                           "se continúa para completar la cobertura de la fuente.")
-            remaining = [item for item in source if str(item["comment_id"]) not in completed]
+                           + ("se detiene por bandera de ahorro." if COMMENTS_STOP_ON_TARGET
+                              else "se continúa para completar la cobertura de la fuente."))
+                if COMMENTS_STOP_ON_TARGET:
+                    early_stop_reached = True
+            remaining = ([] if early_stop_reached else
+                         [item for item in source if str(item["comment_id"]) not in completed])
             pending_batches = (len(remaining) + CLASSIFICATION_BATCH_SIZE - 1) // CLASSIFICATION_BATCH_SIZE
             completed_batches = len(results) // CLASSIFICATION_BATCH_SIZE
             total_batches = completed_batches + pending_batches
@@ -779,7 +895,7 @@ class BatchedCommentsClassifierAgent(LlmAgent):
                 timeout=60000, retry_options=types.HttpRetryOptions(attempts=1)))
             permanent_failure = None
             transient_failure = None
-            async def classify_batch(batch_number, batch):
+            async def classify_batch(batch_number, batch, recovery_level=0):
                 nonlocal permanent_failure, transient_failure
                 prompt = ("Clasifica cada comentario exactamente una vez. Devuelve solo JSON. "
                           "decision debe ser deseo, problema, no_aplica o requiere_revision. "
@@ -798,7 +914,8 @@ class BatchedCommentsClassifierAgent(LlmAgent):
                 last_error = None
                 details = {}
                 attempts = 0
-                for attempt in range(3):
+                max_attempts = 1 if COMMENTS_ADAPTIVE_RECOVERY else 3
+                for attempt in range(max_attempts):
                     if permanent_failure:
                         details = permanent_failure
                         last_error = details['error_type']
@@ -817,8 +934,11 @@ class BatchedCommentsClassifierAgent(LlmAgent):
                             config=types.GenerateContentConfig(
                                 response_mime_type="application/json", temperature=0,
                                 seed=DETERMINISTIC_GENERATION_SEED + attempt,
-                                candidate_count=1),
+                                candidate_count=1,
+                                **({"thinking_config": thinking_config}
+                                   if (thinking_config := _thinking_config("classifier")) else {})),
                         )
+                        _add_usage(usage_metrics, response)
                         candidate = _decode(response.text)
                         parsed = _validate_batch(candidate, batch, categories)
                         break
@@ -836,6 +956,34 @@ class BatchedCommentsClassifierAgent(LlmAgent):
                             transient_failure = details
                             break
                 failed = parsed is None
+                structural_message = str(details.get("message", ""))
+                structural_failure = failed and any(marker in structural_message for marker in (
+                    "Comentarios faltantes, repetidos o con identificadores desconocidos",
+                    "La respuesta no es una lista de decisiones",
+                    "Decisión no válida",
+                    "Categoría incompatible con la decisión",
+                ))
+                if (failed and COMMENTS_ADAPTIVE_RECOVERY and structural_failure
+                        and recovery_level < 2 and not permanent_failure and not transient_failure):
+                    if recovery_level == 0:
+                        adaptive_recovery["full_batch_failures"] += 1
+                    subgroup_size = 5 if len(batch) > 5 else 1
+                    sub_batches = [batch[i:i + subgroup_size]
+                                   for i in range(0, len(batch), subgroup_size)]
+                    adaptive_recovery["sub_batches_requested"] += len(sub_batches)
+                    if subgroup_size == 1:
+                        adaptive_recovery["singleton_requests"] += len(sub_batches)
+                    recovered = []
+                    for offset, subgroup in enumerate(sub_batches):
+                        _, sub_results, _ = await classify_batch(
+                            f"{batch_number}.{offset + 1}", subgroup, recovery_level + 1)
+                        recovered.extend(sub_results)
+                    if recovery_level == 0:
+                        recovered_ok = sum(item.get("failure_kind") != "technical_error"
+                                           for item in recovered)
+                        adaptive_recovery["comments_recovered"] += recovered_ok
+                        adaptive_recovery["comments_pending"] += len(batch) - recovered_ok
+                    return batch_number, recovered, None
                 if failed:
                     # Preserve coverage and the original identity. These items
                     # remain visible for review instead of silently disappearing.
@@ -855,8 +1003,9 @@ class BatchedCommentsClassifierAgent(LlmAgent):
                     materialized.append({
                         **item,
                         "failure_kind": ("technical_error" if failed
-                                         else "semantic_ambiguity" if decision == 'requiere_revision' else None),
-                        "attempts": attempts,
+                                         else item.get("failure_kind")
+                                         or ("semantic_ambiguity" if decision == 'requiere_revision' else None)),
+                        "attempts": max(attempts, int(item.get("attempts", 0) or 0)),
                         "categoria": decision if decision in {"deseo", "problema"} else decision,
                         "deseo": category if decision == "deseo" else None,
                         "problema": category if decision == "problema" else None,
@@ -906,16 +1055,20 @@ class BatchedCommentsClassifierAgent(LlmAgent):
                                         "request_timeout_seconds": CLASSIFICATION_REQUEST_TIMEOUT_SECONDS,
                                         "request_finished_at": time.time(),
                                         "last_error": batch_error,
+                                        **({"usage": dict(usage_metrics)} if USAGE_METRICS_ENABLED else {}),
                                     }},
                                    f"Lote {batch_number} guardado: {len(results)}/{len(source)} comentarios; "
                                    f"deseos: {desires_count}; problemas: {problems_count}; "
                                    f"total relevante: {valid_count}/{CLASSIFICATION_TARGET}.")
+                        if COMMENTS_STOP_ON_TARGET and _market_signal_reached(results):
+                            early_stop_reached = True
+                            break
                 finally:
                     for task in tasks:
                         if not task.done():
                             task.cancel()
                     await asyncio.gather(*tasks, return_exceptions=True)
-                if permanent_failure or transient_failure:
+                if early_stop_reached or permanent_failure or transient_failure:
                     break
 
             recovery = ctx.session.state.get('youtube_comments_recovery') or {}
@@ -1002,14 +1155,19 @@ class BatchedCommentsClassifierAgent(LlmAgent):
             review_count = sum(1 for item in results if item.get("decision") == "requiere_revision")
             desires_count, problems_count = _market_signal_counts(results)
             target_reached = _market_signal_reached(results)
+            stop_reason = "target_reached" if early_stop_reached else "source_exhausted"
             yield emit({"youtube_comments_classified": payload,
-                        "youtube_comments_classification_status": {"status": "complete", "invocation_id": ctx.invocation_id,
+                        "youtube_comments_classification_status": {"status": ("complete_early" if early_stop_reached else "complete"), "invocation_id": ctx.invocation_id,
                         "source_count": len(source), "result_count": len(results), "review_count": review_count,
                         "technical_error_count": technical_count, "semantic_review_count": review_count - technical_count,
                         "invalid_source_count": invalid_source_count, "target": CLASSIFICATION_TARGET,
                         "desires_count": desires_count, "problems_count": problems_count,
                         "target_reached": target_reached,
-                         "stop_reason": "source_exhausted"}}, payload)
+                        "unprocessed_count": max(0, len(source) - len(results)),
+                        "stop_reason": stop_reason,
+                        "adaptive_recovery_enabled": COMMENTS_ADAPTIVE_RECOVERY,
+                        "adaptive_recovery": dict(adaptive_recovery),
+                        **({"usage": dict(usage_metrics)} if USAGE_METRICS_ENABLED else {})}}, payload)
         except Exception as exc:
             yield emit({"youtube_comments_classified": json.dumps(results, ensure_ascii=False),
                         "youtube_comments_classification_status": {"status": "error", "invocation_id": ctx.invocation_id,

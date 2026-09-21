@@ -1,0 +1,28 @@
+
++-----------------------------------------------------------------------------+
+| ADK Web Server started                                                      |
+|                                                                             |
+| For local testing, access at http://127.0.0.1:8000.                         |
++-----------------------------------------------------------------------------+
+
+INFO:     127.0.0.1:57196 - "GET /list-apps HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60885 - "GET /config/telemetry HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59138 - "GET /config/telemetry HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58633 - "GET /openapi.json HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49690 - "GET /config/telemetry HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55511 - "GET /list-apps HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58794 - "GET /dev-ui/?app=marketing_campaign_agent&userId=user&session=0e9b3f61-63f7-4cae-a4ff-f95af2f3a031 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58794 - "GET /dev-ui/?app=marketing_campaign_agent&userId=user&session=98bd89d1-753e-4757-aa45-0cf92c0b0cd5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58794 - "GET /dev-ui/prism-dark.css HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:57787 - "GET /list-apps?relative_path=./ HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58794 - "GET /version HTTP/1.1" 200 OK
+INFO:     127.0.0.1:65010 - "GET /config/telemetry HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58794 - "GET /dev/apps/marketing_campaign_agent/build_graph HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57787 - "GET /dev/apps/marketing_campaign_agent/build_graph_image?dark_mode=false HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50133 - "GET /dev/apps/marketing_campaign_agent/build_graph_image?dark_mode=true HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61628 - "GET /dev/apps/marketing_campaign_agent/builder?ts=1789160168682 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51707 - "GET /dev/apps/marketing_campaign_agent/eval_sets HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62740 - "GET /dev/apps/marketing_campaign_agent/eval_results HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62741 - "GET /openapi.json HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62441 - "GET /openapi.json HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58440 - "POST /run_sse HTTP/1.1" 200 OK

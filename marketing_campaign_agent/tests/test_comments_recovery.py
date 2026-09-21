@@ -281,6 +281,29 @@ def test_failed_batch_does_not_hide_progress_or_discard_other_batches():
     assert state["market_research_metrics"]["decision"] == "INCOMPLETE_ANALYSIS"
 
 
+def test_adaptive_recovery_splits_structural_batch_failure():
+    ids = [str(i) for i in range(25)]
+
+    def model(**kw):
+        batch = json.loads(kw['contents'].split('COMENTARIOS=', 1)[1])
+        if len(batch) > 5:
+            return MagicMock(text='[]')
+        return response([item['comment_id'] for item in batch])
+
+    with patch('marketing_campaign_agent.comments_pipeline.COMMENTS_ADAPTIVE_RECOVERY', True):
+        state, _, _, _, client = asyncio.run(run_pipeline([[video('a', ids)]], model))
+
+    rows = json.loads(state['youtube_comments_classified'])
+    recovery = state['youtube_comments_classification_status']['adaptive_recovery']
+    assert len(rows) == 25
+    assert len({row['comment_id'] for row in rows}) == 25
+    assert recovery['full_batch_failures'] == 1
+    assert recovery['sub_batches_requested'] == 5
+    assert recovery['singleton_requests'] == 0
+    assert state['youtube_comments_classification_status']['technical_error_count'] == 0
+    assert client.models.generate_content.call_count == 6
+
+
 def test_recovery_shrinks_failed_batch_and_keeps_successful_decisions():
     ids = [str(i) for i in range(26)]
     calls = []

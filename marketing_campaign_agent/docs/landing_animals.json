@@ -1,0 +1,155 @@
+{
+    "avatar": {
+        "name": "Buscadores espirituales y amantes de los animales",
+        "demographics": {
+            "age_range": null,
+            "gender": null,
+            "language": null
+        },
+        "description": "Personas con un profundo amor por los animales y sensibilidad espiritual que desean aprender a comunicarse de forma intuitiva con sus mascotas, comprender sus emociones e intuiciones y brindarles bienestar energético, aun si nunca se han considerado psíquicas."
+    },
+    "offer": {
+        "description": "Una masterclass en línea gratuita sobre comunicación e sanación intuitiva con animales, acompañada de una guía en PDF de regalo con un ejercicio de enraizamiento para animales de compañía.",
+        "deliverables": [
+            "Acceso a la masterclass gratuita en línea 'Animal Communication & Healing Masterclass'",
+            "Guía de regalo descargable 'Grounding Exercise For Your Animal Companions Guide' (valorada en $27)"
+        ]
+    },
+    "main_promise": "Transformar el amor por los animales en una comunicación clara y confiable con ellos mediante secretos intuitivos simples para recibir sus mensajes con nitidez.",
+    "deseos": [
+        "Aprender a percibir e interpretar los mensajes sutiles, emociones, pensamientos e imágenes de las mascotas con mayor claridad",
+        "Entender lo que los animales realmente quieren y necesitan para responder de manera que se sientan seguros y calmados",
+        "Fortalecer el vínculo energético y apoyar el bienestar emocional de sus animales de compañía mediante técnicas simples"
+    ],
+    "problemas": [
+        "Dudas y falta de confianza en la propia capacidad intuitiva para conectar con las mascotas",
+        "Sentir bloqueos internos o incertidumbre al tratar de interpretar lo que comunican los animales",
+        "Lidiar con animales ansiosos o desequilibrados emocionalmente sin saber cómo apoyarlos energéticamente"
+    ],
+    "youtube_keywords": [
+        "cómo comunicarse intuitivamente con los animales",
+        "cómo entender lo que siente mi mascota",
+        "ejercicios de grounding para animales ansiosos",
+        "técnicas energéticas para calmar perros y gatos",
+        "cómo desarrollar la telepatía con animales de compañía",
+        "bloqueos en la comunicación intuitiva con mascotas",
+        "cómo saber si mi perro me habla con pensamientos e imágenes",
+        "comunicación con animales para principiantes sin ser psíquico",
+        "cómo fortalecer el campo energético de mi mascota",
+        "pasos para la comunicación intuitiva y sanación animal"
+    ],
+    "evidence": [
+        {
+            "field": "offer.description",
+            "quote": "FREE Animal Communication & Healing Masterclass",
+            "kind": "explicit"
+        },
+        {
+            "field": "offer.deliverables.0",
+            "quote": "FREE Animal Communication & Healing Masterclass",
+            "kind": "explicit"
+        },
+        {
+            "field": "offer.deliverables.1",
+            "quote": "Grounding Exercise For Your Animal Companions\nGuide\nabsolutely\nFREE!\n($27 value)",
+            "kind": "explicit"
+        },
+        {
+            "field": "main_promise",
+            "quote": "Turn Your Love For Animals Into Clear, Confident Communication With Them",
+            "kind": "explicit"
+        },
+        {
+            "field": "avatar",
+            "quote": "This page was created with a lot of ♥ specifically for you as a conscious animal loving spiritual seeker wanting to deepen your connection to animals and all of life.",
+            "kind": "explicit"
+        },
+        {
+            "field": "deseos.0",
+            "quote": "How to recognize the subtle ways animals are already communicating with you\nthrough thoughts, emotions, images, and energy so you can begin receiving their messages with greater clarity.",
+            "kind": "inference"
+        },
+        {
+            "field": "deseos.1",
+            "quote": "How to understand what your animals truly want, feel, and need\nso you can respond in ways that help them feel calmer, safer, and more supported.",
+            "kind": "inference"
+        },
+        {
+            "field": "deseos.2",
+            "quote": "Simple energy techniques that strengthen the bond between you and your animals\nwhile supporting their emotional and energetic wellbeing.",
+            "kind": "inference"
+        },
+        {
+            "field": "problemas.0",
+            "quote": "even if you’ve never considered yourself psychic.",
+            "kind": "inference"
+        },
+        {
+            "field": "problemas.1",
+            "quote": "How to turn any perceived blocks that interfere with animal communication into the inner clarity and confidence\nneeded to trust the messages you receive from your animals.",
+            "kind": "inference"
+        },
+        {
+            "field": "problemas.2",
+            "quote": "Calm anxious or unsettled animals",
+            "kind": "inference"
+        },
+        {
+            "field": "youtube_keywords.0",
+            "quote": "FREE Animal Communication & Healing Masterclass",
+            "kind": "inference"
+        },
+        {
+            "field": "youtube_keywords.1",
+            "quote": "How to understand what your animals truly want, feel, and need",
+            "kind": "inference"
+        },
+        {
+            "field": "youtube_keywords.2",
+            "quote": "Grounding Exercise For Your Animal Companions\nGuide",
+            "kind": "inference"
+        },
+        {
+            "field": "youtube_keywords.3",
+            "quote": "Simple energy techniques that strengthen the bond between you and your animals",
+            "kind": "inference"
+        },
+        {
+            "field": "youtube_keywords.4",
+            "quote": "through thoughts, emotions, images, and energy so you can begin receiving their messages with greater clarity.",
+            "kind": "inference"
+        },
+        {
+            "field": "youtube_keywords.5",
+            "quote": "How to turn any perceived blocks that interfere with animal communication into the inner clarity and confidence",
+            "kind": "inference"
+        },
+        {
+            "field": "youtube_keywords.6",
+            "quote": "How to recognize the subtle ways animals are already communicating with you",
+            "kind": "inference"
+        },
+        {
+            "field": "youtube_keywords.7",
+            "quote": "even if you’ve never considered yourself psychic.",
+            "kind": "inference"
+        },
+        {
+            "field": "youtube_keywords.8",
+            "quote": "Strengthen your animal’s energy field",
+            "kind": "inference"
+        },
+        {
+            "field": "youtube_keywords.9",
+            "quote": "For over 33 years, I’ve been helping animal lovers discover their natural ability to communicate intuitively with animals.",
+            "kind": "inference"
+        }
+    ],
+    "source_info": {
+        "url": "https://animal.lynnmckenzie.com/MasterclassRegistration",
+        "requested_url": "https://animal.lynnmckenzie.com/MasterclassRegistration",
+        "page_type": "TSL",
+        "page_language": "es",
+        "youtube_language": "es"
+    }
+}

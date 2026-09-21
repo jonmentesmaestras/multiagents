@@ -7,6 +7,18 @@ from typing import Any, Union
 logger = logging.getLogger(__name__)
 
 
+def is_safe_early_completion(status: dict[str, Any] | None) -> bool:
+    """Accept only a positive, explicitly bounded early-stop as terminal."""
+    return bool(
+        status
+        and status.get("status") == "complete_early"
+        and status.get("target_reached") is True
+        and status.get("stop_reason") == "target_reached"
+        and status.get("technical_error_count", 0) == 0
+        and status.get("invalid_source_count", 0) == 0
+    )
+
+
 def _parse_classified_comments(classified_comments: Union[list[dict[str, Any]], str, Any]) -> list[dict[str, Any]]:
     """Parses various input formats into a list of classified comment dictionaries."""
     if not classified_comments:
@@ -131,19 +143,23 @@ def evaluate_classified_comments_metrics(
     search_incomplete = bool(
         search_status is not None and search_status.get("status") != "complete"
     )
+    safe_early_completion = is_safe_early_completion(classification_status)
     processing_incomplete = bool(
         collection_status is not None and collection_status.get("status") != "complete"
     ) or bool(
-        classification_status is not None and classification_status.get("status") != "complete"
+        classification_status is not None
+        and classification_status.get("status") != "complete"
+        and not safe_early_completion
     )
     if classification_status and classification_status.get("invalid_source_count", 0):
         processing_incomplete = True
-    if coverage["status"] != "verified":
+    if coverage["status"] != "verified" and not safe_early_completion:
         processing_incomplete = True
 
     # The only market threshold is the combined total of deseos and problemas.
     # An unknown coverage state cannot support a market rejection or acceptance.
     coverage_verified = coverage["status"] == "verified"
+    coverage_sufficient = coverage_verified or safe_early_completion
     technical_incomplete = technical_error_count > 0
     threshold_reached = total_above_100
     possible_threshold = maximum_possible_relevant >= 100
@@ -151,7 +167,7 @@ def evaluate_classified_comments_metrics(
         not search_incomplete
         and not processing_incomplete
         and not technical_incomplete
-        and coverage_verified
+        and coverage_sufficient
         and threshold_reached
     )
 

@@ -1,0 +1,33 @@
+{
+  "filters": {
+    "nicho": "Gastronomía",
+    "checkout": ["Hotmart", "Kiwify", "Panda"],
+    "minimum_days": 10
+  },
+  "campaigns": [
+    {
+      "advertiser": "Cozinha Gourmet Eymael",
+      "days_active": 11,
+      "ad_count": 2,
+      "ad_id": "4677027805912709",
+      "url": "https://lp.victoreymael.com.br/menusemanal/",
+      "reason why": "Cumple el umbral de 10 o más días, muestra 2 anuncios y presenta el indicador de actividad de la ficha. La oferta se centra en menús semanales y recetas prácticas, por lo que es comparable con la campaña de referencia."
+    },
+    {
+      "advertiser": "Thaís Martins Bolos e doces",
+      "days_active": 95,
+      "ad_count": 2,
+      "ad_id": "1486064882666965",
+      "url": "https://pay.hotmart.com/R105571377P?off=w8e648wq&checkoutMode=10",
+      "reason why": "Cumple ampliamente el umbral de antigüedad con 95 días, muestra 2 anuncios y presenta el indicador de actividad de la ficha. Su permanencia prolongada la convierte en una candidata prioritaria para estudiar."
+    },
+    {
+      "advertiser": "marthaguterres",
+      "days_active": 100,
+      "ad_count": 6,
+      "ad_id": "948845414892501",
+      "url": "https://marthaguterres.com.br/aula-gratuita-hk/",
+      "reason why": "Cumple el umbral con 100 días, concentra 6 anuncios y presenta el indicador de actividad de la ficha. Es la señal más fuerte de continuidad entre las tres campañas seleccionadas."
+    }
+  ]
+}

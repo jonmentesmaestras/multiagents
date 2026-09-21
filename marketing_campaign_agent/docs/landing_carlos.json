@@ -1,0 +1,119 @@
+{
+    "avatar": {
+        "name": "Persona interesada en la biodescodificación y sanación de la raíz emocional de sus síntomas físicos",
+        "demographics": {
+            "age_range": null,
+            "gender": null,
+            "language": null
+        },
+        "description": "Personas principiantes sin conocimientos previos en biodescodificación que sufren o tienen familiares con problemas físicos o emocionales (como sobrepeso, migrañas, caída del cabello, hipotiroidismo o dolor crónico) y buscan entender el origen emocional de sus síntomas para aliviar su angustia y sanar."
+    },
+    "offer": {
+        "description": "Libro digital (ebook) titulado 'Tu cuerpo tiene algo que decirte' con bonos de regalo, enfocado en biodescodificación y sanación emocional de afecciones físicas.",
+        "deliverables": [
+            "Ebook en formato PDF 100% descargable con acceso online para lectura desde dispositivos móviles y bonos de regalo."
+        ]
+    },
+    "main_promise": "Descubrir la raíz emocional detrás de los síntomas físicas y enfermedades para lograr comprensión, alivio interior y conexión con uno mismo sin culpas ni presiones.",
+    "deseos": [
+        "Identificar y sanar el origen emocional de enfermedades o dolores físicos.",
+        "Experimentar alivio interior, paz emocional y soltar cargas o culpas acumuladas durante años.",
+        "Mejorar síntomas o afecciones físicas mediante ejercicios sencillos y afirmaciones."
+    ],
+    "problemas": [
+        "Padecer dolencias o síntomas físicos (hipotiroidismo, migrañas, sobrepeso, caída de cabello) sin comprender su causa profunda.",
+        "Sentir culpa, ansiedad o juzgarse a uno mismo por las propias afecciones físicas o conductas.",
+        "Acumular emociones reprimidas o enojo guardado durante mucho tiempo provocando malestar emocional y físico."
+    ],
+    "youtube_keywords": [
+        "biodescodificacion para principiantes",
+        "origen emocional de las enfermedades",
+        "biodescodificacion de migrañas y sintomas",
+        "significado emocional del sobrepeso",
+        "como sanar la raiz emocional de una enfermedad"
+    ],
+    "evidence": [
+        {
+            "field": "offer.description",
+            "quote": "Tu cuerpo tiene algo que decirte + Bonos de regalo ✨",
+            "kind": "explicit"
+        },
+        {
+            "field": "offer.deliverables.0",
+            "quote": "Es 100% descargable en PDF para que lo tengas para siempre. Además, te damos acceso online para leerlo desde el celular.",
+            "kind": "explicit"
+        },
+        {
+            "field": "main_promise",
+            "quote": "Si en 7 días no sentís ni una emoción, una comprensión o un alivio interior… te devuelvo el 100%, sin preguntas, sin culpas.",
+            "kind": "explicit"
+        },
+        {
+            "field": "avatar",
+            "quote": "¿Necesito tener conocimientos previos sobre biodescodificación?\nNo. Está pensado para principiantes, con lenguaje simple y ejemplos claros para aplicar desde el primer día.",
+            "kind": "inference"
+        },
+        {
+            "field": "deseos.0",
+            "quote": "Encontré el origen emocional de mis migrañas. Desde que aplico los ejercicios, los dolores son mucho más leves.",
+            "kind": "inference"
+        },
+        {
+            "field": "deseos.1",
+            "quote": "Si en 7 días no sentís ni una emoción, una comprensión o un alivio interior… te devuelvo el 100%, sin preguntas, sin culpas.",
+            "kind": "inference"
+        },
+        {
+            "field": "deseos.2",
+            "quote": "Con las afirmaciones del libro, bajé 7 kilos en paz, sin ansiedad ni culpa.",
+            "kind": "inference"
+        },
+        {
+            "field": "problemas.0",
+            "quote": "Tengo hipotiroidismo y siempre me sentí culpable. Leer que mi cuerpo solo pedía ser escuchado me liberó de años de angustia.",
+            "kind": "inference"
+        },
+        {
+            "field": "problemas.1",
+            "quote": "Con obesidad siempre me juzgué. Este libro me ayudó a mirarme con compasión y sanar la raíz emocional del hambre.",
+            "kind": "inference"
+        },
+        {
+            "field": "problemas.2",
+            "quote": "Me ayudó a comprender el enojo guardado que cargaba hace años. Fue como soltar una mochila invisible.",
+            "kind": "inference"
+        },
+        {
+            "field": "youtube_keywords.0",
+            "quote": "¿Necesito tener conocimientos previos sobre biodescodificación?\nNo. Está pensado para principiantes, con lenguaje simple y ejemplos claros para aplicar desde el primer día.",
+            "kind": "inference"
+        },
+        {
+            "field": "youtube_keywords.1",
+            "quote": "Cada enfermedad que viví tenía una raíz emocional que jamás había considerado.",
+            "kind": "inference"
+        },
+        {
+            "field": "youtube_keywords.2",
+            "quote": "Encontré el origen emocional de mis migrañas. Desde que aplico los ejercicios, los dolores son mucho más leves.",
+            "kind": "inference"
+        },
+        {
+            "field": "youtube_keywords.3",
+            "quote": "Con las afirmaciones del libro, bajé 7 kilos en paz, sin ansiedad ni culpa.",
+            "kind": "inference"
+        },
+        {
+            "field": "youtube_keywords.4",
+            "quote": "Cada enfermedad que viví tenía una raíz emocional que jamás había considerado.",
+            "kind": "inference"
+        }
+    ],
+    "source_info": {
+        "url": "https://mujerfortalezas.com/products/tu-cuerpo-tiene-algo-que-decirte-bonos-de-regalo",
+        "requested_url": "https://mujerfortalezas.com/products/tu-cuerpo-tiene-algo-que-decirte-bonos-de-regalo",
+        "page_type": "VSL",
+        "page_language": "es",
+        "youtube_language": "es"
+    }
+}

@@ -57,6 +57,45 @@ def test_threshold_does_not_override_incomplete_source_coverage():
     assert result['is_offer_accepted'] is None
 
 
+def test_safe_positive_early_stop_accepts_incomplete_source_coverage():
+    classified = [row(i, 'deseo') for i in range(100)]
+    source = classified + [row(100 + i, 'no_aplica') for i in range(25)]
+    result = evaluate_classified_comments_metrics(
+        classified,
+        source_comments=source,
+        collection_status={'status': 'complete'},
+        classification_status={
+            'status': 'complete_early',
+            'target_reached': True,
+            'stop_reason': 'target_reached',
+            'technical_error_count': 0,
+            'invalid_source_count': 0,
+        },
+    )
+    assert result['coverage']['status'] == 'incomplete'
+    assert result['decision'] == 'ACCEPT_OFFER'
+    assert result['is_offer_accepted'] is True
+
+
+def test_unsafe_early_stop_remains_incomplete():
+    classified = [row(i, 'deseo') for i in range(100)]
+    source = classified + [row(100, 'no_aplica')]
+    result = evaluate_classified_comments_metrics(
+        classified,
+        source_comments=source,
+        collection_status={'status': 'complete'},
+        classification_status={
+            'status': 'complete_early',
+            'target_reached': True,
+            'stop_reason': 'target_reached',
+            'technical_error_count': 1,
+            'invalid_source_count': 0,
+        },
+    )
+    assert result['decision'] == 'INCOMPLETE_ANALYSIS'
+    assert result['is_offer_accepted'] is None
+
+
 def test_only_combined_relevant_total_determines_market_threshold():
     cases = [
         (51, 0, 'DO_NOT_ACCEPT_OFFER'),

@@ -1,0 +1,142 @@
+WARNING: The --reload flag is not supported on Windows because it forces Uvicorn to use SelectorEventLoop, which does not support subprocesses (needed for executing tools). Forcing --no-reload.
+2026-09-11 15:54:09,792 - INFO - service_factory.py:266 - Using in-memory memory service
+2026-09-11 15:54:09,806 - INFO - local_storage.py:89 - Using per-agent session storage rooted at C:\Users\LENOVO\Desktop\marketing-agents-adk
+2026-09-11 15:54:09,813 - INFO - local_storage.py:121 - Using per-agent artifact storage rooted at C:\Users\LENOVO\Desktop\marketing-agents-adk
+c:\Users\LENOVO\Desktop\marketing-agents-adk\.venv\Lib\site-packages\google\adk\cli\fast_api.py:263: UserWarning: [EXPERIMENTAL] InMemoryCredentialService: This feature is experimental and may change or be removed in future versions without notice. It may introduce breaking changes at any time.
+  credential_service = InMemoryCredentialService()
+c:\Users\LENOVO\Desktop\marketing-agents-adk\.venv\Lib\site-packages\google\adk\auth\credential_service\in_memory_credential_service.py:33: UserWarning: [EXPERIMENTAL] BaseCredentialService: This feature is experimental and may change or be removed in future versions without notice. It may introduce breaking changes at any time.
+  super().__init__()
+INFO:     Started server process [8052]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:8000 (Press CTRL+C to quit)
+c:\Users\LENOVO\Desktop\marketing-agents-adk\.venv\Lib\site-packages\fastapi\openapi\utils.py:303: UserWarning: Duplicate Operation ID add_session_to_eval_set_dev_apps__app_name__eval_sets__eval_set_id__add_session_post for function add_session_to_eval_set at c:\Users\LENOVO\Desktop\marketing-agents-adk\.venv\Lib\site-packages\google\adk\cli\dev_server.py
+  warnings.warn(message, stacklevel=1)
+2026-09-11 15:56:08,749 - INFO - local_storage.py:65 - Creating local session service at C:\Users\LENOVO\Desktop\marketing-agents-adk\marketing_campaign_agent\.adk\session.db
+2026-09-11 15:56:08,782 - INFO - envs.py:83 - Loaded .env file for marketing_campaign_agent at C:\Users\LENOVO\Desktop\marketing-agents-adk\.env
+2026-09-11 15:57:03,254 - WARNING - _api_client.py:139 - Both GOOGLE_API_KEY and GEMINI_API_KEY are set. Using GOOGLE_API_KEY.
+2026-09-11 15:57:05,783 - INFO - google_llm.py:223 - Sending out request, model: gemini-3.6-flash, backend: GoogleLLMVariant.GEMINI_API, stream: False
+2026-09-11 15:57:05,785 - INFO - models.py:8707 - AFC is enabled with max remote calls: 10.
+2026-09-11 15:57:05,786 - WARNING - models.py:8711 - Direct use of automatic function calling (AFC) in AsyncModels.generate_content is not recommended. Instead, we recommend to use AFC in AsyncChat.send_message. Similarly, direct use of AFC in AsyncModels.generate_content_stream is not recommended. Instead, we recommend to use AFC in AsyncChat.send_message_stream.
+2026-09-11 15:57:34,553 - INFO - google_llm.py:293 - Response received from the model.
+2026-09-11 15:57:34,694 - INFO - youtube_api_tool.py:370 - [YouTube Tool] Attempting search via official YouTube Data API v3...
+2026-09-11 15:57:34,695 - INFO - youtube_api_tool.py:104 - [YouTube API] Searching videos for keyword: 'Release Process Jin Ong trabajo emocional para sanación' (max=50)
+2026-09-11 15:57:35,685 - INFO - youtube_api_tool.py:378 - [YouTube Tool] YouTube Data API v3 successfully returned 4 videos.
+2026-09-11 15:57:35,746 - INFO - youtube_api_tool.py:370 - [YouTube Tool] Attempting search via official YouTube Data API v3...
+2026-09-11 15:57:35,748 - INFO - youtube_api_tool.py:104 - [YouTube API] Searching videos for keyword: 'liberación de emociones atrapadas en el cuerpo proceso de sanación' (max=50)
+2026-09-11 15:57:37,023 - INFO - youtube_api_tool.py:378 - [YouTube Tool] YouTube Data API v3 successfully returned 50 videos.
+2026-09-11 15:57:37,075 - INFO - youtube_api_tool.py:370 - [YouTube Tool] Attempting search via official YouTube Data API v3...
+2026-09-11 15:57:37,076 - INFO - youtube_api_tool.py:104 - [YouTube API] Searching videos for keyword: 'enfermedades crónicas que no responden a tratamientos convencionales' (max=50)
+2026-09-11 15:57:38,803 - INFO - youtube_api_tool.py:378 - [YouTube Tool] YouTube Data API v3 successfully returned 50 videos.
+2026-09-11 15:57:38,855 - INFO - youtube_api_tool.py:370 - [YouTube Tool] Attempting search via official YouTube Data API v3...
+2026-09-11 15:57:38,855 - INFO - youtube_api_tool.py:104 - [YouTube API] Searching videos for keyword: 'cómo afectan las emociones no procesadas a la salud física' (max=50)
+2026-09-11 15:57:40,013 - INFO - youtube_api_tool.py:378 - [YouTube Tool] YouTube Data API v3 successfully returned 50 videos.
+2026-09-11 15:57:40,086 - INFO - youtube_api_tool.py:370 - [YouTube Tool] Attempting search via official YouTube Data API v3...
+2026-09-11 15:57:40,087 - INFO - youtube_api_tool.py:104 - [YouTube API] Searching videos for keyword: 'por qué la terapia somática no me ha funcionado en salud crónica' (max=50)
+2026-09-11 15:57:41,292 - INFO - youtube_api_tool.py:378 - [YouTube Tool] YouTube Data API v3 successfully returned 32 videos.
+2026-09-11 15:57:41,358 - INFO - youtube_api_tool.py:370 - [YouTube Tool] Attempting search via official YouTube Data API v3...
+2026-09-11 15:57:41,359 - INFO - youtube_api_tool.py:104 - [YouTube API] Searching videos for keyword: 'cómo identificar emociones almacenadas en el cuerpo diagnóstico' (max=50)
+2026-09-11 15:57:42,940 - INFO - youtube_api_tool.py:378 - [YouTube Tool] YouTube Data API v3 successfully returned 50 videos.
+2026-09-11 15:57:43,007 - INFO - youtube_api_tool.py:370 - [YouTube Tool] Attempting search via official YouTube Data API v3...
+2026-09-11 15:57:43,008 - INFO - youtube_api_tool.py:104 - [YouTube API] Searching videos for keyword: 'pasos para aplicar el marco de liberación emocional Release Process' (max=50)
+2026-09-11 15:57:44,401 - INFO - youtube_api_tool.py:378 - [YouTube Tool] YouTube Data API v3 successfully returned 50 videos.
+2026-09-11 15:57:44,470 - INFO - youtube_api_tool.py:370 - [YouTube Tool] Attempting search via official YouTube Data API v3...
+2026-09-11 15:57:44,471 - INFO - youtube_api_tool.py:104 - [YouTube API] Searching videos for keyword: 'ejercicios de integración con Growthwork Journal para sanación emocional' (max=50)
+2026-09-11 15:57:44,963 - INFO - youtube_api_tool.py:129 - [YouTube API] No video IDs found for keyword: 'ejercicios de integración con Growthwork Journal para sanación emocional'
+2026-09-11 15:57:44,967 - INFO - youtube_api_tool.py:385 - [YouTube Tool] Executing Playwright fallback for YouTube search...
+2026-09-11 15:57:49,545 - INFO - youtube_search_tool.py:143 - Searching YouTube for keyword: 'ejercicios de integración con Growthwork Journal para sanación emocional'
+2026-09-11 15:58:01,033 - INFO - youtube_search_tool.py:244 - Found matching video: 'Ejercicio para enfocarte en los proyectos (Integración Emocional) - Shivagam' (3.7 K vistas -> 3700) - https://www.youtube.com/watch?v=K131bMl-r7g&pp=ygVKZWplcmNpY2lvcyBkZSBpbnRlZ3JhY2nDs24gY29uIEdyb3d0aHdvcmsgSm91cm5hbCBwYXJhIHNhbmFjacOzbiBlbW9jaW9uYWw%3D
+2026-09-11 15:58:01,937 - INFO - youtube_search_tool.py:244 - Found matching video: 'Ejercicio de escritura terapéutica para trabajar tus emociones \u2764\ufe0f Diario emocional \U0001f525' (270 vistas -> 270) - https://www.youtube.com/watch?v=iMmjpub7tZg&pp=ygVKZWplcmNpY2lvcyBkZSBpbnRlZ3JhY2nDs24gY29uIEdyb3d0aHdvcmsgSm91cm5hbCBwYXJhIHNhbmFjacOzbiBlbW9jaW9uYWw%3D
+2026-09-11 15:58:02,959 - INFO - youtube_search_tool.py:244 - Found matching video: '\U0001f496 6 Ejercicios de Autocompasión || Materiales de Psicoterapia' (1.6 K vistas -> 1600) - https://www.youtube.com/watch?v=pnQJZqmhetc&pp=ygVKZWplcmNpY2lvcyBkZSBpbnRlZ3JhY2nDs24gY29uIEdyb3d0aHdvcmsgSm91cm5hbCBwYXJhIHNhbmFjacOzbiBlbW9jaW9uYWw%3D
+2026-09-11 15:58:03,081 - INFO - youtube_search_tool.py:244 - Found matching video: 'Ejercicio para gestionar emociones' (8.6 K vistas -> 8600) - https://www.youtube.com/watch?v=JjiFrGdFTEA&pp=ygVKZWplcmNpY2lvcyBkZSBpbnRlZ3JhY2nDs24gY29uIEdyb3d0aHdvcmsgSm91cm5hbCBwYXJhIHNhbmFjacOzbiBlbW9jaW9uYWw%3D
+2026-09-11 15:58:03,190 - INFO - youtube_search_tool.py:244 - Found matching video: 'Como Mandar Energía Sanadora a Otros | Rutinas de 10 Minutos' (19 k vistas -> 19000) - https://www.youtube.com/watch?v=M9gPmLZeZK8&pp=ygVKZWplcmNpY2lvcyBkZSBpbnRlZ3JhY2nDs24gY29uIEdyb3d0aHdvcmsgSm91cm5hbCBwYXJhIHNhbmFjacOzbiBlbW9jaW9uYWw%3D
+2026-09-11 15:58:03,306 - INFO - youtube_search_tool.py:244 - Found matching video: 'Blindaje emocional mediante la autorregulación de tus emociones | Vero Marcos | TEDxCoatzacoalcos' (210 k vistas -> 210000) - https://www.youtube.com/watch?v=MiZ3DW4RG4Q&pp=ygVKZWplcmNpY2lvcyBkZSBpbnRlZ3JhY2nDs24gY29uIEdyb3d0aHdvcmsgSm91cm5hbCBwYXJhIHNhbmFjacOzbiBlbW9jaW9uYWzSBwkJ_gsBhyohjO8%3D
+2026-09-11 15:58:03,425 - INFO - youtube_search_tool.py:244 - Found matching video: 'Ejercicios para desarrollar la gratitud | Irene Jordan en Neuro Style' (748 vistas -> 748) - https://www.youtube.com/watch?v=TT7pRTxmceE&pp=ygVKZWplcmNpY2lvcyBkZSBpbnRlZ3JhY2nDs24gY29uIEdyb3d0aHdvcmsgSm91cm5hbCBwYXJhIHNhbmFjacOzbiBlbW9jaW9uYWzSBwkJ_gsBhyohjO8%3D
+2026-09-11 15:58:03,568 - INFO - youtube_search_tool.py:244 - Found matching video: 'SANACIÓN A DISTANCIA para la ANSIEDAD | Equilibrio Emocional con KS Healing | YOHEV' (1.8 K vistas -> 1800) - https://www.youtube.com/watch?v=TOg9t9atmEs&pp=ygVKZWplcmNpY2lvcyBkZSBpbnRlZ3JhY2nDs24gY29uIEdyb3d0aHdvcmsgSm91cm5hbCBwYXJhIHNhbmFjacOzbiBlbW9jaW9uYWw%3D
+2026-09-11 15:58:03,693 - INFO - youtube_search_tool.py:244 - Found matching video: 'Del estrés laboral a la reconexión corporal: cómo recuperar tu eje ?' (9 vistas -> 9) - https://www.youtube.com/watch?v=dgdRrlD-izs&pp=ygVKZWplcmNpY2lvcyBkZSBpbnRlZ3JhY2nDs24gY29uIEdyb3d0aHdvcmsgSm91cm5hbCBwYXJhIHNhbmFjacOzbiBlbW9jaW9uYWw%3D
+2026-09-11 15:58:03,819 - INFO - youtube_search_tool.py:244 - Found matching video: 'Cápsula 12. Ejercicio de gratitud para transformar nuestro estado emocional actual.' (192 vistas -> 192) - https://www.youtube.com/watch?v=uSbwKfgrjQQ&pp=ygVKZWplcmNpY2lvcyBkZSBpbnRlZ3JhY2nDs24gY29uIEdyb3d0aHdvcmsgSm91cm5hbCBwYXJhIHNhbmFjacOzbiBlbW9jaW9uYWw%3D
+2026-09-11 15:58:03,934 - INFO - youtube_search_tool.py:244 - Found matching video: 'Ejercicios prácticos para la gestión de las emociones' (3 K vistas -> 3000) - https://www.youtube.com/watch?v=e9IrdPXHZWw&pp=ygVKZWplcmNpY2lvcyBkZSBpbnRlZ3JhY2nDs24gY29uIEdyb3d0aHdvcmsgSm91cm5hbCBwYXJhIHNhbmFjacOzbiBlbW9jaW9uYWw%3D
+2026-09-11 15:58:04,060 - INFO - youtube_search_tool.py:244 - Found matching video: 'Recupera tu felicidad  Actividades y relaciones saludables para sanar y crecer' (101 vistas -> 101) - https://www.youtube.com/watch?v=yW-QMeGHE7c&pp=ygVKZWplcmNpY2lvcyBkZSBpbnRlZ3JhY2nDs24gY29uIEdyb3d0aHdvcmsgSm91cm5hbCBwYXJhIHNhbmFjacOzbiBlbW9jaW9uYWw%3D
+2026-09-11 15:58:04,174 - INFO - youtube_search_tool.py:244 - Found matching video: 'Cómo Calmar una Crisis Emocional: Práctica de Autocontención (Basada en Ciencia)' (2.1 K vistas -> 2100) - https://www.youtube.com/watch?v=bS5k2VUqxG4&pp=ygVKZWplcmNpY2lvcyBkZSBpbnRlZ3JhY2nDs24gY29uIEdyb3d0aHdvcmsgSm91cm5hbCBwYXJhIHNhbmFjacOzbiBlbW9jaW9uYWw%3D
+2026-09-11 15:58:04,283 - INFO - youtube_search_tool.py:244 - Found matching video: 'Psicoterapia sensoriomotriz: sanar el trauma desde el cuerpo | Conversaciones Esenciales' (169 vistas -> 169) - https://www.youtube.com/watch?v=fYJQAeL6deE&pp=ygVKZWplcmNpY2lvcyBkZSBpbnRlZ3JhY2nDs24gY29uIEdyb3d0aHdvcmsgSm91cm5hbCBwYXJhIHNhbmFjacOzbiBlbW9jaW9uYWw%3D
+2026-09-11 15:58:04,391 - INFO - youtube_search_tool.py:244 - Found matching video: 'Las PRÁCTICAS más EFECTIVAS para Cuidar tu Esfera MENTAL y EMOCIONAL' (3.5 K vistas -> 3500) - https://www.youtube.com/watch?v=fOEc7V1P-_E&pp=ygVKZWplcmNpY2lvcyBkZSBpbnRlZ3JhY2nDs24gY29uIEdyb3d0aHdvcmsgSm91cm5hbCBwYXJhIHNhbmFjacOzbiBlbW9jaW9uYWw%3D
+2026-09-11 15:58:04,498 - INFO - youtube_search_tool.py:244 - Found matching video: 'TRG: Lo Que Nadie Te Contó (y Deberías Saber)' (118 k vistas -> 118000) - https://www.youtube.com/watch?v=QfJkuzfmxeY&pp=ygVKZWplcmNpY2lvcyBkZSBpbnRlZ3JhY2nDs24gY29uIEdyb3d0aHdvcmsgSm91cm5hbCBwYXJhIHNhbmFjacOzbiBlbW9jaW9uYWw%3D
+2026-09-11 15:58:05,371 - INFO - youtube_api_tool.py:370 - [YouTube Tool] Attempting search via official YouTube Data API v3...
+2026-09-11 15:58:05,372 - INFO - youtube_api_tool.py:104 - [YouTube API] Searching videos for keyword: 'cómo escuchar los mensajes del cuerpo en enfermedades complejas' (max=50)
+2026-09-11 15:58:06,823 - INFO - youtube_api_tool.py:378 - [YouTube Tool] YouTube Data API v3 successfully returned 50 videos.
+2026-09-11 15:58:06,887 - INFO - youtube_api_tool.py:370 - [YouTube Tool] Attempting search via official YouTube Data API v3...
+2026-09-11 15:58:06,888 - INFO - youtube_api_tool.py:104 - [YouTube API] Searching videos for keyword: 'qué hacer cuando los especialistas y protocolos de salud no funcionan' (max=50)
+2026-09-11 15:58:08,228 - INFO - youtube_api_tool.py:378 - [YouTube Tool] YouTube Data API v3 successfully returned 50 videos.
+2026-09-11 15:58:08,290 - INFO - youtube_api_tool.py:370 - [YouTube Tool] Attempting search via official YouTube Data API v3...
+2026-09-11 15:58:08,292 - INFO - youtube_api_tool.py:104 - [YouTube API] Searching videos for keyword: 'Healing Beyond The Diagnosis Jin Ong opiniones y resultados' (max=50)
+2026-09-11 15:58:09,634 - INFO - youtube_api_tool.py:378 - [YouTube Tool] YouTube Data API v3 successfully returned 6 videos.
+2026-09-11 15:58:09,696 - INFO - youtube_api_tool.py:370 - [YouTube Tool] Attempting search via official YouTube Data API v3...
+2026-09-11 15:58:09,696 - INFO - youtube_api_tool.py:104 - [YouTube API] Searching videos for keyword: 'testimonios de sanación emocional con el libro Healing Beyond The Diagnosis' (max=50)
+2026-09-11 15:58:11,471 - INFO - youtube_api_tool.py:378 - [YouTube Tool] YouTube Data API v3 successfully returned 42 videos.
+2026-09-11 15:58:11,506 - WARNING - _api_client.py:139 - Both GOOGLE_API_KEY and GEMINI_API_KEY are set. Using GOOGLE_API_KEY.
+2026-09-11 15:58:13,465 - INFO - models.py:8707 - AFC is enabled with max remote calls: 10.
+2026-09-11 15:58:33,192 - INFO - models.py:8707 - AFC is enabled with max remote calls: 10.
+2026-09-11 15:58:48,276 - INFO - models.py:8707 - AFC is enabled with max remote calls: 10.
+2026-09-11 15:59:06,695 - INFO - models.py:8707 - AFC is enabled with max remote calls: 10.
+2026-09-11 15:59:23,579 - INFO - models.py:8707 - AFC is enabled with max remote calls: 10.
+2026-09-11 15:59:50,645 - INFO - models.py:8707 - AFC is enabled with max remote calls: 10.
+2026-09-11 16:00:07,797 - INFO - models.py:8707 - AFC is enabled with max remote calls: 10.
+2026-09-11 16:00:24,886 - INFO - models.py:8707 - AFC is enabled with max remote calls: 10.
+2026-09-11 16:00:41,613 - INFO - models.py:8707 - AFC is enabled with max remote calls: 10.
+2026-09-11 16:01:07,915 - INFO - models.py:8707 - AFC is enabled with max remote calls: 10.
+2026-09-11 16:01:41,891 - INFO - models.py:8707 - AFC is enabled with max remote calls: 10.
+2026-09-11 16:02:04,487 - INFO - models.py:8707 - AFC is enabled with max remote calls: 10.
+2026-09-11 16:02:25,039 - INFO - models.py:8707 - AFC is enabled with max remote calls: 10.
+2026-09-11 16:02:40,617 - INFO - models.py:8707 - AFC is enabled with max remote calls: 10.
+2026-09-11 16:03:00,105 - INFO - models.py:8707 - AFC is enabled with max remote calls: 10.
+2026-09-11 16:03:14,196 - INFO - youtube_comment_extractor_tool.py:466 - [Comment Collector] Processing https://www.youtube.com/watch?v=TjqrualxgkI (keywords='cómo escuchar los mensajes del cuerpo en enfermedades complejas', threshold=0, months=3)
+2026-09-11 16:04:37,372 - INFO - youtube_comment_extractor_tool.py:466 - [Comment Collector] Processing https://www.youtube.com/watch?v=O3IMHBkXEPw (keywords='cómo escuchar los mensajes del cuerpo en enfermedades complejas', threshold=0, months=3)
+2026-09-11 16:04:53,127 - INFO - youtube_comment_extractor_tool.py:466 - [Comment Collector] Processing https://www.youtube.com/watch?v=YtxXRdLAOpU (keywords='liberación de emociones atrapadas en el cuerpo proceso de sanación', threshold=0, months=3)
+2026-09-11 16:05:11,013 - INFO - youtube_comment_extractor_tool.py:466 - [Comment Collector] Processing https://www.youtube.com/watch?v=oGJ1GTrnqO8 (keywords='por qué la terapia somática no me ha funcionado en salud crónica', threshold=0, months=3)
+2026-09-11 16:05:20,666 - INFO - youtube_comment_extractor_tool.py:466 - [Comment Collector] Processing https://www.youtube.com/watch?v=IDb-i_JbpNs (keywords='liberación de emociones atrapadas en el cuerpo proceso de sanación', threshold=0, months=3)
+2026-09-11 16:05:27,092 - INFO - youtube_comment_extractor_tool.py:466 - [Comment Collector] Processing https://www.youtube.com/watch?v=4S4LyUUThUQ (keywords='liberación de emociones atrapadas en el cuerpo proceso de sanación', threshold=0, months=3)
+2026-09-11 16:05:33,705 - INFO - youtube_comment_extractor_tool.py:466 - [Comment Collector] Processing https://www.youtube.com/watch?v=EQL5AsC7xtw (keywords='liberación de emociones atrapadas en el cuerpo proceso de sanación', threshold=0, months=3)
+2026-09-11 16:05:41,093 - INFO - youtube_comment_extractor_tool.py:466 - [Comment Collector] Processing https://www.youtube.com/watch?v=6-3t1IJg9T4 (keywords='liberación de emociones atrapadas en el cuerpo proceso de sanación', threshold=0, months=3)
+2026-09-11 16:05:48,404 - INFO - youtube_comment_extractor_tool.py:466 - [Comment Collector] Processing https://www.youtube.com/watch?v=QfJkuzfmxeY (keywords='ejercicios de integración con Growthwork Journal para sanación emocional', threshold=0, months=3)
+2026-09-11 16:05:55,864 - INFO - youtube_comment_extractor_tool.py:466 - [Comment Collector] Processing https://www.youtube.com/watch?v=79nOb-c4YUI (keywords='cómo escuchar los mensajes del cuerpo en enfermedades complejas', threshold=0, months=3)
+2026-09-11 16:06:02,856 - INFO - youtube_comment_extractor_tool.py:466 - [Comment Collector] Processing https://www.youtube.com/watch?v=LUACffAjmls (keywords='liberación de emociones atrapadas en el cuerpo proceso de sanación', threshold=0, months=3)
+2026-09-11 16:06:08,776 - INFO - youtube_comment_extractor_tool.py:466 - [Comment Collector] Processing https://www.youtube.com/watch?v=9CfOxTbSxHk (keywords='liberación de emociones atrapadas en el cuerpo proceso de sanación', threshold=0, months=3)
+2026-09-11 16:06:14,770 - INFO - youtube_comment_extractor_tool.py:466 - [Comment Collector] Processing https://www.youtube.com/watch?v=5EQ9qvipInE (keywords='liberación de emociones atrapadas en el cuerpo proceso de sanación', threshold=0, months=3)
+2026-09-11 16:06:19,345 - INFO - youtube_comment_extractor_tool.py:466 - [Comment Collector] Processing https://www.youtube.com/watch?v=qbzXvzIos4U (keywords='liberación de emociones atrapadas en el cuerpo proceso de sanación', threshold=0, months=3)
+2026-09-11 16:06:23,201 - INFO - youtube_comment_extractor_tool.py:466 - [Comment Collector] Processing https://www.youtube.com/watch?v=rRpxu4uHmZ8 (keywords='liberación de emociones atrapadas en el cuerpo proceso de sanación; cómo afectan las emociones no procesadas a la salud física', threshold=0, months=3)
+2026-09-11 16:06:26,718 - INFO - youtube_comment_extractor_tool.py:466 - [Comment Collector] Processing https://www.youtube.com/watch?v=lcmh1VqCnWo (keywords='cómo escuchar los mensajes del cuerpo en enfermedades complejas', threshold=0, months=3)
+2026-09-11 16:06:29,555 - INFO - youtube_comment_extractor_tool.py:466 - [Comment Collector] Processing https://www.youtube.com/watch?v=93mRxk_E-5I (keywords='liberación de emociones atrapadas en el cuerpo proceso de sanación', threshold=0, months=3)
+2026-09-11 16:06:32,681 - INFO - youtube_comment_extractor_tool.py:466 - [Comment Collector] Processing https://www.youtube.com/watch?v=W7B4ghJa7eI (keywords='testimonios de sanación emocional con el libro Healing Beyond The Diagnosis', threshold=0, months=3)
+2026-09-11 16:06:34,922 - INFO - youtube_comment_extractor_tool.py:466 - [Comment Collector] Processing https://www.youtube.com/watch?v=IGhw9ox3NSI (keywords='liberación de emociones atrapadas en el cuerpo proceso de sanación', threshold=0, months=3)
+2026-09-11 16:06:37,737 - INFO - youtube_comment_extractor_tool.py:466 - [Comment Collector] Processing https://www.youtube.com/watch?v=nTB0w9tyNtc (keywords='cómo escuchar los mensajes del cuerpo en enfermedades complejas', threshold=0, months=3)
+2026-09-11 16:06:39,623 - INFO - youtube_comment_extractor_tool.py:466 - [Comment Collector] Processing https://www.youtube.com/watch?v=P4JhGGOYXb8 (keywords='liberación de emociones atrapadas en el cuerpo proceso de sanación; cómo afectan las emociones no procesadas a la salud física', threshold=0, months=3)
+2026-09-11 16:06:41,628 - INFO - youtube_comment_extractor_tool.py:466 - [Comment Collector] Processing https://www.youtube.com/watch?v=jfzw7WsWJ8c (keywords='liberación de emociones atrapadas en el cuerpo proceso de sanación', threshold=0, months=3)
+2026-09-11 16:06:43,619 - INFO - youtube_comment_extractor_tool.py:466 - [Comment Collector] Processing https://www.youtube.com/watch?v=DPOgZZFMs8s (keywords='qué hacer cuando los especialistas y protocolos de salud no funcionan', threshold=0, months=3)
+2026-09-11 16:06:45,413 - INFO - youtube_comment_extractor_tool.py:466 - [Comment Collector] Processing https://www.youtube.com/watch?v=leU4I0ghJu8 (keywords='liberación de emociones atrapadas en el cuerpo proceso de sanación', threshold=0, months=3)
+2026-09-11 16:06:46,901 - INFO - youtube_comment_extractor_tool.py:466 - [Comment Collector] Processing https://www.youtube.com/watch?v=jQK17AFlg7c (keywords='liberación de emociones atrapadas en el cuerpo proceso de sanación', threshold=0, months=3)
+2026-09-11 16:06:48,716 - INFO - youtube_comment_extractor_tool.py:466 - [Comment Collector] Processing https://www.youtube.com/watch?v=E8i7zopGw0c (keywords='liberación de emociones atrapadas en el cuerpo proceso de sanación', threshold=0, months=3)
+2026-09-11 16:06:50,764 - INFO - youtube_comment_extractor_tool.py:466 - [Comment Collector] Processing https://www.youtube.com/watch?v=HK0qIHrRQF0 (keywords='liberación de emociones atrapadas en el cuerpo proceso de sanación', threshold=0, months=3)
+2026-09-11 16:06:52,694 - INFO - youtube_comment_extractor_tool.py:466 - [Comment Collector] Processing https://www.youtube.com/watch?v=G2bpCDG4nNc (keywords='liberación de emociones atrapadas en el cuerpo proceso de sanación; cómo identificar emociones almacenadas en el cuerpo diagnóstico; cómo escuchar los mensajes del cuerpo en enfermedades complejas', threshold=0, months=3)
+2026-09-11 16:06:53,914 - INFO - youtube_comment_extractor_tool.py:466 - [Comment Collector] Processing https://www.youtube.com/watch?v=vq1fjlF9hKE (keywords='liberación de emociones atrapadas en el cuerpo proceso de sanación', threshold=0, months=3)
+2026-09-11 16:06:55,930 - INFO - youtube_comment_extractor_tool.py:466 - [Comment Collector] Processing https://www.youtube.com/watch?v=vNRBLG1t2zo (keywords='liberación de emociones atrapadas en el cuerpo proceso de sanación', threshold=0, months=3)
+2026-09-11 16:06:56,631 - INFO - youtube_comment_extractor_tool.py:466 - [Comment Collector] Processing https://www.youtube.com/watch?v=ul9QT54zKpA (keywords='liberación de emociones atrapadas en el cuerpo proceso de sanación', threshold=0, months=3)
+2026-09-11 16:06:57,687 - INFO - youtube_comment_extractor_tool.py:466 - [Comment Collector] Processing https://www.youtube.com/watch?v=8CPeCJ5PUEw (keywords='liberación de emociones atrapadas en el cuerpo proceso de sanación', threshold=0, months=3)
+2026-09-11 16:06:59,120 - INFO - youtube_comment_extractor_tool.py:466 - [Comment Collector] Processing https://www.youtube.com/watch?v=7h51_0ZiiXs (keywords='liberación de emociones atrapadas en el cuerpo proceso de sanación', threshold=0, months=3)
+2026-09-11 16:07:00,435 - INFO - youtube_comment_extractor_tool.py:466 - [Comment Collector] Processing https://www.youtube.com/watch?v=EQ0QH8Fce3w (keywords='liberación de emociones atrapadas en el cuerpo proceso de sanación', threshold=0, months=3)
+2026-09-11 16:07:01,393 - INFO - youtube_comment_extractor_tool.py:466 - [Comment Collector] Processing https://www.youtube.com/watch?v=nZm0T-oURTE (keywords='liberación de emociones atrapadas en el cuerpo proceso de sanación', threshold=0, months=3)
+2026-09-11 16:07:02,089 - INFO - youtube_comment_extractor_tool.py:466 - [Comment Collector] Processing https://www.youtube.com/watch?v=0Aa5dZbaMr8 (keywords='cómo afectan las emociones no procesadas a la salud física', threshold=0, months=3)
+2026-09-11 16:07:03,071 - INFO - youtube_comment_extractor_tool.py:466 - [Comment Collector] Processing https://www.youtube.com/watch?v=y00zwoughHg (keywords='testimonios de sanación emocional con el libro Healing Beyond The Diagnosis', threshold=0, months=3)
+2026-09-11 16:07:03,855 - INFO - youtube_comment_extractor_tool.py:466 - [Comment Collector] Processing https://www.youtube.com/watch?v=XiW5GPw_7-Y (keywords='testimonios de sanación emocional con el libro Healing Beyond The Diagnosis', threshold=0, months=3)
+2026-09-11 16:07:05,005 - WARNING - _api_client.py:139 - Both GOOGLE_API_KEY and GEMINI_API_KEY are set. Using GOOGLE_API_KEY.
+2026-09-11 16:07:06,837 - INFO - models.py:8707 - AFC is enabled with max remote calls: 10.
+2026-09-11 16:07:30,177 - INFO - models.py:8707 - AFC is enabled with max remote calls: 10.
+2026-09-11 16:07:51,190 - INFO - models.py:8707 - AFC is enabled with max remote calls: 10.
+2026-09-11 16:08:15,137 - INFO - models.py:8707 - AFC is enabled with max remote calls: 10.
+2026-09-11 16:08:38,415 - INFO - models.py:8707 - AFC is enabled with max remote calls: 10.
+2026-09-11 16:09:03,309 - INFO - models.py:8707 - AFC is enabled with max remote calls: 10.
+2026-09-11 16:09:25,730 - INFO - models.py:8707 - AFC is enabled with max remote calls: 10.
+2026-09-11 16:09:48,807 - INFO - models.py:8707 - AFC is enabled with max remote calls: 10.
+2026-09-11 16:10:08,113 - INFO - models.py:8707 - AFC is enabled with max remote calls: 10.
+2026-09-11 16:10:24,269 - INFO - models.py:8707 - AFC is enabled with max remote calls: 10.
+2026-09-11 16:10:36,978 - INFO - models.py:8707 - AFC is enabled with max remote calls: 10.
+2026-09-11 16:11:04,366 - INFO - models.py:8707 - AFC is enabled with max remote calls: 10.

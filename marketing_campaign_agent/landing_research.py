@@ -16,6 +16,7 @@ from pydantic import BaseModel, Field, StringConstraints, ValidationError
 from .comments_pipeline import _decode
 from . import recovery_runtime
 from .tools.landing_page_scraper import content_error, scrape_landing_page
+from .tools.comments_evaluator_tool import is_safe_early_completion
 from .landing_attachments import (
     WAITING_ATTACHMENT, VISUAL_INSTRUCTION, describe_attachments, media_parts,
     selected_media, transcribed_source, provenance_note,
@@ -981,7 +982,8 @@ class GroundedCampaignOrchestrator(SequentialAgent):
                     return
             if index == 3:
                 status = ctx.session.state.get("youtube_comments_classification_status") or {}
-                if status and status.get("status") != "complete":
+                if (status and status.get("status") != "complete"
+                        and not is_safe_early_completion(status)):
                     yield emit("La clasificación no terminó. Los avances guardados se mantienen. "
                                "El estado contiene el motivo que requiere intervención.")
                     return

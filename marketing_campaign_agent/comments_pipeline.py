@@ -30,6 +30,7 @@ RECOVERY_SECONDS = max(1, int(os.getenv("COMMENTS_RECOVERY_SECONDS", "600")))
 RATE_LIMIT_BACKOFF_SECONDS = max(1, int(os.getenv("COMMENTS_RATE_LIMIT_BACKOFF_SECONDS", "60")))
 VIDEO_VALIDATION_BATCH_SIZE = 10
 VIDEO_VALIDATION_ATTEMPTS = 3
+VIDEO_VALIDATION_CONTRACT_VERSION = 5
 DETERMINISTIC_GENERATION_SEED = 17
 USAGE_METRICS_ENABLED = os.getenv("GEMINI_USAGE_METRICS", "0").lower() in {"1", "true", "yes", "on"}
 COMMENTS_STOP_ON_TARGET = os.getenv("COMMENTS_STOP_ON_TARGET", "0").lower() in {"1", "true", "yes", "on"}
@@ -81,6 +82,14 @@ def _market_signal_counts(results):
     desires = sum(item.get("decision") == "deseo" for item in results)
     problems = sum(item.get("decision") == "problema" for item in results)
     return desires, problems
+
+
+def _video_metric(value):
+    """Treat missing or malformed YouTube counts as zero for sorting only."""
+    try:
+        return int(value)
+    except (TypeError, ValueError):
+        return 0
 
 
 def _market_signal_reached_counts(desires, problems, total_target=None):
@@ -270,6 +279,52 @@ def _semantic_tokens(value):
     return set(tokens)
 
 
+_SPANISH_TITLE_WORDS = {
+    "al", "con", "cuando", "de", "del", "el", "en", "es", "esta", "este",
+    "la", "las", "lo", "los", "mi", "mis", "para", "por", "que", "se",
+    "sin", "son", "su", "sus", "te", "tu", "tus", "un", "una", "y",
+}
+_ENGLISH_TITLE_WORDS = {
+    "a", "about", "and", "are", "can", "for", "from", "how", "in",
+    "is", "of", "the", "to", "what", "when", "with", "you", "your",
+}
+_PORTUGUESE_TITLE_WORDS = {
+    "aos", "com", "dos", "na", "nas", "no", "nos", "nossa", "nosso",
+    "os", "sao", "seu", "sua", "um", "uma", "voce", "voces",
+}
+
+
+def _spanish_title_language(candidate):
+    """Use YouTube language metadata plus title cues; unknown never passes."""
+    title = str(candidate.get("video_title") or "").casefold()
+    tokens = set(re.findall(r"[a-z]+", _normalize_for_evidence(title)))
+    spanish_score = len(tokens & _SPANISH_TITLE_WORDS) + (2 if re.search(r"[ñ¿¡]", title) else 0)
+    english_score = len(tokens & _ENGLISH_TITLE_WORDS)
+    portuguese_score = len(tokens & _PORTUGUESE_TITLE_WORDS) + (2 if re.search(r"[çãõ]", title) else 0)
+    default = str(candidate.get("default_language") or "unknown").lower().split("-", 1)[0]
+    audio = str(candidate.get("audio_language") or "unknown").lower().split("-", 1)[0]
+    for declared in (default, audio):
+        if declared not in {"", "unknown"} and declared != "es":
+            return declared
+    if english_score >= 2 and english_score > spanish_score:
+        return "en"
+    if portuguese_score >= 2 and portuguese_score > spanish_score:
+        return "pt"
+    if default == "es" and spanish_score >= 1:
+        return "es"
+    if spanish_score >= 2 and spanish_score > max(english_score, portuguese_score):
+        return "es"
+    return "unknown"
+
+
+def _query_specs_for_landing(landing):
+    specs = landing.get("youtube_search_specs") or []
+    if isinstance(specs, list) and len(specs) == len(landing.get("youtube_keywords", [])):
+        if all(isinstance(spec, dict) and spec.get("query") for spec in specs):
+            return specs
+    return []
+
+
 def _normalize_for_evidence(value):
     text = unicodedata.normalize("NFKD", str(value).lower())
     text = "".join(char for char in text if not unicodedata.combining(char))
@@ -294,6 +349,12 @@ def _validate_video_batch(candidate, batch, landing_context):
         source = by_id[str(item["video_id"])]
         if item.get("decision") not in {"accepted", "rejected"}:
             raise ValueError("Decisión de video no válida")
+        title_language = _spanish_title_language(source)
+        item["title_language"] = title_language
+        if item.get("decision") == "accepted" and title_language != "es":
+            item["decision"] = "rejected"
+            item["reason"] = "El título no está identificado con suficiente confianza en español."
+            item["selection_reason"] = "non_spanish_title"
         if not str(item.get("language", "")).strip():
             raise ValueError("Cada video requiere idioma")
         if (item.get("decision") == "accepted"
@@ -319,11 +380,10 @@ def _validate_video_batch(candidate, batch, landing_context):
                 item["decision"] = "rejected"
                 item["reason"] = "La evidencia indicada no aparece en el título ni en la descripción."
                 item["selection_reason"] = "ungrounded_relevance_evidence"
-            elif not (_semantic_tokens(evidence) & landing_anchors):
+            elif not (_semantic_tokens(source.get("video_title") or "") & landing_anchors):
                 item["decision"] = "rejected"
                 item["reason"] = (
-                    "El título o la descripción solo sustentan un mecanismo genérico y no contienen "
-                    "contexto específico de la landing."
+                    "El título no contiene un ancla temática de la landing."
                 )
                 item["selection_reason"] = "insufficient_landing_context"
     return candidate
@@ -361,6 +421,11 @@ class BatchedVideoAnalyzerAgent(LlmAgent):
             landing = _decode(ctx.session.state.get("landing_page_research")) or {}
             queries = [str(value).strip() for value in landing.get("youtube_keywords", [])
                        if str(value).strip()]
+            specs_by_query = {
+                str(spec.get("query", "")).strip(): spec
+                for spec in _query_specs_for_landing(landing)
+                if str(spec.get("query", "")).strip()
+            }
             if not queries:
                 raise ValueError("La landing validada no contiene consultas de YouTube")
             yield emit({"youtube_videos_research": (
@@ -409,10 +474,15 @@ class BatchedVideoAnalyzerAgent(LlmAgent):
                             item = dict(row)
                             item["video_id"] = video_id
                             item["found_by_queries"] = []
+                            item["found_by_search_specs"] = []
                             candidates_by_id[video_id] = item
                         queries_for_video = candidates_by_id[video_id]["found_by_queries"]
                         if query not in queries_for_video:
                             queries_for_video.append(query)
+                        spec = specs_by_query.get(query)
+                        specs_for_video = candidates_by_id[video_id]["found_by_search_specs"]
+                        if spec and all(existing.get("query") != query for existing in specs_for_video):
+                            specs_for_video.append(spec)
                 except Exception as exc:
                     ledger[query].update(status="error", error=f"{type(exc).__name__}: {exc}")
                 yield emit({"youtube_search_status": {
@@ -426,14 +496,17 @@ class BatchedVideoAnalyzerAgent(LlmAgent):
 
             raw_candidates = list(candidates_by_id.values())
             for item in raw_candidates:
-                item["video_keywords"] = "; ".join(item.pop("found_by_queries"))
+                found_queries = item.pop("found_by_queries")
+                item["video_keywords"] = "; ".join(found_queries)
+            raw_candidates.sort(key=lambda item: (
+                _video_metric(item.get("view_count")) >= 25_000,
+                _video_metric(item.get("comment_count")),
+                _video_metric(item.get("view_count")),
+                str(item.get("published_at") or "")), reverse=True)
             candidate_count = len(raw_candidates)
-            decisions = [saved_by_id[str(item["video_id"])] for item in raw_candidates
-                         if str(item["video_id"]) in saved_by_id]
+            decisions = []
             eligible_candidates = []
             for item in raw_candidates:
-                if str(item["video_id"]) in saved_by_id:
-                    continue
                 comment_count = item.get("comment_count")
                 try:
                     comment_count = int(comment_count) if comment_count is not None else None
@@ -452,6 +525,7 @@ class BatchedVideoAnalyzerAgent(LlmAgent):
                                       "relevance_evidence": item.get("video_title", ""),
                                       "selection_reason": ("comments_unavailable" if metadata_complete
                                                            else "comment_count_unknown"),
+                                      "validation_contract_version": VIDEO_VALIDATION_CONTRACT_VERSION,
                                       **({"validation_failure_kind": "technical_error"}
                                          if not metadata_complete else {})})
                 elif comment_count <= 100:
@@ -460,14 +534,27 @@ class BatchedVideoAnalyzerAgent(LlmAgent):
                                       "relevance_decision": "rejected",
                                       "relevance_reason": "No supera el mínimo de 100 comentarios totales.",
                                       "relevance_evidence": item.get("video_title", ""),
-                                      "selection_reason": "below_comment_threshold"})
+                                      "selection_reason": "below_comment_threshold",
+                                      "validation_contract_version": VIDEO_VALIDATION_CONTRACT_VERSION})
                 else:
+                    title_language = _spanish_title_language(item)
+                    item["title_language"] = title_language
+                    if title_language != "es":
+                        decisions.append({**item,
+                                          "detected_language": title_language,
+                                          "relevance_decision": "rejected",
+                                          "relevance_reason": (
+                                              "El título no está identificado con suficiente confianza en español."),
+                                          "relevance_evidence": item.get("video_title", ""),
+                                          "selection_reason": "non_spanish_title",
+                                          "validation_contract_version": VIDEO_VALIDATION_CONTRACT_VERSION})
+                        continue
+                    saved = saved_by_id.get(str(item["video_id"]))
+                    # Old decisions used a stricter relevance contract.
+                    if saved and saved.get("validation_contract_version") == VIDEO_VALIDATION_CONTRACT_VERSION:
+                        decisions.append({**item, **saved})
+                        continue
                     eligible_candidates.append(item)
-            eligible_candidates.sort(key=lambda item: (
-                int(item.get("view_count") or 0) >= 25_000,
-                int(item.get("comment_count") or 0),
-                int(item.get("view_count") or 0),
-                str(item.get("published_at") or "")), reverse=True)
             total_batches = ((len(eligible_candidates) + VIDEO_VALIDATION_BATCH_SIZE - 1)
                              // VIDEO_VALIDATION_BATCH_SIZE)
             if eligible_candidates:
@@ -497,6 +584,10 @@ class BatchedVideoAnalyzerAgent(LlmAgent):
                     "accepted puede ser direct (mecanismo de la oferta) o audience_context (un contexto de audiencia "
                     "que probablemente produzca comentarios sobre D1-D3 o P1-P3), siempre en español. "
                     "rejected incluye otro tema, otro idioma o metadatos insuficientes. "
+                    "El título debe estar en español y mostrar el tema concreto de la landing. "
+                    "La popularidad y la consulta que encontró el video no prueban su relevancia: rechaza "
+                    "videos sobre personas, entretenimiento u otro tema aunque compartan palabras. Una "
+                    "descripción o canal no puede rescatar un título ajeno al tema. "
                     "La consulta que encontró el video no es evidencia. Mencionar solo un mecanismo genérico, "
                     "como IA, prompts o ChatGPT, no demuestra relación con la landing. Para aceptar, el título "
                     "o la descripción debe nombrar también un producto, actividad, audiencia, deseo o problema "
@@ -553,8 +644,8 @@ class BatchedVideoAnalyzerAgent(LlmAgent):
                         for item in batch:
                             single_prompt = prompt_prefix + "VIDEOS=" + json.dumps([{
                                 key: item.get(key) for key in (
-                                    "video_id", "video_title", "video_description", "channel_title",
-                                    "default_language", "audio_language", "video_keywords")
+                    "video_id", "video_title", "video_description", "channel_title",
+                    "default_language", "audio_language", "video_keywords")
                             }], ensure_ascii=False)
                             try:
                                 response = await generate_response_async(
@@ -594,6 +685,7 @@ class BatchedVideoAnalyzerAgent(LlmAgent):
                                       "relevance_decision": decision["decision"],
                                       "relevance_reason": decision.get("reason", ""),
                                       "relevance_evidence": decision.get("evidence", ""),
+                                      "validation_contract_version": VIDEO_VALIDATION_CONTRACT_VERSION,
                                       **({"selection_reason": decision["selection_reason"]}
                                          if decision.get("selection_reason") else {}),
                                       **({"validation_failure_kind": decision["failure_kind"]}
@@ -687,20 +779,20 @@ class DeterministicCommentsCollectorAgent(LlmAgent):
             accepted_count = len(videos)
             rejected_count = candidate_count - accepted_count
             if saved:
-                result = _decode(saved) or []
-                if not isinstance(result, list):
+                saved_result = _decode(saved) or []
+                if not isinstance(saved_result, list):
                     raise ValueError("El punto de recuperación de comentarios no es válido")
-                # Older checkpoints may not retain the accepted candidate list.
-                # The saved video records are sufficient to finish their recovery.
-                if not videos:
-                    videos = [item for item in result if isinstance(item, dict)]
-                    accepted_count = len(videos)
-                    rejected_count = max(0, candidate_count - accepted_count)
+                # A saved comments checkpoint is not authority to bypass the
+                # current candidate gate. Keep only records for currently
+                # accepted videos; never restore orphaned legacy results.
+                accepted_hrefs = {item.get("video_href") for item in videos}
+                result = [item for item in saved_result if isinstance(item, dict)
+                          and item.get("video_href") in accepted_hrefs]
             if not videos:
                 raise ValueError("Ningún candidato superó la validación semántica contra la landing")
             processed_urls = {item.get("video_href") for item in result if isinstance(item, dict)}
-            remaining_videos = ([] if saved and saved_collection_status.get("status") == "complete" else
-                                [item for item in videos if item.get("video_href") not in processed_urls])
+            remaining_videos = [item for item in videos
+                                if item.get("video_href") not in processed_urls]
             if remaining_videos:
                 yield emit({"youtube_comments_collection_status": {
                     "status": "collecting", "invocation_id": ctx.invocation_id,

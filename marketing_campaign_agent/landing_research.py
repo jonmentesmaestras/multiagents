@@ -6,6 +6,7 @@ import time
 import json
 import re
 import unicodedata
+from pathlib import Path
 from typing import Annotated, Literal
 
 from google.adk.agents import LlmAgent, SequentialAgent
@@ -13,7 +14,7 @@ from google.adk.events import Event, EventActions
 from google.genai import types
 from pydantic import BaseModel, Field, StringConstraints, ValidationError
 
-from .comments_pipeline import _decode
+from .comments_pipeline import VIDEO_VALIDATION_CONTRACT_VERSION, _decode
 from . import recovery_runtime
 from .tools.landing_page_scraper import content_error, scrape_landing_page
 from .tools.comments_evaluator_tool import is_safe_early_completion
@@ -128,6 +129,12 @@ class Evidence(BaseModel):
     page: int | None = Field(default=None, strict=True, ge=1)
 
 
+class YouTubeSearchSpec(BaseModel):
+    query: Text
+    context_terms: list[Text] = Field(min_length=1, max_length=8)
+    intent_terms: list[Text] = Field(min_length=1, max_length=8)
+
+
 class LandingResearch(BaseModel):
     avatar: Avatar
     offer: Offer
@@ -135,6 +142,7 @@ class LandingResearch(BaseModel):
     deseos: list[Text] = Field(min_length=3, max_length=3)
     problemas: list[Text] = Field(min_length=3, max_length=3)
     youtube_keywords: list[Text] = Field(min_length=12, max_length=12)
+    youtube_search_specs: list[YouTubeSearchSpec] = Field(default_factory=list)
     evidence: list[Evidence] = Field(min_length=1)
 
 
@@ -147,7 +155,7 @@ STATE_KEYS = (
     "youtube_comments_checkpoint", "youtube_comments_classification_cache",
     "youtube_comments_recovery", "youtube_collection_recovery", "human_review_files",
     "market_research_metrics", "comments_resume", "youtube_search_status",
-    "video_analysis_resume",
+    "video_analysis_resume", "youtube_video_review",
 )
 STATUS_KEY = "landing_page_research_status"
 
@@ -157,12 +165,35 @@ def _normalize(text: str) -> str:
 
 
 def _search_tokens(text: str) -> set[str]:
+    return set(_ordered_search_tokens(text))
+
+
+def _ordered_search_tokens(text: str) -> list[str]:
     value = unicodedata.normalize("NFKD", text.lower())
     value = "".join(ch for ch in value if not unicodedata.combining(ch))
-    return {
+    return list(dict.fromkeys(
         token for token in re.findall(r"[a-z0-9]+", value)
         if len(token) >= 3 and token not in _GENERIC_SEARCH_WORDS
-    }
+    ))
+
+
+def _search_query_fallback(query: str) -> str:
+    return " ".join(_ordered_search_tokens(query)[:4])
+
+
+def _clean_search_spec_terms(terms: list[str], query: str) -> list[str]:
+    """Discard unusable model hints without aborting an otherwise valid analysis.
+
+    The aligned, independently validated query is a conservative fallback when
+    every hint is generic or overlong. It keeps the video screen grounded in the
+    actual search, instead of letting a word like 'método' match unrelated titles.
+    """
+    cleaned = list(dict.fromkeys(
+        _normalize(term) for term in terms if 1 <= len(_search_tokens(term)) <= 4
+    ))
+    if cleaned:
+        return cleaned
+    return [_search_query_fallback(query)]
 
 
 def _validate_search_anchors(result: LandingResearch, source: dict) -> None:
@@ -254,6 +285,14 @@ def requested_url(content: types.Content | None) -> str:
 def validate_research(text: str, source: dict) -> dict:
     """Check shape and literal evidence; this does not prove semantic entailment."""
     result = LandingResearch.model_validate_json(text)
+    if result.youtube_search_specs:
+        if len(result.youtube_search_specs) != len(result.youtube_keywords):
+            raise ValueError("Debe existir una especificación de contexto por cada consulta de YouTube.")
+        for index, spec in enumerate(result.youtube_search_specs):
+            if _normalize(spec.query).casefold() != _normalize(result.youtube_keywords[index]).casefold():
+                raise ValueError(f"La especificación {index + 1} no corresponde a su consulta de YouTube.")
+            spec.context_terms = _clean_search_spec_terms(spec.context_terms, spec.query)
+            spec.intent_terms = _clean_search_spec_terms(spec.intent_terms, spec.query)
     required = {"offer.description", "main_promise", "avatar"}
     required.update(f"offer.deliverables.{i}" for i in range(len(result.offer.deliverables)))
     required.update(f"{field}.{i}" for field in ("deseos", "problemas")
@@ -545,6 +584,21 @@ class GroundedLandingPageAgent(LlmAgent):
                             candidate = {**repair_draft, "youtube_keywords": [
                                 queries[i] if i in repair_indices else query
                                 for i, query in enumerate(repair_draft["youtube_keywords"])]}
+                            # Specs belong to their query. A keyword-only repair
+                            # must not leave the old query or old screening hints
+                            # attached to a newly repaired search.
+                            specs = repair_draft.get("youtube_search_specs")
+                            if isinstance(specs, list) and len(specs) == len(queries):
+                                candidate["youtube_search_specs"] = [
+                                    ({**spec,
+                                      "query": candidate["youtube_keywords"][i],
+                                      "context_terms": [_search_query_fallback(
+                                          candidate["youtube_keywords"][i])],
+                                      "intent_terms": [_search_query_fallback(
+                                          candidate["youtube_keywords"][i])]}
+                                     if i in repair_indices and isinstance(spec, dict) else spec)
+                                    for i, spec in enumerate(specs)
+                                ]
                         text = json.dumps(candidate, ensure_ascii=False)
                     elif visual:
                         source = transcribed_source(text, source)
@@ -699,6 +753,12 @@ class GroundedCampaignOrchestrator(SequentialAgent):
         try:
             message = ' '.join(p.text or '' for p in (ctx.user_content.parts or [])) if ctx.user_content else ''
             automatic = message.strip() == recovery_runtime.AUTO_RESUME
+            video_review = ctx.session.state.get("youtube_video_review") or {}
+            if (automatic and video_review.get("status") == "awaiting_video_review"
+                    and ctx.session.state.get("pause_after_video_selection", False)):
+                terminal_status = "awaiting_video_review"
+                yield lifecycle(terminal_status)
+                return
             prior = ctx.session.state.get('pipeline_run') or {}
             if automatic and prior.get('status') != 'active':
                 return
@@ -803,8 +863,60 @@ class GroundedCampaignOrchestrator(SequentialAgent):
                          content=types.Content(role="model", parts=[types.Part.from_text(text=text)]))
 
         message = " ".join(p.text or "" for p in (ctx.user_content.parts or [])) if ctx.user_content else ""
+        switch_on = bool(re.fullmatch(r"\s*(activar|encender) pausa de videos[.!]?\s*", message, re.I))
+        switch_off = bool(re.fullmatch(r"\s*(desactivar|apagar) pausa de videos[.!]?\s*", message, re.I))
+        pause_enabled = bool(ctx.session.state.get("pause_after_video_selection", False))
+        resume_review = False
+        start_index = 0
+        if switch_on:
+            ctx.session.state["pause_after_video_selection"] = True
+            yield emit("Pausa de revisión activada para esta sesión. La selección se detendrá antes de recolectar comentarios.", {
+                "pause_after_video_selection": True})
+            return
+        if switch_off:
+            review = ctx.session.state.get("youtube_video_review") or {}
+            if review.get("status") != "awaiting_video_review":
+                ctx.session.state["pause_after_video_selection"] = False
+                yield emit("Pausa de revisión desactivada para esta sesión. El próximo workflow seguirá sin detenerse.", {
+                    "pause_after_video_selection": False})
+                return
+            try:
+                saved_videos = _decode(ctx.session.state.get("youtube_videos_research"))
+            except (ValueError, TypeError):
+                saved_videos = None
+            search_status = ctx.session.state.get("youtube_search_status") or {}
+            if search_status.get("status") != "complete" or not isinstance(saved_videos, list):
+                yield emit("No se puede reanudar: falta una selección completa de videos guardada.")
+                return
+            if any(not isinstance(item, dict) or item.get("validation_contract_version")
+                   != VIDEO_VALIDATION_CONTRACT_VERSION for item in saved_videos):
+                yield emit("La selección guardada se hizo con una versión anterior del filtro. "
+                           "Inicia de nuevo la investigación para revisar decisiones actualizadas.")
+                return
+            pause_enabled = False
+            ctx.session.state["pause_after_video_selection"] = False
+            saved_accepted_count = sum(
+                isinstance(item, dict) and item.get("relevance_decision") == "accepted"
+                for item in saved_videos)
+            start_index = 2 if saved_accepted_count else 1
+            resume_review = True
+            status = ctx.session.state.get(STATUS_KEY) or {}
+            resume_message = ("Revisión aprobada. Continúo desde la recolección de comentarios con los videos guardados."
+                              if saved_accepted_count else
+                              "Revisión cerrada. No hubo videos aceptados; finalizo la búsqueda sin repetirla.")
+            yield emit(resume_message, {
+                "pause_after_video_selection": False,
+                "video_analysis_resume": False,
+                "comments_resume": False,
+                "market_research_report": None,
+                "youtube_video_review": {**review, "status": "approved",
+                                          "approved_at": time.time()},
+                STATUS_KEY: {**status, "status": "validated",
+                             "invocation_id": ctx.invocation_id},
+            })
         coverage_required = any(agent.name == "YoutubeCommentsAnalyzer" for agent in self.sub_agents)
-        resume = message.strip() == recovery_runtime.AUTO_RESUME or bool(re.fullmatch(r"\s*(reanuda|contin[uú]a)(?: la secuencia)?[.!]?\s*", message, re.I))
+        resume = (not resume_review and (message.strip() == recovery_runtime.AUTO_RESUME or bool(
+            re.fullmatch(r"\s*(reanuda|contin[uú]a)(?: la secuencia)?[.!]?\s*", message, re.I))))
         landing_status = ctx.session.state.get(STATUS_KEY) or {}
         retry_saved_landing = (
             landing_status.get("status") == "error"
@@ -813,7 +925,6 @@ class GroundedCampaignOrchestrator(SequentialAgent):
                 "extraction_method") == "user_attachment")
         if landing_status.get("status") == WAITING_ATTACHMENT or retry_saved_landing:
             resume = False
-        start_index = 0
         if resume:
             state = ctx.session.state
             status = state.get(STATUS_KEY) or {}
@@ -911,9 +1022,12 @@ class GroundedCampaignOrchestrator(SequentialAgent):
                     yield emit("Cobertura verificada. Generando el informe final.", {"market_research_metrics": metrics})
             run = ctx.session.state.get('pipeline_run') or {}
             yield emit(f'Etapa {index + 1}: {agent.name}.', {'pipeline_run': {**run, 'stage': index}})
-            async with aclosing(agent.run_async(ctx)) as stream:
-                async for event in stream:
-                    yield event
+            if resume_review and index == 1:
+                yield emit("Usando el resultado de selección guardado; no se repite la búsqueda.")
+            else:
+                async with aclosing(agent.run_async(ctx)) as stream:
+                    async for event in stream:
+                        yield event
             if index == 0 and (ctx.session.state.get(STATUS_KEY) or {}).get("status") == WAITING_ATTACHMENT:
                 return
             if index == 1 and coverage_required:
@@ -927,6 +1041,49 @@ class GroundedCampaignOrchestrator(SequentialAgent):
                                "is_offer_accepted": None, "coverage": search_status}
                     yield emit(report, {"market_research_report": report,
                                         "market_research_metrics": metrics})
+                    return
+                accepted_videos = []
+                try:
+                    decisions = _decode(ctx.session.state.get("youtube_videos_research")) or []
+                except (ValueError, TypeError):
+                    decisions = []
+                for decision in decisions:
+                    if (isinstance(decision, dict)
+                            and decision.get("video_title") and decision.get("video_href")):
+                        video = {"titulo": decision["video_title"],
+                                 "url": decision["video_href"]}
+                        if (decision.get("relevance_decision") == "accepted"
+                                and decision.get("title_language") == "es"
+                                and str(decision.get("detected_language", "")).lower().startswith("es")):
+                            accepted_videos.append(video)
+                # This review file is the exact set that may reach comment
+                # extraction: Spanish titles that passed the relevance gate.
+                candidate_videos = accepted_videos
+                if pause_enabled:
+                    review_folder = (Path(__file__).resolve().parent / "docs" / "revision_humana"
+                                     / str(ctx.session.id))
+                    review_path = review_folder / "videos_seleccionados.json"
+                    candidates_path = review_folder / "videos_candidatos.json"
+                    review_path.parent.mkdir(parents=True, exist_ok=True)
+                    review_path.write_text(json.dumps(accepted_videos, ensure_ascii=False, indent=2),
+                                           encoding="utf-8")
+                    candidates_path.write_text(
+                        json.dumps(candidate_videos, ensure_ascii=False, indent=2), encoding="utf-8")
+                if pause_enabled:
+                    yield emit(
+                        "Selección terminada. El workflow queda pausado antes de recolectar comentarios. "
+                        f"Videos candidatos aprobados: {len(candidate_videos)}. "
+                        f"{len(candidate_videos)} en {candidates_path}. "
+                        f"La lista de aceptados está en {review_path}; "
+                        "envía 'desactivar pausa de videos' para continuar.",
+                        {"youtube_video_review": {
+                            "status": "awaiting_video_review",
+                            "count": len(accepted_videos),
+                            "path": str(review_path),
+                            "candidate_count": len(candidate_videos),
+                            "candidates_path": str(candidates_path),
+                            "created_at": time.time(),
+                        }})
                     return
                 if search_status.get("accepted", 0) == 0:
                     candidate_count = search_status.get("candidate_count", 0)

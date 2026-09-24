@@ -247,6 +247,46 @@ def test_derived_youtube_keywords_do_not_require_literal_quotes():
     assert validate_research(json.dumps(data), SOURCE)["youtube_keywords"] == data["youtube_keywords"]
 
 
+def test_generic_search_spec_terms_are_removed_without_stopping_research():
+    data = valid_analysis()
+    data["youtube_search_specs"] = [
+        {"query": query, "context_terms": ["frecuencias"],
+         "intent_terms": ["aplicar"]}
+        for query in data["youtube_keywords"]
+    ]
+    data["youtube_search_specs"][0]["context_terms"] = ["método", "frecuencias"]
+    data["youtube_search_specs"][0]["intent_terms"] = ["método"]
+    result = validate_research(json.dumps(data), SOURCE)
+    assert result["youtube_search_specs"][0]["context_terms"] == ["frecuencias"]
+    assert result["youtube_search_specs"][0]["intent_terms"] == ["aplicar frecuencias"]
+
+
+def test_all_weak_search_spec_terms_fall_back_to_grounded_query():
+    data = valid_analysis()
+    data["youtube_search_specs"] = [
+        {"query": query, "context_terms": ["método"], "intent_terms": ["método"]}
+        for query in data["youtube_keywords"]
+    ]
+    result = validate_research(json.dumps(data), SOURCE)
+    assert result["youtube_search_specs"][0]["context_terms"] == ["aplicar frecuencias"]
+    assert result["youtube_search_specs"][0]["intent_terms"] == ["aplicar frecuencias"]
+    assert all(spec["context_terms"] and spec["intent_terms"]
+               for spec in result["youtube_search_specs"])
+
+
+def test_generic_spec_does_not_stop_orchestrated_landing_stage():
+    data = valid_analysis()
+    data["youtube_search_specs"] = [
+        {"query": query, "context_terms": ["método"], "intent_terms": ["método"]}
+        for query in data["youtube_keywords"]
+    ]
+    session, _, model, downstream, _ = asyncio.run(run_pipeline(
+        SOURCE, output=json.dumps(data)))
+    assert len(model.requests) == 1
+    assert session.state[STATUS_KEY]["status"] == "validated"
+    assert all(agent.calls == 1 for agent in downstream)
+
+
 def test_youtube_query_matrix_requires_exactly_twelve_entries():
     data = valid_analysis()
     data["youtube_keywords"] = data["youtube_keywords"][:10]
@@ -301,6 +341,24 @@ def test_agent_repairs_foreign_query_language_once_before_publishing():
     assert "CORRECCIÓN OBLIGATORIA" in model.requests[1].contents[0].parts[0].text
     assert session.state["landing_page_research"] is not None
     assert session.state["landing_page_research_status"]["status"] == "validated"
+    assert all(agent.calls == 1 for agent in downstream)
+
+
+def test_keyword_repair_keeps_search_specs_aligned_with_repaired_query():
+    mixed = valid_analysis()
+    mixed["youtube_keywords"][0] = "curso de harmonização com preenchimento"
+    mixed["youtube_search_specs"] = [
+        {"query": query, "context_terms": ["frecuencias"],
+         "intent_terms": ["aplicar"]}
+        for query in mixed["youtube_keywords"]
+    ]
+    session, _, model, downstream, _ = asyncio.run(run_pipeline(
+        SOURCE, output=[json.dumps(mixed), json.dumps(valid_analysis())]))
+    assert len(model.requests) == 2
+    assert session.state[STATUS_KEY]["status"] == "validated"
+    research = json.loads(session.state["landing_page_research"])
+    assert research["youtube_search_specs"][0]["query"] == research["youtube_keywords"][0]
+    assert research["youtube_search_specs"][0]["context_terms"] == ["aplicar frecuencias"]
     assert all(agent.calls == 1 for agent in downstream)
 
 

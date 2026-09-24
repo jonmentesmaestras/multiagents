@@ -6,7 +6,9 @@ from google.adk.runners import Runner
 from google.adk.sessions import InMemorySessionService
 from google.genai import types
 
-from marketing_campaign_agent.comments_pipeline import BatchedVideoAnalyzerAgent
+from marketing_campaign_agent.comments_pipeline import (
+    BatchedVideoAnalyzerAgent, VIDEO_VALIDATION_CONTRACT_VERSION,
+)
 
 
 def candidate(index):
@@ -14,7 +16,7 @@ def candidate(index):
     return {
         "video_id": video_id,
         "video_href": f"https://www.youtube.com/watch?v={video_id}",
-        "video_title": f"Biodescodificación video {index}",
+        "video_title": f"La biodescodificación de síntomas en español {index}",
         "video_description": "Explica el origen emocional de un síntoma.",
         "channel_title": "Canal en español",
         "default_language": "es",
@@ -97,7 +99,10 @@ def test_queries_are_separate_and_validation_uses_batches_of_ten():
     assert state["youtube_search_status"]["status"] == "complete"
     assert state["youtube_search_status"]["candidate_count"] == 23
     assert state["youtube_search_status"]["candidates_decided"] == 23
-    assert len(json.loads(state["youtube_videos_research"])) == 23
+    saved = json.loads(state["youtube_videos_research"])
+    assert len(saved) == 23
+    assert next(item for item in saved if item["video_id"] == candidate(0)["video_id"])[
+        "relevance_decision"] == "accepted"  # 25,000 views is not a hard floor.
     texts = [part.text for event in events if event.content for part in event.content.parts or []]
     assert not any(text.lstrip().startswith("[") for text in texts)
 
@@ -139,9 +144,48 @@ def test_comment_floor_is_applied_before_semantic_validation():
     assert state["youtube_search_status"]["status"] == "complete"
 
 
+def test_popularity_then_numeric_filter_then_spanish_title_review():
+    landing = {
+        "offer": {"description": "Comunicación intuitiva con animales"},
+        "main_promise": "Entender mensajes de mascotas",
+        "avatar": {"name": "Personas con mascotas", "description": "Cuidadores de animales"},
+        "deseos": ["Conectar con mascotas"], "problemas": ["No entender sus emociones"],
+        "youtube_keywords": ["cómo hablar con mascotas"],
+        "youtube_search_specs": [{
+            "query": "cómo hablar con mascotas", "context_terms": ["animales"],
+            "intent_terms": ["mensajes"],
+        }],
+    }
+    relevant = {**candidate(70), "video_title": (
+        "HAZ ESTO para CONECTAR y HABLAR con tus MASCOTAS de este PLANO y las que YA NO ESTÁN"),
+        "view_count": 275084, "comment_count": 1534}
+    unrelated = {**candidate(71), "video_title": (
+        "Así puedes ABRIR TU TERCER OJO | Iván Donalson #14"),
+        "view_count": 150000, "comment_count": 800}
+    low_comments = {**candidate(72), "video_title": "La comunicación con animales",
+                    "view_count": 900000, "comment_count": 100}
+    english = {**candidate(73), "video_title": (
+        "How to Send a Telepathic Message to a Specific Person"),
+        "default_language": "en", "audio_language": "en",
+        "view_count": 500000, "comment_count": 1200}
+    state, _, _, client = asyncio.run(run_analyzer(
+        lambda query, **kwargs: [unrelated, low_comments, relevant, english],
+        decisions_from_prompt, landing))
+    assert client.aio.models.generate_content.call_count == 1
+    prompted = json.loads(
+        client.aio.models.generate_content.call_args.kwargs["contents"].split("VIDEOS=", 1)[1])
+    assert [row["video_id"] for row in prompted] == [relevant["video_id"], unrelated["video_id"]]
+    saved = {item["video_id"]: item for item in json.loads(state["youtube_videos_research"])}
+    assert saved[relevant["video_id"]]["relevance_decision"] == "accepted"
+    assert saved[unrelated["video_id"]]["selection_reason"] == "insufficient_landing_context"
+    assert saved[low_comments["video_id"]]["selection_reason"] == "below_comment_threshold"
+    assert saved[english["video_id"]]["selection_reason"] == "non_spanish_title"
+
+
 def test_unknown_comment_count_is_pending_when_metadata_recovery_failed():
     rows = [candidate(0)]
     rows[0].pop("comment_count")
+    rows[0]["view_count"] = "unknown"
     state, _, _, client = asyncio.run(run_analyzer(
         lambda query, **kwargs: rows,
         decisions_from_prompt,
@@ -176,7 +220,7 @@ def test_generic_prompt_title_without_description_is_rejected():
     assert saved["selection_reason"] == "insufficient_landing_context"
 
 
-def test_generic_title_is_accepted_when_description_confirms_landing_context():
+def test_generic_title_is_not_rescued_by_relevant_description():
     row = candidate(51)
     row["video_title"] = "Este es el Secreto para Crear el Mejor Prompt de Todos"
     row["video_description"] = (
@@ -194,7 +238,8 @@ def test_generic_title_is_accepted_when_description_confirms_landing_context():
         lambda query, **kwargs: [row], model, fashion_landing()))
 
     saved = json.loads(state["youtube_videos_research"])[0]
-    assert saved["relevance_decision"] == "accepted"
+    assert saved["relevance_decision"] == "rejected"
+    assert saved["selection_reason"] == "insufficient_landing_context"
 
 
 def test_missing_evidence_is_resolved_per_video_without_stopping_coverage():
@@ -224,7 +269,8 @@ def test_resume_reuses_saved_decisions_and_validates_only_pending_candidates():
     rows = [candidate(index) for index in range(15)]
     saved = [{**item, "relevance_decision": "accepted", "detected_language": "es",
               "relevance_reason": "Decisión guardada", "relevance_evidence": item["video_title"],
-              "video_keywords": "biodescodificación migrañas"}
+              "video_keywords": "biodescodificación migrañas",
+              "validation_contract_version": VIDEO_VALIDATION_CONTRACT_VERSION}
              for item in rows[:10]]
     state, _, _, client = asyncio.run(run_analyzer(
         lambda query, **kwargs: rows,
@@ -240,6 +286,21 @@ def test_resume_reuses_saved_decisions_and_validates_only_pending_candidates():
     assert state["youtube_search_status"]["status"] == "complete"
     assert state["youtube_search_status"]["resume_saved_count"] == 10
     assert len(json.loads(state["youtube_videos_research"])) == 15
+
+
+def test_resume_rechecks_old_keyword_gate_rejection():
+    row = candidate(80)
+    old = {**row, "relevance_decision": "rejected",
+           "selection_reason": "keyword_context_mismatch",
+           "validation_contract_version": VIDEO_VALIDATION_CONTRACT_VERSION - 1}
+    state, _, _, client = asyncio.run(run_analyzer(
+        lambda query, **kwargs: [row], decisions_from_prompt,
+        initial={"video_analysis_resume": True,
+                 "youtube_videos_research": json.dumps([old])}))
+    assert client.aio.models.generate_content.call_count == 1
+    saved = json.loads(state["youtube_videos_research"])[0]
+    assert saved["relevance_decision"] == "accepted"
+    assert saved["validation_contract_version"] == VIDEO_VALIDATION_CONTRACT_VERSION
 
 
 def test_video_validation_request_has_end_to_end_timeout():

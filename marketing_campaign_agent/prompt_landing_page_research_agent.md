@@ -53,6 +53,11 @@ Return ONLY one valid JSON object, without Markdown fences, with these fields:
   "deseos": ["Resultado deseado 1", "Resultado deseado 2", "Resultado deseado 3"],
   "problemas": ["Problema 1", "Problema 2", "Problema 3"],
   "youtube_keywords": ["exactamente 12 consultas concretas derivadas de esta landing"],
+  "youtube_search_specs": [
+    {"query": "consulta idéntica a youtube_keywords en la misma posición",
+     "context_terms": ["contexto específico", "sinónimo concreto"],
+     "intent_terms": ["mecanismo", "intención"]}
+  ],
   "evidence": [
     {"field": "offer.description", "quote": "Exact excerpt from main_content", "kind": "explicit"}
   ]
@@ -66,6 +71,15 @@ EVIDENCE CONTRACT:
 - Do not create evidence entries for youtube_keywords.*. They are derived Spanish
   searches and Python validates their semantic anchors against the grounded landing
   fields. Always produce exactly 12 queries in the fixed order defined above.
+- Produce exactly 12 `youtube_search_specs`, aligned one-to-one and in the same order
+  as `youtube_keywords`. Each `query` must exactly match its keyword. `context_terms`
+  must contain concrete words naming the offer's specific subject, product, audience,
+  or activity, including grounded synonyms when useful. `intent_terms` must name the
+  query's concrete mechanism, action, problem, or result. Use one to four informative
+  words per term; short phrases such as "comunicación intuitiva" are valid. Avoid
+  generic terms such as ayuda, persona, método, or video. These terms are lexical
+  signals for screening; a later semantic review decides whether the Spanish title
+  actually concerns this landing.
 - If a demographic is not null, also cite its exact path, e.g. avatar.demographics.age_range.
 - Each quote must be a verbatim contiguous excerpt from main_content, in its ORIGINAL language,
   at least 12 characters long. No translated quotes, paraphrases, ellipses, or fabricated text.
